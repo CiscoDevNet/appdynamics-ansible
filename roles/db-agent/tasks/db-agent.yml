@@ -1,0 +1,40 @@
+
+- name: Ensures db agent {{db_agent_dest_folder_linux}} dir exists
+  file: 
+    path: "{{ db_agent_dest_folder_linux }}/"
+    state: directory     
+    mode: 0755
+    owner: appdynamics 
+    group: appdynamics
+
+- name: Get DB Agent from AWS S3
+  vars:
+      ansible_python_interpreter: /usr/bin/python3 
+  aws_s3: 
+    bucket: "{{ aws_s3_.bucket_name }}"
+    object: "{{ aws_s3_.object_keys.db_agent }}"
+    dest: "{{db_agent_dest_folder_linux }}/{{ db_agent_dest_file }}"
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    mode: get
+
+- name: Unarchive the DB agent file
+  unarchive: 
+    #src: "{{ nexus.base_url }}?{{ db_agent_search_parameters }}" # for nexus
+    src: "{{db_agent_dest_folder_linux }}/{{ db_agent_dest_file }}"
+    dest: "{{ db_agent_dest_folder_linux }}"
+    owner: appdynamics
+    group: appdynamics    
+    copy: no
+
+- name: Configure db-agent controller-info.xml file
+  template:
+    src: templates/db-agent-controller-info.xml.j2
+    dest: '{{ db_agent_dest_folder_linux }}/conf/controller-info.xml'
+    owner: appdynamics
+    group: appdynamics
+    mode: 0755  
+    
+- name: Start DB Agent service
+  #shell: "nohup java -Ddbagent.name={{ db_name }}-{{ application_environment }} -Xms1536m -Xmx3g -jar {{ db_agent_dest_folder_linux }}/db-agent.jar &"
+  shell: "./{{ db_agent_dest_folder_linux }}/start-dbagent -Ddbagent.name={{ db_agent_name }}-{{ application_environment }} -Xms1536m -Xmx3g &"

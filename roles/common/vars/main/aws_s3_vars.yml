@@ -1,0 +1,6 @@
+---
+aws_s3_: # The additional `_` is to avoid conflict with the aws_s3 module
+  bucket_name: appd-ansible-agents
+  object_keys:
+    java_agent: java/AppServerAgent-1.8-20.8.0.30686.zip
+    machine_agent: linux/machineagent-bundle-64bit-linux-20.8.0.2713.zip

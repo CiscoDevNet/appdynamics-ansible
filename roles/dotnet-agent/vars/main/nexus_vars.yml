@@ -1,0 +1,16 @@
+---
+nexus:
+  base_url: http://localhost:8081/nexus/service/local/artifact/maven/redirect
+  #Appd Repository facts
+  appd:
+    repositoryId: software
+    groupId: com.appdynamics
+    machine_agent_artifactId: machine-agent-windows
+    machine_agent_version: 20.8.0.9831
+    machine_agent_packaging: zip
+    application_agent_artifactId: application-agent-windows
+    application_agent_version: 20.8.0.0
+    application_agent_packaging: msi
+    netviz_agent_artifactId: netviz-agent-windows
+    netviz_agent_version: 20.6.0.2050
+    netviz_agent_packaging: zip 

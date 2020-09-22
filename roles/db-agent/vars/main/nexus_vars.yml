@@ -1,0 +1,9 @@
+---
+nexus:
+  base_url: http://localhost:8081/nexus/service/local/artifact/maven/redirect
+  appd:
+    repositoryId: software
+    groupId: com.appdynamics
+    db_agent_artifactId: db-agent
+    db_agent_version: 20.7.0
+    db_agent_packaging: zip

@@ -1,0 +1,38 @@
+---
+
+- name: Check if EPEL repo is already configured.
+  stat:
+    path: /etc/yum.repos.d/epel.repo
+  register: epel_present
+
+- name: Install EPEL repo.
+  yum:
+    name: epel-release
+    state: present
+  when: not epel_present.stat.exists
+
+- name: install tools and pre-requisites for RedHat variants
+  yum:
+    name:
+     - unzip
+     - libselinux-python
+    state: installed
+
+# needed for AWS S3 boto configs 
+- name: Install Python and pip for RedHat variants
+  yum:
+    name:
+      - python3
+      - python3-pip
+    state: present
+
+#ref https://www.digitalocean.com/community/tutorials/how-to-install-java-on-centos-and-fedora
+- name: Install JRE for RedHat OS 
+  yum:
+    name: java-1.8.0-openjdk-headless
+    update_cache: yes
+    state: present
+- name: Remove 1.7 JRE
+  yum:
+    name: java-1.7.0-openjdk
+    state: absent
