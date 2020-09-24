@@ -54,6 +54,10 @@ if [[ "$@" = *"-ansible"* ]]; then
     ANSIBLE=true
 fi
 
+if [[ "$@" = *"-path"* ]]; then
+    path=true
+fi
+
 #
 # Download options
 #
@@ -188,11 +192,11 @@ fi
 echo "Is Ansible enabled : $ANSIBLE "
 
 if [ "$ANSIBLE" = "true" ]; then
-    echo ${fileJson} | jq -r '.download_path' > ./files/"${RENAME_TO}".txt
+    echo ${fileJson} | jq -r '.download_path' > "$(basename/${RENAME_TO}.txt1)"
     exit 0
 fi
 
-if [ "$LISTONLY" != "" ]; then
+if [ -z "$LISTONLY" ]; then
     echo
     echo "Downloading file : ${fileToDownload}"
     echo

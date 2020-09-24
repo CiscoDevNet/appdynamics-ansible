@@ -1,0 +1,8 @@
+---
+- hosts: java
+  tasks:
+    - include_role:
+        name: getAgent
+      vars:
+    
+
