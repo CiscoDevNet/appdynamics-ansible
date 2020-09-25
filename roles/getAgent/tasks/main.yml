@@ -1,11 +1,6 @@
-- name: Execute GetAgent shell
-  command: "{{role_path}}/files/getAgent.sh java8agent 20.8.0 -ansible"
-  register: shellout2
+- name: Download AppDynamics Agent
+  command: "{{role_path}}/files/get-agent.sh download {{agent_type}} -v {{agent_version}}"
+  register: agent_download_url
   ignore_errors: False
   delegate_to: localhost
-- debug: var=shellout2.stdout
-
-- name: Result
-  shell: echo shellout2.stdout
-  delegate_to: localhost
-    #when: foo_result.rc == 5
+- debug: var=agent_download_url

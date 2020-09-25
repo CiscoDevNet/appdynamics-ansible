@@ -1,18 +1,9 @@
 #!/usr/bin/env sh
 
-# Copyright (c) AppDynamics, Inc., and its affiliates 2020
-# All Rights Reserved.
-# THIS IS UNPUBLISHED PROPRIETARY CODE OF APPDYNAMICS, INC.
-#
-# The copyright notice above does not evidence any actual or
-# intended publication of such source code
-
-#set -o xtrace
 set -o nounset
 
 readonly OS="$(uname -s)"
 readonly ARCH="$(uname -m)"
-
 readonly ME="$(basename "$0")"
 readonly HERE=$(CDPATH='' cd "$(dirname "$0")" && pwd -P)
 
@@ -29,13 +20,14 @@ readonly ERR_INTEGRITY=6
 readonly ERR_MISSING_ARCHIVE=7
 readonly ERR_MISSING_LIB_DEPS=8
 readonly ERR_UNSUPPORTED_PLATFORM=9
+readonly ERR_GENERIC=10
 
 APPAGENT=""
- PLATFORM=""
- EUM=""
- EVENTS=""
- RENAME_TO=""
- VERSION=""
+PLATFORM=""
+EUM=""
+EVENTS=""
+VERSION=""
+DOWNLOAD_PAGE_OUTPUT="tmp.json"
 
 # Switch to the script's directory.
 cd "${HERE}" || exit
@@ -135,13 +127,17 @@ check_dependencies() {
   fi
 }
 
+#Supported agent types:
+#sun-java|ibm-java|machine|machine-win|dotnet|db|db-win
 download_options() {
   if [ "$1" = "sun-java" -o "$1" = "java" ]; then
     APPAGENT="jvm%2Cjava-jdk8" #APPAGENT="jvm"
     matchString="sun-jvm"
+    PLATFORM="linux"
   elif [ "$1" = "ibm-java" ]; then
     APPAGENT="jvm%2Cjava-jdk8"
     matchString="ibm-jvm"
+    PLATFORM="linux"
   elif [ "$1" = "machine" ]; then
     APPAGENT="machine"
     PLATFORM="linux"
@@ -153,55 +149,52 @@ download_options() {
   elif [ "$1" = "dotnet" ]; then
     APPAGENT="dotnet"
     matchString="dotnet"
-  elif [ "$1" = "db" -o "$1" = "db-linux" -o "$1" = "dbagent" -o "$1" = "dbagent-linux" ]; then
+    PLATFORM="windows"
+  elif [ "$1" = "db" -o "$1" = "dbagent" ]; then
     APPAGENT="db"
-    matchString="dbagent"
-  elif [ "$1" = "db-win" -o "$1" = "db-windows" -o "$1" = "dbagent-windows" -o "$1" = "dbagent-win" ]; then
+    matchString="db-agent"
+    PLATFORM="linux"
+  elif [ "$1" = "db-win" -o "$1" = "db-windows" ]; then
     APPAGENT="db"
     matchString="db-agent-winx64"
+    PLATFORM="windows"
   else
     exit_bad_args "unknown agent type: $1"
   fi
 }
 
-
 # Returns the download URL for the provided agent and version. Incorrect
 # argument results in exit with `ERR_BAD_ARGS`.
 #
 # Args:
-#   $1 - agent type (java|machine|zero)
+#   $1 - agent type (java|machine|)
 #   $3 - agent version
 # Returns:
 #   the downlod URL for the specified agent and version.
-
 get_download_url() {
-  VERSION=$2
-  portal_page="https://download.appdynamics.com/download/downloadfile/?version=${VERSION}&apm=${APPAGENT}&os=${PLATFORM}&platform_admin_os=${PLATFORM}&events=${EVENTS}&eum=${EUM}&apm_os=windows%2Clinux%2Calpine-linux%2Cosx%2Csolaris%2Csolaris-sparc%2Caix"
-  
-  http_response=$(curl -s  -o tmpout.json -w "%{http_code}" -X GET "$portal_page")
+  VERSION="$2"
+  #portal_page="https://download.appdynamics.com/download/downloadfile/?version=${VERSION}&apm=${APPAGENT}&os=${PLATFORM}&platform_admin_os=${PLATFORM}&events=${EVENTS}&eum=${EUM}&apm_os=windows%2Clinux%2Calpine-linux%2Cosx%2Csolaris%2Csolaris-sparc%2Caix"
+
+  portal_page="https://download.appdynamics.com/download/downloadfile/?version=${VERSION}&apm=${APPAGENT}&os=${PLATFORM}&platform_admin_os=${PLATFORM}&events=${EVENTS}&eum=${EUM}&apm_os=${PLATFORM}"
+ 
+  http_response=$(curl -s -o ${DOWNLOAD_PAGE_OUTPUT} -w "%{http_code}" -X GET "$portal_page")
 
   if [ "${http_response}" -ge 400 ] && [ "${http_code}" -lt 600 ]; then
     exit_with_error "bad HTTP response code: ${http_response}" "${ERR_BAD_RESPONSE}"
   fi
 
   if [ "${http_response}" != "200" ]; then
-     exit_with_error "bad HTTP response code: ${http_response}" "${ERR_BAD_RESPONSE}"
+    exit_with_error "None 200 response code: ${http_response}" "${ERR_GENERIC}"
   fi
 
-  #curl -s -L -o tmpout.json $portal_page
-  fileJson=$(cat tmpout.json | jq "first(.results[]  | select(.s3_path | test(\"${matchString}\"))) | .")
-  #echo ${fileJson} > test.json
-  # Grab the file path from the json output from previous command
-  fileToDownload=$(echo ${fileJson} | jq -r .s3_path)
+  processed_payload=$(cat ${DOWNLOAD_PAGE_OUTPUT} | jq "first(.results[]  | select(.s3_path | test(\"${matchString}\"))) | .")
 
-  fileVersion=$(echo ${fileJson} | jq -r .version)
-
-  if [ -z "$fileToDownload" ]; then
-    exit_with_error "Could not download your request ${1}" "${ERR_BAD_RESPONSE}"
-
+  readonly d_s3_path=$(echo ${processed_payload} | jq -r .s3_path)
+  if [ -z "$d_s3_path" ]; then
+    exit_with_error "Could not download your request ${1}. Please ensure that agent version exist in https://download.appdynamics.com " "${ERR_BAD_RESPONSE}"
   fi
-  echo $fileToDownload
 
+  echo $d_s3_path
 }
 
 # Runs `curl` command to download the agent archive. Network or HTTP failure
@@ -210,7 +203,7 @@ get_download_url() {
 # Args:
 #   $1 - archive download URL.
 do_curl() {
-  if ! curl -qLO -o $2 '\n%{http_code}\n' "$1" >"${HTTP_STATUS_FILE}"; then
+  if ! curl -qLO --write-out '\n%{http_code}\n' "$1" >"${HTTP_STATUS_FILE}"; then
     exit_with_error "failed to download specified agent" "${ERR_NETWORK}"
   fi
 
@@ -240,7 +233,7 @@ download() {
       shift
       url="${1:-}"
       ;;
-    sun-java | ibm-java | machine | machine-win | dotnet)
+    sun-java | ibm-java | machine | machine-win | dotnet | db | db-win)
       [ -n "${agent:-}" ] && exit_bad_args "multiple agents must be downloaded in separate command invocations"
       readonly agent="${1:-}"
       ;;
@@ -254,19 +247,19 @@ download() {
   if [ -z "${agent:-}" ] || [ -z "${version:-}" ]; then
     exit_bad_args "missing one or more of agent type and  version"
   fi
-  
-  download_options "${agent}" 
 
-  readonly s3_path="$(get_download_url ${agent} ${version} )"
- 
+  download_options "${agent}"
+  readonly s3_path="$(get_download_url ${agent} ${version})"
   download_url="${DEFAULT_DOWNLOAD_SITE}/${s3_path}"
-
   echo $download_url
- 
- ############# ALL I NEED IN ANSIBLE is the download path ###################
 
- # Get the archive name.
- # readonly archive_name=$(basename "${download_url}")
+  # cleanup
+  rm -f ${DOWNLOAD_PAGE_OUTPUT}
+
+  ############# ALL I NEED IN ANSIBLE is the download path ###################
+
+  # Get the archive name.
+  # readonly archive_name=$(basename "${download_url}")
 
   # Actual download: curl the URL.
   #info_msg "Downloading ${agent} agent from ${download_url}"
@@ -275,7 +268,7 @@ download() {
   # Validate the downloaded file.
   # ansible - checksum verification not needed..
   #verify "${archive_name}" "${checksum}"
-   ################### ################### ################### ################### ################### 
+  ################### ################### ################### ################### ###################
 }
 
 main() {

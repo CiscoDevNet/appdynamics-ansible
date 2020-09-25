@@ -4,5 +4,8 @@
     - include_role:
         name: getAgent
       vars:
+       agent_version: 20.6.0
+       agent_type: dotnet
+
     
 

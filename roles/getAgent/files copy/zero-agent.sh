@@ -16,17 +16,16 @@ readonly ME="$(basename "$0")"
 readonly HERE=$(CDPATH='' cd "$(dirname "$0")" && pwd -P)
 
 readonly DOWNLOAD_PATH="download-file"
-readonly DEFAULT_DOWNLOAD_SITE="https://download-files.appdynamics.com" 
+readonly DEFAULT_DOWNLOAD_SITE="https://download-files.appdynamics.com"
 
-#ansible agents 
+#ansible agents
 readonly DOTNET_AGENT_ARCHIVE_NAME="dotNetAgentSetup64"
 readonly DOTNET_AGENT_DOWNLOAD_PATH="dotnet"
 
-# DotNetcore link seem to require authentication atm. 
+# DotNetcore link seem to require authentication atm.
 # test https://download.appdynamics.com/download/prox/download-file/dotnet-core/20.7.0/AppDynamics-DotNetCore-linux-x64-20.7.0.zip
 #readonly DOTNET_CORE_AGENT_ARCHIVE_NAME="AppDynamics-DotNetCore-linux-x64"
 #readonly DOTNET_CORE_AGENT_DOWNLOAD_PATH="dotnet-core"
-
 
 readonly JAVA_AGENT_ARCHIVE_NAME="AppServerAgent"
 readonly JAVA_AGENT_DOWNLOAD_PATH="sun-jvm"
@@ -37,7 +36,7 @@ readonly IBM_JAVA_AGENT_DOWNLOAD_PATH="ibm-jvm"
 readonly MACHINE_AGENT_ARCHIVE_NAME="machineagent-bundle-64bit-linux"
 readonly MACHINE_AGENT_DOWNLOAD_PATH="machine-bundle"
 
-#ansible: MA for windows 
+#ansible: MA for windows
 readonly MACHINE_AGENT_ARCHIVE_NAME_WIN="machineagent-bundle-64bit-windows"
 
 readonly ZERO_AGENT_ARCHIVE_NAME="appdynamics-zero-agent"
@@ -45,7 +44,7 @@ readonly ZERO_AGENT_DOWNLOAD_PATH="zero-agent"
 
 readonly ARCHIVE_TYPE="zip"
 
-#ansible 
+#ansible
 readonly WIN_ARCHIVE_TYPE="msi"
 
 readonly HTTP_STATUS_FILE="http_$$.status"
@@ -156,11 +155,11 @@ check_platform_compatibility() {
 # Checks dependencies required by this script. Unmet dependencies result
 # in exit with `ERR_DEPS`.
 check_dependencies() {
-  if ! command -v curl > /dev/null 2>&1; then
+  if ! command -v curl >/dev/null 2>&1; then
     exit_with_error "curl command unavailable" ${ERR_DEPS}
-  elif ! command -v ${MD5} > /dev/null 2>&1; then
+  elif ! command -v ${MD5} >/dev/null 2>&1; then
     exit_with_error "${MD5} command unavailable" ${ERR_DEPS}
-  elif ! command -v "awk" > /dev/null 2>&1; then
+  elif ! command -v "awk" >/dev/null 2>&1; then
     exit_with_error "awk command unavailable" ${ERR_DEPS}
   fi
 }
@@ -183,7 +182,7 @@ get_download_url() {
     echo "$2/${MACHINE_AGENT_DOWNLOAD_PATH}/$3/${MACHINE_AGENT_ARCHIVE_NAME}-$3.${ARCHIVE_TYPE}"
   elif [ "$1" = "zero" ]; then
     echo "$2/${ZERO_AGENT_DOWNLOAD_PATH}/$3/${ZERO_AGENT_ARCHIVE_NAME}-$3.${ARCHIVE_TYPE}"
-   #ansible additions 
+    #ansible additions
   elif [ "$1" = "dotnet" ]; then
     echo "$2/${DOTNET_AGENT_DOWNLOAD_PATH}/$3/${DOTNET_AGENT_ARCHIVE_NAME}-$3.${WIN_ARCHIVE_TYPE}"
   #dotnet-core seem to require authentication
@@ -202,7 +201,7 @@ get_download_url() {
 # Args:
 #   $1 - archive download URL.
 do_curl() {
-  if ! curl -qLO --write-out '\n%{http_code}\n' "$1" > "${HTTP_STATUS_FILE}"; then
+  if ! curl -qLO --write-out '\n%{http_code}\n' "$1" >"${HTTP_STATUS_FILE}"; then
     exit_with_error "failed to download specified agent" "${ERR_NETWORK}"
   fi
 
@@ -213,7 +212,7 @@ do_curl() {
 }
 
 simulate_curl() {
-  if ! curl -qL --write-out '\n%{http_code}\n' "$1" > "${HTTP_STATUS_FILE}"; then
+  if ! curl -qL --write-out '\n%{http_code}\n' "$1" >"${HTTP_STATUS_FILE}"; then
     exit_with_error "failed to download specified agent" "${ERR_NETWORK}"
   fi
 
@@ -278,12 +277,12 @@ do_unzip() {
 # Some Linux distros include a back-level C library, which will not allow the
 # libpreload.so library to load.  We cannot install in this environment.
 test_ldpreload() {
-    SAVE_LDPRELOAD=${LD_PRELOAD:-}
-    export LD_PRELOAD=${PWD}/zeroagent/lib64/libpreload.so
-    ls >/dev/null
-    rc=$?
-    export LD_PRELOAD=${SAVE_LDPRELOAD}
-    return ${rc}
+  SAVE_LDPRELOAD=${LD_PRELOAD:-}
+  export LD_PRELOAD=${PWD}/zeroagent/lib64/libpreload.so
+  ls >/dev/null
+  rc=$?
+  export LD_PRELOAD=${SAVE_LDPRELOAD}
+  return ${rc}
 }
 
 ###################################################################################################################
@@ -297,27 +296,27 @@ test_ldpreload() {
 download() {
   while [ $# -gt 0 ]; do
     case "$1" in
-      -v|--version)
-        [ -n "${version:-}" ] && exit_bad_args "--version already specified"
-        shift
-        readonly version="${1:-}"
-        ;;
-      -c|--checksum)
-        [ -n "${checksum:-}" ] && exit_bad_args "--checksum already specified"
-        shift
-        readonly checksum="${1:-}"
-        ;;
-      -u|--url)
-        shift
-        url="${1:-}"
-        ;;
-      sun-java|ibm-java|machine|machine-win|dotnet|zero)
-        [ -n "${agent:-}" ] && exit_bad_args "multiple agents must be downloaded in separate command invocations"
-        readonly agent="${1:-}"
-        ;;
-      *)
-        exit_bad_args "unknown argument: $1"
-        ;;
+    -v | --version)
+      [ -n "${version:-}" ] && exit_bad_args "--version already specified"
+      shift
+      readonly version="${1:-}"
+      ;;
+    -c | --checksum)
+      [ -n "${checksum:-}" ] && exit_bad_args "--checksum already specified"
+      shift
+      readonly checksum="${1:-}"
+      ;;
+    -u | --url)
+      shift
+      url="${1:-}"
+      ;;
+    sun-java | ibm-java | machine | machine-win | dotnet | zero)
+      [ -n "${agent:-}" ] && exit_bad_args "multiple agents must be downloaded in separate command invocations"
+      readonly agent="${1:-}"
+      ;;
+    *)
+      exit_bad_args "unknown argument: $1"
+      ;;
     esac
     shift
   done
@@ -329,10 +328,10 @@ download() {
   # Get the download URL.
   url="${url:-${DEFAULT_DOWNLOAD_SITE}}"
   readonly download_url=$(get_download_url "${agent}" "${url}/${DOWNLOAD_PATH}" "${version}")
-  
+
   #ansible ->>>>> stop here. Cos all we need is the url
-  echo "$download_url" 
-  #exit 0 
+  echo "$download_url"
+  #exit 0
 
   # Get the archive name.
   readonly archive_name=$(basename "${download_url}")
@@ -386,22 +385,22 @@ main() {
 
   while [ $# -gt 0 ]; do
     case "$1" in
-      download)
-        shift
-        download "$@"
-        exit $?
-        ;;
-      install)
-        shift
-        install "$@"
-        exit $?
-        ;;
-      -h|--help|help)
-        exit_with_usage
-        ;;
-      *)
-        exit_bad_args "unknown command: $1"
-        ;;
+    download)
+      shift
+      download "$@"
+      exit $?
+      ;;
+    install)
+      shift
+      install "$@"
+      exit $?
+      ;;
+    -h | --help | help)
+      exit_with_usage
+      ;;
+    *)
+      exit_bad_args "unknown command: $1"
+      ;;
     esac
     shift
   done
