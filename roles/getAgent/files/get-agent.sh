@@ -169,7 +169,7 @@ download_options() {
 # argument results in exit with `ERR_BAD_ARGS`.
 #
 # Args:
-#   $1 - agent type (java|machine|)
+#   $1 - agent type 
 #   $3 - agent version
 # Returns:
 #   the downlod URL for the specified agent and version.
