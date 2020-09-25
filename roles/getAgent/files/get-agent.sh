@@ -264,7 +264,7 @@ download() {
     rm -f ${DOWNLOAD_PAGE_OUTPUT}
   fi
 
-  ############# ALL I NEED IN ANSIBLE is the download path ###################
+  ############# All we need in ANSIBLE is the download url - not doing the actual curl ###################
 
   # Get the archive name.
   # readonly archive_name=$(basename "${download_url}")
