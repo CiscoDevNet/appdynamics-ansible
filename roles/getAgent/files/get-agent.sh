@@ -22,12 +22,14 @@ readonly ERR_MISSING_LIB_DEPS=8
 readonly ERR_UNSUPPORTED_PLATFORM=9
 readonly ERR_GENERIC=10
 
-APPAGENT=""
-PLATFORM=""
-EUM=""
-EVENTS=""
-VERSION=""
 DOWNLOAD_PAGE_OUTPUT="tmp.json"
+
+#download page search params
+_app_agent=""
+_os_platform=""
+_eum=""
+_events=""
+_version=""
 
 # Switch to the script's directory.
 cd "${HERE}" || exit
@@ -42,7 +44,7 @@ _usage() {
   echo "  -h, --help, help                     Print this help"
   echo
   echo "  download AGENT                       Agent to download (choices: sun-java, ibm-java, machine, machine-win, dotnet)"
-  echo "    -v, --version VERSION              Version number for the supplied agent"
+  echo "    -v, --version _version              Version number for the supplied agent"
   echo
   echo "  install ARGS                         Install Download Agent with the supplied arguments"
 }
@@ -131,33 +133,33 @@ check_dependencies() {
 #sun-java|ibm-java|machine|machine-win|dotnet|db|db-win
 download_options() {
   if [ "$1" = "sun-java" -o "$1" = "java" ]; then
-    APPAGENT="jvm%2Cjava-jdk8" #APPAGENT="jvm"
-    matchString="sun-jvm"
-    PLATFORM="linux"
+    _app_agent="jvm%2Cjava-jdk8" #_app_agent="jvm"
+    _finder="sun-jvm"
+    _os_platform="linux"
   elif [ "$1" = "ibm-java" ]; then
-    APPAGENT="jvm%2Cjava-jdk8"
-    matchString="ibm-jvm"
-    PLATFORM="linux"
+    _app_agent="jvm%2Cjava-jdk8"
+    _finder="ibm-jvm"
+    _os_platform="linux"
   elif [ "$1" = "machine" ]; then
-    APPAGENT="machine"
-    PLATFORM="linux"
-    matchString="machineagent-bundle-64bit-linux"
+    _app_agent="machine"
+    _os_platform="linux"
+    _finder="machineagent-bundle-64bit-linux"
   elif [ "$1" = "machine-windows" -o "$1" = "machine-win" ]; then
-    APPAGENT="machine"
-    PLATFORM="windows"
-    matchString="machineagent-bundle-64bit-windows"
+    _app_agent="machine"
+    _os_platform="windows"
+    _finder="machineagent-bundle-64bit-windows"
   elif [ "$1" = "dotnet" ]; then
-    APPAGENT="dotnet"
-    matchString="dotnet"
-    PLATFORM="windows"
+    _app_agent="dotnet"
+    _finder="dotnet"
+    _os_platform="windows"
   elif [ "$1" = "db" -o "$1" = "dbagent" ]; then
-    APPAGENT="db"
-    matchString="db-agent"
-    PLATFORM="linux"
+    _app_agent="db"
+    _finder="db-agent"
+    _os_platform="linux"
   elif [ "$1" = "db-win" -o "$1" = "db-windows" ]; then
-    APPAGENT="db"
-    matchString="db-agent-winx64"
-    PLATFORM="windows"
+    _app_agent="db"
+    _finder="db-agent-winx64"
+    _os_platform="windows"
   else
     exit_bad_args "unknown agent type: $1"
   fi
@@ -172,11 +174,12 @@ download_options() {
 # Returns:
 #   the downlod URL for the specified agent and version.
 get_download_url() {
-  VERSION="$2"
-  #portal_page="https://download.appdynamics.com/download/downloadfile/?version=${VERSION}&apm=${APPAGENT}&os=${PLATFORM}&platform_admin_os=${PLATFORM}&events=${EVENTS}&eum=${EUM}&apm_os=windows%2Clinux%2Calpine-linux%2Cosx%2Csolaris%2Csolaris-sparc%2Caix"
+  _version="$2"
 
-  portal_page="https://download.appdynamics.com/download/downloadfile/?version=${VERSION}&apm=${APPAGENT}&os=${PLATFORM}&platform_admin_os=${PLATFORM}&events=${EVENTS}&eum=${EUM}&apm_os=${PLATFORM}"
- 
+  #portal_page="https://download.appdynamics.com/download/downloadfile/?version=${_version}&apm=${_app_agent}&os=${_os_platform}&platform_admin_os=${_os_platform}&events=${_events}&eum=${_eum}&apm_os=windows%2Clinux%2Calpine-linux%2Cosx%2Csolaris%2Csolaris-sparc%2Caix"
+
+  portal_page="https://download.appdynamics.com/download/downloadfile/?version=${_version}&apm=${_app_agent}&os=${_os_platform}&platform_admin_os=${_os_platform}&events=${_events}&eum=${_eum}&apm_os=${_os_platform}"
+
   http_response=$(curl -s -o ${DOWNLOAD_PAGE_OUTPUT} -w "%{http_code}" -X GET "$portal_page")
 
   if [ "${http_response}" -ge 400 ] && [ "${http_code}" -lt 600 ]; then
@@ -187,10 +190,10 @@ get_download_url() {
     exit_with_error "None 200 response code: ${http_response}" "${ERR_GENERIC}"
   fi
 
-  processed_payload=$(cat ${DOWNLOAD_PAGE_OUTPUT} | jq "first(.results[]  | select(.s3_path | test(\"${matchString}\"))) | .")
-
+  processed_payload=$(cat ${DOWNLOAD_PAGE_OUTPUT} | jq "first(.results[]  | select(.s3_path | test(\"${_finder}\"))) | .")
   readonly d_s3_path=$(echo ${processed_payload} | jq -r .s3_path)
-  if [ -z "$d_s3_path" ]; then
+
+  if [ -z "$d_s3_path" ] || [ "$d_s3_path" = "" ]; then
     exit_with_error "Could not download your request ${1}. Please ensure that agent version exist in https://download.appdynamics.com " "${ERR_BAD_RESPONSE}"
   fi
 
@@ -249,12 +252,17 @@ download() {
   fi
 
   download_options "${agent}"
-  readonly s3_path="$(get_download_url ${agent} ${version})"
-  download_url="${DEFAULT_DOWNLOAD_SITE}/${s3_path}"
-  echo $download_url
+  readonly s3_download_uri="$(get_download_url ${agent} ${version})"
 
-  # cleanup
-  rm -f ${DOWNLOAD_PAGE_OUTPUT}
+  if [ -z "$s3_download_uri" ] || [ "$s3_download_uri" = "" ]; then
+    exit_with_error "Could not download your request . Please ensure that agent version exist in https://download.appdynamics.com " "${ERR_BAD_RESPONSE}"
+  else
+
+    download_url="${DEFAULT_DOWNLOAD_SITE}/${s3_download_uri}"
+    echo $download_url
+    #clean up when all is OK
+    rm -f ${DOWNLOAD_PAGE_OUTPUT}
+  fi
 
   ############# ALL I NEED IN ANSIBLE is the download path ###################
 
