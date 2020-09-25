@@ -8,7 +8,6 @@ readonly ME="$(basename "$0")"
 readonly HERE=$(CDPATH='' cd "$(dirname "$0")" && pwd -P)
 
 readonly DEFAULT_DOWNLOAD_SITE="https://download-files.appdynamics.com"
-
 readonly HTTP_STATUS_FILE="http_$$.status"
 
 readonly ERR_HELP=1
@@ -100,6 +99,8 @@ exit_bad_args() {
 # Removes temporary file during exit or interrupt.
 cleanup() {
   rm -f "${HTTP_STATUS_FILE}"
+  rm -f ${DOWNLOAD_PAGE_OUTPUT}
+
 }
 trap cleanup EXIT TERM INT
 
@@ -108,7 +109,6 @@ trap cleanup EXIT TERM INT
 ###################################################################################################################
 
 # Checks if the platform operating system and machine hardware are
-# compatible with the zero agent. Incompatibility results in exiting
 # with `ERR_UNSUPPORTED_PLATFORM`.
 check_platform_compatibility() {
   if [ "${OS}" != "Linux" ] || [ "${ARCH}" != "x86_64" ]; then
@@ -175,7 +175,6 @@ download_options() {
 #   the downlod URL for the specified agent and version.
 get_download_url() {
   _version="$2"
-
   #portal_page="https://download.appdynamics.com/download/downloadfile/?version=${_version}&apm=${_app_agent}&os=${_os_platform}&platform_admin_os=${_os_platform}&events=${_events}&eum=${_eum}&apm_os=windows%2Clinux%2Calpine-linux%2Cosx%2Csolaris%2Csolaris-sparc%2Caix"
 
   portal_page="https://download.appdynamics.com/download/downloadfile/?version=${_version}&apm=${_app_agent}&os=${_os_platform}&platform_admin_os=${_os_platform}&events=${_events}&eum=${_eum}&apm_os=${_os_platform}"
@@ -216,6 +215,16 @@ do_curl() {
   fi
 }
 
+verify() {
+  readonly archive="$1"
+
+  # Check if we actually have a file.
+  if [ ! -f "${archive_name}" ]; then
+    exit_with_error "missing archive: ${archive}" "${ERR_MISSING_ARCHIVE}"
+  fi
+  info_msg "Successfully downloaded ${archive}"
+}
+
 ###################################################################################################################
 #                                             COMMAND FUNCTIONS                                                   #
 ###################################################################################################################
@@ -236,6 +245,10 @@ download() {
       shift
       url="${1:-}"
       ;;
+    -d | --dryrun)
+      shift
+      dryrun="true"
+      ;;
     sun-java | ibm-java | machine | machine-win | dotnet | db | db-win)
       [ -n "${agent:-}" ] && exit_bad_args "multiple agents must be downloaded in separate command invocations"
       readonly agent="${1:-}"
@@ -251,32 +264,30 @@ download() {
     exit_bad_args "missing one or more of agent type and  version"
   fi
 
+  if [ -z "${dryrun:-}" ]; then
+    dryrun="false"
+  fi
+
+  #Call download options
   download_options "${agent}"
   readonly s3_download_uri="$(get_download_url ${agent} ${version})"
 
   if [ -z "$s3_download_uri" ] || [ "$s3_download_uri" = "" ]; then
     exit_with_error "Could not download your request . Please ensure that agent version exist in https://download.appdynamics.com " "${ERR_BAD_RESPONSE}"
-  else
 
+  elif [ "${dryrun}" = "true" ]; then
     download_url="${DEFAULT_DOWNLOAD_SITE}/${s3_download_uri}"
     echo $download_url
-    #clean up when all is OK
-    rm -f ${DOWNLOAD_PAGE_OUTPUT}
+    cleanup
+  else
+    download_url="${DEFAULT_DOWNLOAD_SITE}/${s3_download_uri}"
+    # Get the archive name.
+    readonly archive_name=$(basename "${download_url}")
+    do_curl "${download_url}"
+    verify "${archive_name}"
+   cleanup
   fi
 
-  ############# All we need in ANSIBLE is the download url - not doing the actual curl ###################
-
-  # Get the archive name.
-  # readonly archive_name=$(basename "${download_url}")
-
-  # Actual download: curl the URL.
-  #info_msg "Downloading ${agent} agent from ${download_url}"
-  #do_curl "${download_url}"
-
-  # Validate the downloaded file.
-  # ansible - checksum verification not needed..
-  #verify "${archive_name}" "${checksum}"
-  ################### ################### ################### ################### ###################
 }
 
 main() {

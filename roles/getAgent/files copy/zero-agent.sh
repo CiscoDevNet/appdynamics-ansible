@@ -135,6 +135,8 @@ exit_bad_args() {
 # Removes temporary file during exit or interrupt.
 cleanup() {
   rm -f "${HTTP_STATUS_FILE}"
+  rm -f ${DOWNLOAD_PAGE_OUTPUT}
+
 }
 trap cleanup EXIT TERM INT
 
