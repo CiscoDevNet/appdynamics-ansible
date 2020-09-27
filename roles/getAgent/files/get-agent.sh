@@ -42,10 +42,10 @@ _usage() {
   echo "Usage: $ME [OPTIONS...]"
   echo "  -h, --help, help                     Print this help"
   echo
-  echo "  download AGENT                       Agent to download (choices: sun-java, ibm-java, machine, machine-win, dotnet)"
-  echo "    -v, --version _version              Version number for the supplied agent"
+  echo "  download AGENT                       Agent to download (choices: sun-java | java | sun-java8 | java8 | ibm-java | machine | machine-win | dotnet | dotnet-core | db | db-win)"
+  echo "    -v, --version  version             Version number for the supplied agent"
+  echo "    -d, --dryrun                       Rturns only the download URL if specificed, it is recommended to use this arg for provisioning tools such as ansible, chef, etc "
   echo
-  echo "  install ARGS                         Install Download Agent with the supplied arguments"
 }
 
 # Prints an error message with an 'ERROR' prefix to stderr.
@@ -113,7 +113,7 @@ trap cleanup EXIT TERM INT
 check_platform_compatibility() {
   if [ "${OS}" != "Linux" ] || [ "${ARCH}" != "x86_64" ]; then
     exit_with_error "Unsupported operating system or machine architecture: ${OS} ${ARCH}. \
-      Cannot install" ${ERR_UNSUPPORTED_PLATFORM}
+      Cannot use get-agent" ${ERR_UNSUPPORTED_PLATFORM}
   fi
 }
 
@@ -130,11 +130,14 @@ check_dependencies() {
 }
 
 #Supported agent types:
-#sun-java|ibm-java|machine|machine-win|dotnet|db|db-win
 download_options() {
   if [ "$1" = "sun-java" -o "$1" = "java" ]; then
     _app_agent="jvm%2Cjava-jdk8" #_app_agent="jvm"
     _finder="sun-jvm"
+    _os_platform="linux"
+  elif [ "$1" = "sun-java8" -o "$1" = "java8" ]; then
+    _app_agent="jvm%2Cjava-jdk8"
+    _finder="java-jdk8"
     _os_platform="linux"
   elif [ "$1" = "ibm-java" ]; then
     _app_agent="jvm%2Cjava-jdk8"
@@ -144,7 +147,7 @@ download_options() {
     _app_agent="machine"
     _os_platform="linux"
     _finder="machineagent-bundle-64bit-linux"
-  elif [ "$1" = "machine-windows" -o "$1" = "machine-win" ]; then
+  elif [ "$1" = "machine-win" ]; then
     _app_agent="machine"
     _os_platform="windows"
     _finder="machineagent-bundle-64bit-windows"
@@ -152,11 +155,17 @@ download_options() {
     _app_agent="dotnet"
     _finder="dotnet"
     _os_platform="windows"
-  elif [ "$1" = "db" -o "$1" = "dbagent" ]; then
+  
+  elif [ "$1" = "dotnet-core" ]; then
+    _app_agent="dotnet,dotnet-core"
+    _finder="AppDynamics-DotNetCore-linux-x64"
+    _os_platform="linux"
+
+  elif [ "$1" = "db" -o ]; then
     _app_agent="db"
     _finder="db-agent"
     _os_platform="linux"
-  elif [ "$1" = "db-win" -o "$1" = "db-windows" ]; then
+  elif [ "$1" = "db-win" ]; then
     _app_agent="db"
     _finder="db-agent-winx64"
     _os_platform="windows"
@@ -164,6 +173,7 @@ download_options() {
     exit_bad_args "unknown agent type: $1"
   fi
 }
+
 
 # Returns the download URL for the provided agent and version. Incorrect
 # argument results in exit with `ERR_BAD_ARGS`.
@@ -215,6 +225,12 @@ do_curl() {
   fi
 }
 
+
+# Verifies that the agent archive file is actually downloaded AND the on-disk
+# with `ERR_MISSING_ARCHIVE` if the specified archive file is missing and
+#
+# Args:
+#   $1 - name of the downloaded archive file
 verify() {
   readonly archive="$1"
 
@@ -225,6 +241,28 @@ verify() {
   info_msg "Successfully downloaded ${archive}"
 }
 
+
+# Extract the spicified agent into specified directory
+# Args:
+#   $1 - name prefix of the specified agent.
+#   $2 - directory name. Default current directory.
+#   $3 - exit if file does not exists. Default : true
+do_unzip() {
+  agent_directory_name=${2:-}
+  fail_if_not_exists=${3:-true}
+  agent_artifact=$1
+  if [ -f "${agent_artifact}" ]; then
+    if [ ! -d "${agent_directory_name}" ]; then
+      info_msg "Extracting ${agent_artifact}..."
+      if ! unzip -q -o -d "${agent_directory_name}" "${agent_artifact}"; then
+        exit_with_error "Failed to extract ${agent_artifact}" ${ERR_INTEGRITY}
+      fi
+    fi
+  elif ${fail_if_not_exists}; then
+    exit_with_error "Failed to discover agent artifact with prefix ${agent_artifact}" ${ERR_MISSING_ARCHIVE}
+  fi
+}
+
 ###################################################################################################################
 #                                             COMMAND FUNCTIONS                                                   #
 ###################################################################################################################
@@ -232,7 +270,7 @@ verify() {
 # Implements the `download` sub-command. This involves downloading the
 # specified agent and verifying its integrity.
 #
-# Args: [sun-java|ibm-java|machine|machine-win|dotnet] --version VERSION
+# Args: [agent-type] --version VERSION --dryrun
 download() {
   while [ $# -gt 0 ]; do
     case "$1" in
@@ -249,7 +287,7 @@ download() {
       shift
       dryrun="true"
       ;;
-    sun-java | ibm-java | machine | machine-win | dotnet | db | db-win)
+    sun-java | java | sun-java8 | java8 | ibm-java | machine | machine-win | dotnet | dotnet-core | db | db-win)
       [ -n "${agent:-}" ] && exit_bad_args "multiple agents must be downloaded in separate command invocations"
       readonly agent="${1:-}"
       ;;
@@ -285,6 +323,7 @@ download() {
     readonly archive_name=$(basename "${download_url}")
     do_curl "${download_url}"
     verify "${archive_name}"
+    do_unzip "${archive_name}" "${agent}-${version}"
    cleanup
   fi
 
