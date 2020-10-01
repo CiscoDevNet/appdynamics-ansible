@@ -1,25 +1,13 @@
 - name: Validate parameters
   include: validate_parameters.yml
 
-- name:  Set Installation facts - specific to Nexus
-  set_fact:
-    machine_agent_search_parameters: "r={{ nexus.appd.repositoryId }}&g={{ nexus.appd.groupId }}&a={{ nexus.appd.machine_agent_artifactId }}&v={{ nexus.appd.machine_agent_version }}&p={{ nexus.appd.machine_agent_packaging }}"
-    application_agent_search_parameters: "r={{ nexus.appd.repositoryId }}&g={{ nexus.appd.groupId }}&a={{ nexus.appd.application_agent_artifactId }}&v={{ nexus.appd.application_agent_version }}&p={{ nexus.appd.application_agent_packaging }}"
+- name: "Get {{agent_type}}:{{agent_version}} Agent"
+  include: get_agents.yml
 
-- name: Set AppDynamics controller and account facts - Production Controller 
-  when: application_environment|lower is match('prod.*')
+- name: Set AppDynamics controller and account facts 
   set_fact:
-    account_access_key: "{{ controller_environment.production.access_key }}"
-    account_name: "{{ controller_environment.production.account_name }}"
-    global_analytics_account_name: "{{ controller_environment.production.global_account_name}}"
-    controller_host_name: "{{ controller_environment.production.host_name }}"
-  no_log: yes
-
-- name: Set AppDynamics controller and account facts - NonProduction Controller 
-  when: application_environment|lower is not match('prod.*')
-  set_fact:
-    account_access_key: "{{ controller_environment.nonproduction.access_key }}"
-    account_name: "{{ controller_environment.nonproduction.account_name }}"
-    global_analytics_account_name: "{{ controller_environment.nonproduction.global_account_name}}"
-    controller_host_name: "{{ controller_environment.nonproduction.host_name }}"
+    controller_account_access_key: "{{ controller_account_access_key }}"
+    controller_account_name: "{{ controller_account_name }}"
+    controller_global_analytics_account_name: "{{ controller_global_analytics_account_name }}"
+    controller_host_name: "{{ controller_host_name }}"
   no_log: yes

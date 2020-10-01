@@ -1,5 +1,15 @@
 ---
 
+- name: Validate agent_type
+  assert:
+    that:  agent_type is defined
+    msg: 'agent type must be provided. Refer to https://github.com/Appdynamics/download-appdynamcis-agents#supported-agent-types'
+
+- name: Validate agent_version 
+  assert:
+    that:  agent_version is defined
+    msg: 'The version of the agent must be provided.'
+
 - name: Validate application_environment
   assert:
     that: application_environment is defined
@@ -9,13 +19,35 @@
   assert:
     that:  application_name is defined
     msg: 'An application_name must be provided'
+  when: agent_type|lower is not match('machine.*','db.*')
 
 - name: Validate tier_name 
   assert:
     that:  tier_name is defined
     msg: 'A tier name must be provided'
+  when: agent_type|lower is not match('machine.*','db*')
 
-#- name: Validate aws_region
-#  assert:
-#    that: aws_region is defined
-#   msg: 'A aws region must be provided'    
+- name: Validate controller_account_access_key
+  assert:
+    that:  controller_account_access_key is defined
+    msg: 'A controller_account_access_key must be provided'
+
+- name: Validate controller_global_analytics_account_name
+  assert:
+    that:  controller_global_analytics_account_name is defined
+    msg: 'A controller_global_analytics_account_name must be provided'
+
+- name: Validate controller_host_name
+  assert:
+    that:  controller_host_name is defined
+    msg: 'A controller_host_name must be provided'
+
+- name: Validate controller_account_name
+  assert:
+    that:  controller_account_name is defined
+    msg: 'A controller_account_name must be provided'
+
+- name: Validate analytics_event_endpoint
+  assert:
+    that:  analytics_event_endpoint is defined
+    msg: 'A analytics_event_endpoint must be provided'
