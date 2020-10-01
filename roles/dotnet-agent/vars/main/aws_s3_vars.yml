@@ -1,6 +1,0 @@
----
-aws_s3_: # The additional `_` is to avoid conflict with the aws_s3 module
-  bucket_name: appd-ansible-agents
-  object_keys:
-    dotnet_agent: windows/dotNetAgentSetup64-20.8.0.msi
-    machine_agent: windows/machineagent-bundle-64bit-windows-20.8.0.2713.zip

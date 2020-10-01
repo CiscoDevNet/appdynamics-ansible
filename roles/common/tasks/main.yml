@@ -2,12 +2,12 @@
   include: validate_parameters.yml
 
 - name: "Get {{agent_type}}:{{agent_version}} Agent"
-  include: get_agents.yml
+  include: get_agent.yml
 
-- name: Set AppDynamics controller and account facts 
+- name: Set AppDynamics controller and account facts
   set_fact:
-    controller_account_access_key: "{{ controller_account_access_key }}"
-    controller_account_name: "{{ controller_account_name }}"
-    controller_global_analytics_account_name: "{{ controller_global_analytics_account_name }}"
+    account_access_key: "{{ controller_account_access_key }}"
+    account_name: "{{ controller_account_name }}"
+    global_analytics_account_name: "{{ controller_global_analytics_account_name }}"
     controller_host_name: "{{ controller_host_name }}"
   no_log: yes

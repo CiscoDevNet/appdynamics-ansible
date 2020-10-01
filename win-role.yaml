@@ -2,7 +2,7 @@
 - hosts: windows
   tasks:
     - include_role:
-        name: windows
+        name: dotnet-agent
       vars:
         # Define Agent Type and Version 
         agent_version: 20.6.0

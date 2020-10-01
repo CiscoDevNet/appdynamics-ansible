@@ -156,7 +156,7 @@ download_options() {
     _finder="machineagent-bundle-64bit-windows"
   elif [ "$1" = "dotnet" ]; then
     _app_agent="dotnet"
-    _finder="dotnet"
+    _finder="dotNetAgentSetup64"
     _os_platform="windows"
   
   elif [ "$1" = "dotnet-core" ]; then
