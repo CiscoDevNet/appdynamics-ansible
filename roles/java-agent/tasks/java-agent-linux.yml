@@ -1,0 +1,49 @@
+
+# App owners would either need the chown the entire agent folder to their app's user  OR grant their app's user read/write access to the agent folder 
+- name: Ensures application agent {{java_agent_dest_folder_linux}} dir exists
+  file: 
+    #path: "{{ java_agent_dest_folder_linux }}/"
+
+    path: /tmp/java-agent
+    state: directory     
+    mode: 0755
+    recurse: yes
+    owner: appdynamics 
+    group: appdynamics
+
+- name: Download Java Agent on  {{ ansible_hostname }}
+  get_url:
+    url: '{{ agent_download_url.stdout }}'
+    dest: '/tmp/java-agent/{{ app_agent_dest_file }}'
+    force: 'true'
+    become: true
+
+- name: Unarchive the application agent file
+  unarchive: 
+    src: "/tmp/java-agent/{{ app_agent_dest_file }}"
+    dest: "{{ java_agent_dest_folder_linux }}"
+    owner: appdynamics
+    group: appdynamics    
+    copy: no
+
+- name: Install java-agent config
+  template:
+    src: templates/application-agent-controller-info.xml.j2
+    dest: '{{ java_agent_dest_folder_linux }}/conf/controller-info.xml'
+    owner: appdynamics
+    group: appdynamics
+    mode: 0755  
+
+- name: Verify java agent config
+  command: less  '{{ java_agent_dest_folder_linux }}/conf/controller-info.xml'
+  register: content
+  ignore_errors: yes
+
+- name: Show config file content
+  debug:
+    var: content
+
+- name: Clean up - remove {{ app_agent_dest_file }} 
+  file:
+    path: "{{ java_agent_dest_folder_linux }}/{{ app_agent_dest_file }}"
+    state: absent

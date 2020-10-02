@@ -7,12 +7,4 @@
     state: present
     name:
     - unzip
-
-# needed for AWS S3  boto3 and botocore 
-- name: Install Python and pip for Debian variants
-  apt:
-    name:
-      - python3
-      - python3-pip
-    state: present
-
+    - acl
