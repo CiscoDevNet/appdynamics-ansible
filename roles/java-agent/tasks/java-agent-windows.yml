@@ -1,0 +1,28 @@
+
+# App owners would either need to chown the entire agent folder to their app's user  OR grant their app's user read/write access to the agent folder 
+- name: Ensures application agent {{java_agent_dest_folder_win}} dir exists
+  win_file: 
+    path: "{{ java_agent_dest_folder_win }}/"
+    state: directory     
+  
+- name: Downloading Java Agent on targets
+  win_get_url:
+    url: '{{ agent_download_url.stdout }}'
+    dest: '{{ java_agent_dest_folder_win }}/{{ java_agent_dest_file }}'
+    force: 'true'
+
+- name: Unarchive the application agent file
+  win_unzip: 
+    src: "{{ java_agent_dest_folder_win }}/{{ java_agent_dest_file }}"
+    dest: "{{ java_agent_dest_folder_win }}"  
+    copy: no
+
+- name: Install java-agent config
+  template:
+    src: templates/application-agent-controller-info.xml.j2
+    dest: '{{ java_agent_dest_folder_win }}/conf/controller-info.xml'
+
+- name: Clean up - remove {{ java_agent_dest_file }} 
+  win_file:
+    path: "{{ java_agent_dest_folder_win }}/{{ java_agent_dest_file }}"
+    state: absent

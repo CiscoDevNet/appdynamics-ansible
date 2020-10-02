@@ -1,10 +1,9 @@
 ---
-- name: Upgrade all apt packages
-  apt: update_cache=yes force_apt_get=yes
+#- name: update apt cache
+#  apt: update_cache=yes force_apt_get=yes
 
 - name: install tools and pre-requisites for Debian variants
   apt:
     state: present
     name:
     - unzip
-    - acl

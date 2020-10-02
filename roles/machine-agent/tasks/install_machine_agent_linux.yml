@@ -1,4 +1,6 @@
 
+- name: Create appdynamics sudoer user 
+  include: appd_sudoer.yml
 
 - name: Ensures machine agent {{machine_agent_dest_folder_linux}} dir exists
   file: 

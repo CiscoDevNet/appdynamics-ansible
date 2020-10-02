@@ -1,19 +1,19 @@
 
 - name: Ensures application agent dir exists
   win_file:
-    path: "{{ dot_agent_dest_folder_win }}\\"
+    path: "{{ dotnet_agent_dest_folder_win }}\\"
     state: directory
 
 - name: Download DotNet Agent MSI 
   win_get_url:
      url: '{{ agent_download_url.stdout }}'
-     dest: '{{ dot_agent_dest_folder_win }}\\{{ dotnet_agent_dest_file }}'
+     dest: '{{ dotnet_agent_dest_folder_win }}\\{{ dotnet_agent_dest_file }}'
      force: 'true'
 
 - name: Configure Winston conf file
   template:
     src: templates/application-agent-controller-info.xml.j2
-    dest: "{{ dot_agent_dest_folder_win }}\\controller-info.xml"
+    dest: "{{ dotnet_agent_dest_folder_win }}\\controller-info.xml"
     force: yes
 
 
@@ -22,11 +22,11 @@
   #become_method: runas
   #become_user: Administrator
   win_package: 
-    path: "{{ dot_agent_dest_folder_win }}\\{{ dotnet_agent_dest_file }}"
+    path: "{{ dotnet_agent_dest_folder_win }}\\{{ dotnet_agent_dest_file }}"
     #path: C:\appdynamics\dotnet-agent\dotNetAgentSetup64.msi
-    arguments: "AD_SetupFile={{ dot_agent_dest_folder_win }}\\controller-info.xml"
+    arguments: "AD_SetupFile={{ dotnet_agent_dest_folder_win }}\\controller-info.xml"
     product_id: "{84B2C875-943E-4E0B-A231-8174D42E01C0}"
-    #log_path: "{{ dot_agent_dest_folder_win }}"
+    #log_path: "{{ dotnet_agent_dest_folder_win }}"
     state: present
   register: install_app_agent_result
 
@@ -36,5 +36,5 @@
     
 - name: Clean up - remove {{ dotnet_agent_dest_file }} 
   win_file:
-    path: "{{ dot_agent_dest_folder_win }}\\{{ dotnet_agent_dest_file }}"
+    path: "{{ dotnet_agent_dest_folder_win }}\\{{ dotnet_agent_dest_file }}"
     state: absent

@@ -1,4 +1,5 @@
 ---
+host_name: '{{ ansible_hostname }}' # computername/hostname of the target machine 
 
 # DB Agent Linux
 db_agent_dest_folder_linux: /opt/appdynamics/db-agent
@@ -18,9 +19,12 @@ ma_agent_dest_file: machine-agent.zip
 machine_agent_hierarchy_root: ACME 
 
 # DotNet Agent Win
-dot_agent_dest_folder_win: C:\\appdynamics\\dotnet-agent # '/' does not work with win_package
+dotnet_agent_dest_folder_win: C:\\appdynamics\\dotnet-agent # '/' does not work with win_package due to msiexec. 
 dotnet_agent_dest_file: dotNetAgentSetup64.msi
 
 # Java Agent Linux 
 java_agent_dest_folder_linux: /opt/appdynamics/java-agent
-app_agent_dest_file: java-agent.zip
+java_agent_dest_file: java-agent.zip
+
+# Java Agent Windows 
+java_agent_dest_folder_win: C:/appdynamics/java-agent

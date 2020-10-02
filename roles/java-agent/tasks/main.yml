@@ -1,3 +1,8 @@
 - name: Download Java Agent on Linux 
   include: java-agent-linux.yml
   when: ansible_os_family == 'RedHat' or  ansible_os_family == 'Debian'
+  become: true
+
+- name: Download Java Agent on Windows 
+  include: java-agent-windows.yml
+  when: ansible_os_family == 'Windows'
