@@ -25,6 +25,7 @@ before_script:
 
 script:
   # Run tests.
+  - ansible-test sanity --docker default -v
   - ansible-test integration --color --docker ubuntu1804
 
 deploy:
