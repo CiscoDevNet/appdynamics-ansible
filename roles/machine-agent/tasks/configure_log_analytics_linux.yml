@@ -13,9 +13,9 @@
     regexp: "^{{ item.setting }}"
     line: "{{ item.setting }}{{ item.value }}"
   with_items:
-    - { setting: 'ad.agent.name=', value: '{{ tier_name }}-ag' }
+    #- { setting: 'ad.agent.name=', value: '{{ tier_name }}-ag' }
     - { setting: 'http.event.endpoint=', value: '{{ analytics_event_endpoint }}' }
-    - { setting: 'ad.controller.url=', value: 'https://{{ controller_host_name }}:443' } #TODO : provide the option of HTTP(S) and port as params
+    - { setting: 'ad.controller.url=', value: '{{ controller_protocol }}://{{ controller_host_name }}:{{ controller_port }}' } 
     - { setting: 'http.event.accountName=', value: '{{ global_analytics_account_name }}' }
     - { setting: 'http.event.accessKey=', value: '{{ account_access_key }}' }
     - { setting: 'http.event.name=', value: '{{ account_name }}' }

@@ -8,5 +8,3 @@
     - name: Check debian os requirements
       include: debian_server_requirements.yml
       when: "ansible_os_family == 'Debian'"
-
-    

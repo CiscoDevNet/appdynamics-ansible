@@ -7,53 +7,31 @@
     path: "{{ machine_agent_dest_folder_linux }}/"
     state: directory     
     mode: 0755
-    owner: appdynamics
-    group: appdynamics
+    owner: "{{ appdynamics_user }}"
+    group: "{{ appdynamics_user }}"
 
 
-- name: Install boto3 and botocore using pip3 
-  pip:
-      name: 
-      - boto3
-      - botocore
-      executable: pip3 # --user
-
-- name: Get Machine Agent from AWS S3
-  vars:
-      ansible_python_interpreter: /usr/bin/python3 
-  aws_s3: 
-    bucket: "{{ aws_s3_.bucket_name }}"
-    object: "{{ aws_s3_.object_keys.machine_agent }}"
+- name: Downloading Machine Agent to targets
+  get_url:
+    url: '{{ agent_download_url.stdout }}'
     dest: "{{ machine_agent_dest_folder_linux }}/{{ ma_agent_dest_file }}"
-    mode: get
-    aws_access_key: "{{ aws_access_key }}"
-    aws_secret_key: "{{ aws_secret_key }}"
+    force: 'true'
 
-# Nexus example 
-#- name: Unzip machine agent file
-#  unarchive: 
-#    src: '{{ nexus.base_url }}?{{ machine_agent_search_parameters }}'
-#    dest: "{{ machine_agent_dest_folder_linux }}"
-#    owner: appdynamics
-#    group: appdynamics
-#    copy: no
-#    creates: "{{ machine_agent_dest_folder_linux }}/bin/machine-agent"
-
-- name: Unzip machine agent file
+- name: Unzip the Machine agent file
   unarchive: 
     src:  "{{ machine_agent_dest_folder_linux }}/{{ ma_agent_dest_file }}"
     dest: "{{ machine_agent_dest_folder_linux }}"
-    owner: appdynamics
-    group: appdynamics
-    copy: no
+    owner: "{{ appdynamics_user }}"
+    group: "{{ appdynamics_user }}"
     creates: "{{ machine_agent_dest_folder_linux }}/bin/machine-agent"
+    copy: no
 
 - name: Configure Machine Agent controller-info.xml file 
   template:
     src: templates/machine-agent-controller-info.xml.j2
-    dest: '{{ machine_agent_dest_folder_linux }}/conf/controller-info.xml' # its best to ver-xxx folder, do this by introducing a versionvariable 
-    owner: appdynamics
-    group: appdynamics
+    dest: '{{ machine_agent_dest_folder_linux }}/conf/controller-info.xml' 
+    owner: "{{ appdynamics_user }}"
+    group: "{{ appdynamics_user }}"
     mode: 0755  
 
 - name: Ensure machine agent file is executable

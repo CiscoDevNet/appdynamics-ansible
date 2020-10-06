@@ -20,14 +20,14 @@
     This can be overridden with the environment variable 'APPDYNAMICS_CONTROLLER_PORT' or the system property
     '-Dappdynamics.controller.port'  -->
 
-    <controller-port>443</controller-port>
+    <controller-port>{{ controller_port }}</controller-port>
 
     <!--  This specifies if the AppDynamics agent should use SSL (HTTPS) to connect to the Controller. If you set this to
     true, the controller port property above should be set to the HTTPS port of the Controller. This can be overridden
     with the environment variable 'APPDYNAMICS_CONTROLLER_SSL_ENABLED' or the system property
     '-Dappdynamics.controller.ssl.enabled'  -->
 
-    <controller-ssl-enabled>true</controller-ssl-enabled>
+    <controller-ssl-enabled>{{ ssl_enabled }}</controller-ssl-enabled>
 
     <!--  Set this flag to 'true' to enable features required for AppDynamics Orchestration, including the following:
     1) Enables the agent to execute tasks specified in AppDynamics Orchestration workflows.
@@ -66,7 +66,7 @@
     metrics. This can be overridden with the environment variable 'APPDYNAMICS_SIM_ENABLED' or the system property
     '-Dappdynamics.sim.enabled'  -->
 
-    <sim-enabled>true</sim-enabled>
+    <sim-enabled>{{ sim_enabled }}</sim-enabled>
 
     <!--  This value is used to create the hierarchy infrastructure view in the UI for this machine. Each hierarchy level
     should be separated with a vertical bar ("|"). For example, if this machine belongs to "DataRack1" and it is located
@@ -78,7 +78,7 @@
 
     Note: The number of characters up to but not including the last vertical bar must not exceed 95.  -->
 
-    <machine-path>{{ machine_agent_hierarchy_root }}|{{ application_environment }}|{{ tier_name }}|{{ host_name }}</machine-path>
+    <machine-path>{{ machine_agent_hierarchy_root }}|{{ application_environment }}|{{ host_name }}</machine-path>
 
 </controller-info>
 

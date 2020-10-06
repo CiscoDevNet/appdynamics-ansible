@@ -28,3 +28,6 @@ java_agent_dest_file: java-agent.zip
 
 # Java Agent Windows 
 java_agent_dest_folder_win: C:/appdynamics/java-agent
+
+#wheel user for Machine agent 
+appdynamics_user: appdynamics

@@ -1,53 +1,15 @@
 
-###### Note #########
-## Unlike Linux, Windows is unable to use the aws-s3 module because Ansible doesn't quite support running Python modules on Windows. 
-# The workaround this limiation, we will download the agents from S3 to the Ansible controller then copy the files to the Windows host
-- name: Check Ansibile controller OS requirements - RedHat
-  include: ../linux/tasks/rhel_server_requirements.yml
-  when: "ansible_os_family == 'RedHat'"
-  delegate_to: localhost
-  
-- name:  Check Ansibile controller OS requirements - Debian
-  include: ../linux/tasks/debian_server_requirements.yml
-  when: "ansible_os_family == 'Debian'"
-  delegate_to: localhost   
-
 - name: Ensures machine agent {{machine_agent_dest_folder_win}} dir exists
   win_file:
     path: "{{ machine_agent_dest_folder_win }}"
     state: directory
 
-# if you're using Nexus...
-#- name:  Download Windows Machine Agent from Nexus
-# win_get_url:
-#    url: '{{ nexus.base_url }}?{{ machine_agent_search_parameters }}'
-#    dest: '{{ temp_folder }}{{ dest_file }}'
-#    force: 'true'
 
-- name: Install boto3 and botocore using pip3 
-  pip:
-      name: 
-      - boto3
-      - botocore
-      executable: pip3 # --user
-  delegate_to: localhost      
-  
-- name: Download Windows Machine Agent from S3
-  vars:
-      ansible_python_interpreter: python3  #or /usr/bin/python3
-  aws_s3: 
-    bucket: "{{ aws_s3_.bucket_name }}"
-    object: "{{ aws_s3_.object_keys.machine_agent }}"
-    dest: "{{ temp_dir }}/{{ ma_agent_dest_file }}"
-    aws_access_key: "{{ aws_access_key }}"
-    aws_secret_key: "{{ aws_secret_key }}"
-    mode: get
-  delegate_to: localhost # the download is done on the ansible controler
-
-- name: Copy agent from Ansible controller to Windows host
-  win_copy:
-    src: "{{ temp_dir }}/{{ ma_agent_dest_file }}"
+- name: Downloading Windows Machine Agent on targets
+  win_get_url:
+    url: "{{ agent_download_url.stdout }}"
     dest: "{{ machine_agent_dest_folder_win }}/{{ ma_agent_dest_file }}"
+    force: 'true'
 
 - name: Unzip machine agent file
   win_unzip:
@@ -75,8 +37,6 @@
 - name: Configure the analytics agent
   include: configure_log_analytics_win.yml
   when: enable_analytics_agent == true
-
-
 
 - name: 'Install machine agent service'
   win_command: cscript.exe "{{ machine_agent_dest_folder_win }}/InstallService.vbs"

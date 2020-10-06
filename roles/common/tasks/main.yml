@@ -4,10 +4,36 @@
 - name: "Get {{agent_type}}:{{agent_version}} Agent"
   include: get_agent.yml
 
-- name: Set AppDynamics controller and account facts
+
+- name: Set AppDynamics access key facts
   set_fact:
     account_access_key: "{{ controller_account_access_key }}"
+  no_log: yes
+
+- name: Set AppDynamics controller facts
+  set_fact:
     account_name: "{{ controller_account_name }}"
     global_analytics_account_name: "{{ controller_global_analytics_account_name }}"
     controller_host_name: "{{ controller_host_name }}"
-  no_log: yes
+    analytics_event_endpoint: "{{ analytics_event_endpoint }}"
+    sim_enabled: "{{ sim_enabled }}"
+    ssl_enabled: "{{ ssl_enabled }}"
+    controller_port: "{{ controller_port }}"
+    enable_analytics_agent: "{{ enable_analytics_agent }}"
+
+- name: Set HTTPS Protocol facts
+  set_fact:
+      controller_protocol: "https"
+      when: "ssl_enabled == 'true'"
+
+- name: Set HTTP Protocol facts
+  set_fact:
+      controller_protocol: "http"
+      when: "ssl_enabled == 'false'"
+
+- name: Print params 
+  vars:
+     params: "Controller={{ controller_protocol }}//:{{ controller_host_name }}:{{ controller_port }}|controller_account_name={{ controller_account_name }}|analytics_event_endpoint={{ analytics_event_endpoint }}"
+  debug: 
+    msg: "{{ params.split('|') }}" 
+  
