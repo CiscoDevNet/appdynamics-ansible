@@ -1,0 +1,24 @@
+---
+- hosts: windows
+  tasks:
+    - include_role:
+        name: dotnet-agent
+      vars:
+        # Define Agent Type and Version 
+        agent_version: 20.6.0
+        agent_type: dotnet
+        # The applicationName
+        application_name: 'IoT_API'
+        tier_name: 'login_service2' # ONLY required if agent type is not machine and db agent
+        application_environment: 'production'
+        # Your controller details 
+        controller_account_access_key:  'ffdsfs' # Please add this to your Vault 
+        controller_global_analytics_account_name: 'customer1-guid' # Please add this to your Vault 
+        controller_host_name: 'saas.appdynamics.com' # Your AppDynamics controller 
+        controller_account_name: 'customer1' # Please add this to your Vault 
+        analytics_event_endpoint: "https://fra-ana-api.saas.appdynamics.com:443"
+        # Define the executables to monitor
+        services:
+          - login.exe
+          - tmw.exe
+

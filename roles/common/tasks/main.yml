@@ -23,17 +23,15 @@
 
 - name: Set HTTPS Protocol facts
   set_fact:
-      controller_protocol: "https"
-      when: "ssl_enabled == 'true'"
-
-- name: Set HTTP Protocol facts
-  set_fact:
-      controller_protocol: "http"
-      when: "ssl_enabled == 'false'"
+      controller_protocol: "{% if ssl_enabled|bool == True %}https{% else %}http{% endif %}"
 
 - name: Print params 
   vars:
-     params: "Controller={{ controller_protocol }}//:{{ controller_host_name }}:{{ controller_port }}|controller_account_name={{ controller_account_name }}|analytics_event_endpoint={{ analytics_event_endpoint }}"
+     params: "
+              SSL enabled = {{ ssl_enabled }} |
+              Controller={{ controller_protocol }}//:{{ controller_host_name }}:{{ controller_port }} |
+              controller_account_name={{ controller_account_name }} |
+              analytics_event_endpoint={{ analytics_event_endpoint }} "
   debug: 
     msg: "{{ params.split('|') }}" 
   
