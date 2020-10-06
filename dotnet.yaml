@@ -2,10 +2,10 @@
 - hosts: windows
   tasks:
     - include_role:
-        name: dotnet-agent
+        name: dotnetagent
       vars:
         # Define Agent Type and Version 
-        agent_version: 20.6.0
+        agent_version: 20.8.0
         agent_type: dotnet
         # The applicationName
         application_name: 'IoT_API'
@@ -16,7 +16,9 @@
         controller_global_analytics_account_name: 'customer1-guid' # Please add this to your Vault 
         controller_host_name: 'saas.appdynamics.com' # Your AppDynamics controller 
         controller_account_name: 'customer1' # Please add this to your Vault 
-        analytics_event_endpoint: "https://fra-ana-api.saas.appdynamics.com:443"
+        ssl_enabled: true
+        controller_port: "443"
+    
         # Define the executables to monitor
         services:
           - login.exe

@@ -1,3 +1,0 @@
----
-db_agent_dest_folder_linux: /opt/appdynamics/db-agent
-db_agent_dest_file: db-agent.zip

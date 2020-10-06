@@ -28,10 +28,10 @@
 - name: Print params 
   vars:
      params: "
-              SSL enabled = {{ ssl_enabled }} |
-              Controller={{ controller_protocol }}//:{{ controller_host_name }}:{{ controller_port }} |
-              controller_account_name={{ controller_account_name }} |
-              analytics_event_endpoint={{ analytics_event_endpoint }} "
+      SSL enabled = {{ ssl_enabled }} |
+      Controller={{ controller_protocol }}://{{ controller_host_name }}:{{ controller_port }} |
+      controller_account_name={{ controller_account_name }} |
+      analytics_event_endpoint={{ analytics_event_endpoint }} "
   debug: 
     msg: "{{ params.split('|') }}" 
   
