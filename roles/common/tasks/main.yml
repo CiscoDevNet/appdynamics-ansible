@@ -1,6 +1,9 @@
 - name: Validate parameters
   include: validate_parameters.yml
 
+- name: Install jq. It's a must to have jq installed on the ansible controller. 
+  include: install_jq.yml
+
 - name: "Get {{agent_type}}:{{agent_version}} Agent"
   include: get_agent.yml
 
@@ -34,4 +37,6 @@
       analytics_event_endpoint={{ analytics_event_endpoint }} "
   debug: 
     msg: "{{ params.split('|') }}" 
+  
+
   

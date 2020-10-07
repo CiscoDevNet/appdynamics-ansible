@@ -1,0 +1,7 @@
+---
+dependencies:
+ - { role: common }
+ - { role: linux_pkg, when: ansible_os_family == 'RedHat' or  ansible_os_family == 'Debian'}
+ #- { role: win_pkg, when: ansible_os_family == 'Windows' }
+
+  
