@@ -7,10 +7,3 @@
     state: present
     name:
     - unzip
-
-- name: Install jq to ansible controller -  Debian variants
-  apt:
-    state: present
-    name:
-    - jq
-  delegate_to: localhost
