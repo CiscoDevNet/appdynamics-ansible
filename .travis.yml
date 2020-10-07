@@ -4,8 +4,8 @@ services: docker
 
 env:
   global:
-    - COLLECTION_NAMESPACE: geerlingguy
-    - COLLECTION_NAME: php_roles
+    - COLLECTION_NAMESPACE: appdynamics
+    - COLLECTION_NAME: agents
   matrix:
     - DISTRO: centos7
       PYTHON_INTERPRETER: /usr/bin/python
