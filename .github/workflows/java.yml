@@ -6,13 +6,13 @@ on:
       - 'roles/java/**'
       - 'molecule/java/**'
       - '.github/workflows/java.yml'
-      - 'molecule/common/**'
+      - 'roles/common/**'
   pull_request:
     paths:
       - 'roles/java/**'
       - 'molecule/java/**'
       - '.github/workflows/java.yml'
-      - 'molecule/common/**'
+      - 'roles/common/**'
 jobs:
   molecule:
     runs-on: ubuntu-latest
