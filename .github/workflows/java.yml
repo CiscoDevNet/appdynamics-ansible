@@ -47,9 +47,9 @@ jobs:
           sudo apt install docker-ce
           sudo systemctl status docker
           python -m pip install --upgrade pip
-          sudo apt-get install -y python-apt
-          pip install molecule yamllint ansible-lint docker 
-          
+          sudo apt-get install -y python3-apt
+          pip install molecule yamllint ansible-lint docker jq
+
       - name: Build the collection
         run: |
           collection_file=$( basename $(ansible-galaxy collection build -f | awk -F" " '{print $NF}'))
