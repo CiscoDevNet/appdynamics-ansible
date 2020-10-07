@@ -1,5 +1,4 @@
 - name: Install jq to ansible controller -  Debian variants 
-  become: true
   apt:
     state: present
     name:
@@ -8,7 +7,6 @@
   when: "ansible_os_family == 'Debian'"
 
 - name: Install jq to ansible controller -  RedHat variants 
-  become: true
   yum:
     name:
      - jq
