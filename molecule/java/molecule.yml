@@ -18,7 +18,6 @@ platforms:
 provisioner:
   name: ansible
   log: true
-  lint: {}
   options:
     vvv: True
   playbooks:
