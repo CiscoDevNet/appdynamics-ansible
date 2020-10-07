@@ -48,8 +48,8 @@ jobs:
           sudo systemctl status docker
           python -m pip install --upgrade pip
           sudo apt-get install -y python-apt
-          pip install molecule yamllint ansible-lint docker python-apt
-
+          pip install molecule yamllint ansible-lint docker 
+          
       - name: Build the collection
         run: |
           collection_file=$( basename $(ansible-galaxy collection build -f | awk -F" " '{print $NF}'))
