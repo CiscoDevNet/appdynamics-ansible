@@ -3,13 +3,18 @@ dependency:
   name: galaxy
 driver:
   name: delegated
+  options:
+    managed: False
+    login_cmd_template: 'docker exec -ti {instance} bash'
+    ansible_connection_options:
+      ansible_connection: docker
 lint: |
   set -e
   yamllint .
   ansible-lint
 platforms:
-  - name: instance
-    image: ${MOLECULE_DISTRO:-ubuntu:xenial}
+  - name: instance-docker
+    #image: ${MOLECULE_DISTRO:-ubuntu:xenial}
     privileged: true
     command: ${MOLECULE_COMMAND:-"sleep infinity"}
     volumes:
