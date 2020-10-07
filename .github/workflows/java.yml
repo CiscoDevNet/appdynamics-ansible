@@ -46,7 +46,7 @@ jobs:
           sudo apt install docker-ce
           sudo systemctl status docker
           python -m pip install --upgrade pip
-          pip install molecule yamllint ansible-lint 
+          pip install molecule yamllint ansible-lint docker
 
       - name: Build the collection
         run: |
