@@ -7,6 +7,7 @@ lint: |
   set -e
   yamllint .
   ansible-lint
+  
 platforms:
   - name: instance
     image: ${MOLECULE_DISTRO:-ubuntu-xenial}
@@ -16,8 +17,5 @@ platforms:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
 provisioner:
   name: ansible
-  log: true
-  options:
-    vvv: True
   playbooks:
     converge: ${MOLECULE_PLAYBOOK:-converge.yml}
