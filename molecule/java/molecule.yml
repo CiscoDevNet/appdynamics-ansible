@@ -5,14 +5,11 @@ driver:
   name: delegated
   options:
     managed: False
-    login_cmd_template: 'docker exec -ti {instance} bash'
-    ansible_connection_options:
-      ansible_connection: docker
-lint: |
-  set -e
-  yamllint .
-  ansible-lint
-  flake8
+#lint: |
+#  set -e
+#  yamllint .
+#  flake8
+#  ansible-lint
 platforms:
   - name: instance
     image: ${MOLECULE_DISTRO:-ubuntu:xenial}
