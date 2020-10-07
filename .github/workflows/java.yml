@@ -15,7 +15,7 @@ on:
       - 'molecule/common/**'
 jobs:
   molecule:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     env:
       PY_COLORS: 1
       ANSIBLE_FORCE_COLOR: 1
@@ -37,10 +37,16 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt install docker
+          sudo apt-get update
+          sudo apt install apt-transport-https ca-certificates curl software-properties-common
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+          sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+          sudo apt update
+          apt-cache policy docker-ce
+          sudo apt install docker-ce
+          sudo systemctl status docker
           python -m pip install --upgrade pip
-          pip install git+https://github.com/ansible-community/molecule.git@master
-          pip install molecule yamllint ansible-lint docker
+          pip install molecule yamllint ansible-lint 
 
       - name: Build the collection
         run: |

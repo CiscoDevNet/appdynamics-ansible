@@ -8,7 +8,7 @@ driver:
 #  set -e
 #  yamllint .
 #  flake8
-#  ansible-lin
+#  ansible-lint
 
 platforms:
   - name: instance
