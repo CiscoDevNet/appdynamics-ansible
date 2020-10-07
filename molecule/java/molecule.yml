@@ -18,6 +18,17 @@ platforms:
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
 provisioner:
-  name: ansible
+  name: ansible  
   playbooks:
     converge: ${MOLECULE_PLAYBOOK:-converge.yml}
+  vars:
+        agent_version: 20.6.0
+        agent_type: sun-java
+        application_name: "IoT_API"
+        tier_name: "login_service2"
+        application_environment: "production"
+        controller_account_access_key: "ffdsfs" 
+        controller_host_name: "saas.appdynamics.com" 
+        controller_account_name: "customer1"  
+        ssl_enabled: false
+        controller_port: "443"
