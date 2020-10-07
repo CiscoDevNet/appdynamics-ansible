@@ -8,10 +8,14 @@ driver:
     login_cmd_template: 'docker exec -ti {instance} bash'
     ansible_connection_options:
       ansible_connection: docker
-      
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
+  flake8
 platforms:
-  - name: instance-docker
-    #image: ${MOLECULE_DISTRO:-ubuntu:xenial}
+  - name: instance
+    image: ${MOLECULE_DISTRO:-ubuntu:xenial}
     privileged: true
     command: ${MOLECULE_COMMAND:-"sleep infinity"}
     volumes:
