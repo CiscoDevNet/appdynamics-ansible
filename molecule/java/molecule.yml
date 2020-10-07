@@ -2,17 +2,16 @@
 dependency:
   name: galaxy
 driver:
-  name: delegated
+  name: docker
 lint: |
   set -e
   yamllint .
   ansible-lint
-  
 platforms:
   - name: instance
-    image: ${MOLECULE_DISTRO:-ubuntu-xenial}
+    image: ${MOLECULE_DISTRO:-ubuntu:xenial}
     privileged: true
-    command: ${MOLECULE_COMMAND:-""}
+    command: ${MOLECULE_COMMAND:-"sleep infinity"}
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
 provisioner:

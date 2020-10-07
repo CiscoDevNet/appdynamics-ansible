@@ -23,7 +23,6 @@ jobs:
       fail-fast: true
       matrix:
         molecule_distro:
-          - { "distro":"centos-8", "command":"/usr/sbin/init" }
           - { "distro":"ubuntu-18.04", "command":"/lib/systemd/systemd" }
         collection_role:
           - java
