@@ -30,7 +30,7 @@ script:
 
 deploy:
   provider: script
-  script: ansible-playbook -i 'localhost,' scripts/deploy.yml -e "tag=$TRAVIS_TAG"
+  script: ansible-playbook -i 'localhost,' build/galaxy_deploy.yml -e "tag=$TRAVIS_TAG"
   'on':
     tags: true
     condition: $DISTRO = centos7
