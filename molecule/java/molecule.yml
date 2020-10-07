@@ -2,7 +2,7 @@
 dependency:
   name: galaxy
 driver:
-  name: docker
+  name: delegated
 lint: |
   set -e
   yamllint .
