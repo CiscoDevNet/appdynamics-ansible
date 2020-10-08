@@ -40,7 +40,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y   python3-setuptools python3-pip libssl-dev 
+          sudo apt-get install -y   python3-setuptools python3-pip libssl-dev jq
           sudo apt install python3-apt
           python3 -m pip install --upgrade setuptools
           pip3 install molecule yamllint ansible-lint docker jq
@@ -53,7 +53,6 @@ jobs:
           sudo apt install docker-ce
           sudo systemctl status docker
           
-
       - name: Build the collection
         run: |
           collection_file=$( basename $(ansible-galaxy collection build -f | awk -F" " '{print $NF}'))
