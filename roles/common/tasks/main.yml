@@ -1,12 +1,12 @@
 - name: Validate parameters
   include: validate_parameters.yml
 
-- name: Install jq. It's a must to have jq installed on the ansible controller. 
-  become: true
-  include: install_jq.yml
+#- name: Install jq. It's a must to have jq installed on the ansible controller. 
+#  become: true
+#  include: install_jq.yml
 
-#- name: "Get {{agent_type}}:{{agent_version}} Agent"
-#  include: get_agent.yml
+- name: "Get {{agent_type}}:{{agent_version}} Agent"
+  include: get_agent.yml
 
 
 - name: Set AppDynamics access key facts
