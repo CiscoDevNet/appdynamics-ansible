@@ -39,9 +39,9 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y python3-pip libssl-dev
+          sudo apt-get install -y   python3-setuptools python3-pip libssl-dev 
           sudo apt install python3-apt
-          python3 -m pip install python3-setuptools
+          python3 -m pip install --upgrade setuptools
           pip3 install molecule yamllint ansible-lint docker jq
           sudo apt install software-properties-common
           sudo apt install apt-transport-https ca-certificates curl software-properties-common
