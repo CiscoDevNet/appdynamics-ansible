@@ -1,5 +1,6 @@
 - name: Install jq to ansible controller -  Debian variants 
   apt:
+    update_cache: yes
     state: present
     name:
     - jq
@@ -8,9 +9,10 @@
 
 - name: Install jq to ansible controller -  RedHat variants 
   yum:
+    update_cache: yes
+    state: installed
     name:
      - jq
-    state: installed
   delegate_to: localhost
   when: "ansible_os_family == 'RedHat'"
 

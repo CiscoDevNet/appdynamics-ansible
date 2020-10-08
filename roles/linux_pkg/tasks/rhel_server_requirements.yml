@@ -1,6 +1,7 @@
 ---
 - name: install tools and pre-requisites for RedHat variants
   yum:
+    update_cache: yes
     name:
      - unzip
     state: installed

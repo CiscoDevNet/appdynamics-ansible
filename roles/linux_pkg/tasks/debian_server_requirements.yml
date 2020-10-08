@@ -5,5 +5,6 @@
 - name: install tools and pre-requisites for Debian variants
   apt:
     state: present
+    update_cache: yes
     name:
     - unzip
