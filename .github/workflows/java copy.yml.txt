@@ -1,0 +1,70 @@
+name: "appdynamics.agents.java"
+
+on:
+  push:
+    paths:
+      - 'roles/java/**'
+      - 'molecule/java/**'
+      - '.github/workflows/java.yml'
+      - 'roles/common/**'
+  pull_request:
+    paths:
+      - 'roles/java/**'
+      - 'molecule/java/**'
+      - '.github/workflows/java.yml'
+      - 'roles/common/**'
+jobs:
+  molecule:
+    runs-on: ubuntu-latest
+    env:
+      PY_COLORS: 1
+      ANSIBLE_FORCE_COLOR: 1
+    strategy:
+      fail-fast: true
+      matrix:
+        molecule_distro:
+         # - { "distro":"ubuntu-18.04", "command":"/lib/systemd/systemd" }
+          - { "distro":"centos-8", "command":"/usr/sbin/init" }
+        collection_role:
+          - java
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v1
+
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y   python3-setuptools python3-pip libssl-dev jq
+          sudo apt install python3-apt
+          python3 -m pip install --upgrade setuptools
+          pip3 install molecule yamllint ansible-lint docker jq
+          sudo apt install software-properties-common
+          sudo apt install apt-transport-https ca-certificates curl software-properties-common
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+          sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+          sudo apt update
+          apt-cache policy docker-ce
+          sudo apt install docker-ce
+          sudo systemctl status docker
+          
+      - name: Build the collection
+        run: |
+          collection_file=$( basename $(ansible-galaxy collection build -f | awk -F" " '{print $NF}'))
+          echo "::set-env name=COLLECTION_FILE::$collection_file"
+        
+      - name: Install the collection
+        run: ansible-galaxy collection install ${COLLECTION_FILE}
+
+      - name: Run role tests
+        run: >-
+          molecule --version &&
+          ansible --version &&
+          MOLECULE_COMMAND=${{ matrix.molecule_distro.command }}
+          MOLECULE_DISTRO=${{ matrix.molecule_distro.distro }}
+          molecule --debug test -s ${{ matrix.collection_role }}
