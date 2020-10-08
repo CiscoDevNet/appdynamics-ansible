@@ -5,8 +5,8 @@
   become: true
   include: install_jq.yml
 
-- name: "Get {{agent_type}}:{{agent_version}} Agent"
-  include: get_agent.yml
+#- name: "Get {{agent_type}}:{{agent_version}} Agent"
+#  include: get_agent.yml
 
 
 - name: Set AppDynamics access key facts
