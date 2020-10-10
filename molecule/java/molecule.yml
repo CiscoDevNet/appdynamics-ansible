@@ -12,7 +12,8 @@ driver:
 
 platforms:
   - name: instance
-    image: geerlingguy/docker-${MOLECULE_DISTRO:-centos8}-ansible:latest
+    #image: geerlingguy/docker-${MOLECULE_DISTRO:-centos8}-ansible:latest
+    image: ubuntu:latest
     command: ""
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
