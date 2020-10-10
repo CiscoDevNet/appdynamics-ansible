@@ -1,8 +1,7 @@
-- name: Install Machine Agent on RedHat or Debian
-  include: install_machine_agent_linux.yml
+
+- include_tasks: install_machine_agent_linux.yml
   become: true
   when: ansible_os_family == 'RedHat' or  ansible_os_family == 'Debian'
 
-- name: Install Machine Agent on Windows
-  include: install_machine_agent_win.yml
+- include_tasks: install_machine_agent_win.yml
   when: ansible_os_family == 'Windows'

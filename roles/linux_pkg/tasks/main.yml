@@ -1,10 +1,8 @@
 - name: Linux Block
   become: true
   block: 
-    - name: Check rhel os requirements
-      include: rhel_server_requirements.yml
+    - include_tasks: rhel_server_requirements.yml
       when: "ansible_os_family == 'RedHat'"
       
-    - name: Check debian os requirements
-      include: debian_server_requirements.yml
+    - include_tasks: debian_server_requirements.yml
       when: "ansible_os_family == 'Debian'"

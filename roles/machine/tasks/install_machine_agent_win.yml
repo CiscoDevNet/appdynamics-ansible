@@ -34,8 +34,7 @@
   debug:
     var: remove_read_std_in_result
 
-- name: Configure the analytics agent
-  include: configure_log_analytics_win.yml
+- include_tasks: configure_log_analytics_win.yml
   when: enable_analytics_agent == true
 
 - name: 'Install machine agent service'

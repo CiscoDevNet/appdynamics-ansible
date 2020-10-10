@@ -1,6 +1,5 @@
 
-- name: Create appdynamics sudoer user 
-  include: appd_sudoer.yml
+- include_tasks: appd_sudoer.yml
 
 - name: Ensures machine agent {{machine_agent_dest_folder_linux}} dir exists
   file: 
@@ -39,8 +38,7 @@
     path: "{{ machine_agent_dest_folder_linux }}/bin/machine-agent"
     mode: 0755
 
-- name: Configure the analytics agent
-  include: configure_log_analytics_linux.yml
+- include_tasks: configure_log_analytics_linux.yml
   when: enable_analytics_agent == true
 
 - name: Add the Agent as a Service using Systemd
