@@ -5,7 +5,7 @@
     that:  agent_type is defined
     msg: 'agent type must be provided. Refer to https://github.com/Appdynamics/download-appdynamcis-agents#supported-agent-types'
 
-- name: Validate agent_version 
+- name: "Validate agent_version"
   assert:
     that:  agent_version is defined
     msg: 'The version of the agent must be provided.'

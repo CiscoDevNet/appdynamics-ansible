@@ -164,7 +164,7 @@ download_options() {
     _finder="AppDynamics-DotNetCore-linux-x64"
     _os_platform="linux"
 
-  elif [ "$1" = "db" -o ]; then
+  elif [ "$1" = "db" ]; then
     _app_agent="db"
     _finder="db-agent"
     _os_platform="linux"
