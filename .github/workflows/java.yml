@@ -48,7 +48,9 @@ jobs:
         run: ansible-galaxy collection install ${COLLECTION_FILE}
       
       - name: Test the collection
-        run: ansible-test sanity --docker default -v
+        run: |
+           cd /home/runner/.ansible/collections/ansible_collections/appdynamics/agents
+           ansible-test sanity --docker default -v
 
       - name: Run role tests
         run: >-
