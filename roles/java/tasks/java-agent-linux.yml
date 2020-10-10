@@ -1,41 +1,44 @@
 
 # App owners would either need to chown the entire agent folder to their app's user  OR grant their app's user read/write access to the agent folder 
-- name: Ensures application agent dir exists
-  file: 
-    path: "{{ java_agent_dest_folder_linux }}/"
-    state: directory     
-    mode: 0755
-    recurse: yes
-  
-- name: Downloading Java Agent to target
-  get_url:
-    url: '{{ agent_download_url.stdout }}'
-    dest: '{{ java_agent_dest_folder_linux }}/{{ java_agent_dest_file }}'
-    force: 'true'
+- name: Java linux Block
+  become: true
+  block: 
+    - name: Ensures application agent dir exists
+      file: 
+        path: "{{ java_agent_dest_folder_linux }}/"
+        state: directory     
+        mode: 0755
+        recurse: yes
+      
+    - name: Downloading Java Agent to target
+      get_url:
+        url: '{{ agent_download_url.stdout }}'
+        dest: '{{ java_agent_dest_folder_linux }}/{{ java_agent_dest_file }}'
+        force: 'true'
 
-- name: Unzip the application agent file
-  unarchive: 
-    src: "{{ java_agent_dest_folder_linux }}/{{ java_agent_dest_file }}"
-    dest: "{{ java_agent_dest_folder_linux }}"   
-    creates: "{{ java_agent_dest_folder_linux }}/javaagent.jar"
-    copy: no
+    - name: Unzip the application agent file
+      unarchive: 
+        src: "{{ java_agent_dest_folder_linux }}/{{ java_agent_dest_file }}"
+        dest: "{{ java_agent_dest_folder_linux }}"   
+        creates: "{{ java_agent_dest_folder_linux }}/javaagent.jar"
+        copy: no
 
-- name: Install java-agent config
-  template:
-    src: templates/application-agent-controller-info.xml.j2
-    dest: '{{ java_agent_dest_folder_linux }}/conf/controller-info.xml'
-    mode: 0755  
+    - name: Install java-agent config
+      template:
+        src: templates/application-agent-controller-info.xml.j2
+        dest: '{{ java_agent_dest_folder_linux }}/conf/controller-info.xml'
+        mode: 0755  
 
-#- name: Verify java agent config
-#  command: less  '{{ java_agent_dest_folder_linux }}/conf/controller-info.xml'
-#  register: content
-#  ignore_errors: yes
+    #- name: Verify java agent config
+    #  command: less  '{{ java_agent_dest_folder_linux }}/conf/controller-info.xml'
+    #  register: content
+    #  ignore_errors: yes
 
-#- name: Show config file content
-#  debug:
-#    var: content
+    #- name: Show config file content
+    #  debug:
+    #    var: content
 
-- name: Clean up - remove {{ java_agent_dest_file }} 
-  file:
-    path: "{{ java_agent_dest_folder_linux }}/{{ java_agent_dest_file }}"
-    state: absent
+    - name: Clean up - remove {{ java_agent_dest_file }} 
+      file:
+        path: "{{ java_agent_dest_folder_linux }}/{{ java_agent_dest_file }}"
+        state: absent

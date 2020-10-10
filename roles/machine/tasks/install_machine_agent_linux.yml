@@ -1,78 +1,79 @@
+- name: Machine Agent linux Block
+  become: true
+  block: 
+  - include_tasks: appd_sudoer.yml
+  - name: Ensures machine agent {{machine_agent_dest_folder_linux}} dir exists
+    file: 
+      path: "{{ machine_agent_dest_folder_linux }}/"
+      state: directory     
+      mode: 0755
+      owner: "{{ appdynamics_user }}"
+      group: "{{ appdynamics_user }}"
 
-- include_tasks: appd_sudoer.yml
 
-- name: Ensures machine agent {{machine_agent_dest_folder_linux}} dir exists
-  file: 
-    path: "{{ machine_agent_dest_folder_linux }}/"
-    state: directory     
-    mode: 0755
-    owner: "{{ appdynamics_user }}"
-    group: "{{ appdynamics_user }}"
+  - name: Downloading Machine Agent to targets
+    get_url:
+      url: '{{ agent_download_url.stdout }}'
+      dest: "{{ machine_agent_dest_folder_linux }}/{{ ma_agent_dest_file }}"
+      force: 'true'
 
+  - name: Unzip the Machine agent file
+    unarchive: 
+      src:  "{{ machine_agent_dest_folder_linux }}/{{ ma_agent_dest_file }}"
+      dest: "{{ machine_agent_dest_folder_linux }}"
+      owner: "{{ appdynamics_user }}"
+      group: "{{ appdynamics_user }}"
+      creates: "{{ machine_agent_dest_folder_linux }}/bin/machine-agent"
+      copy: no
 
-- name: Downloading Machine Agent to targets
-  get_url:
-    url: '{{ agent_download_url.stdout }}'
-    dest: "{{ machine_agent_dest_folder_linux }}/{{ ma_agent_dest_file }}"
-    force: 'true'
+  - name: Configure Machine Agent controller-info.xml file 
+    template:
+      src: templates/machine-agent-controller-info.xml.j2
+      dest: '{{ machine_agent_dest_folder_linux }}/conf/controller-info.xml' 
+      owner: "{{ appdynamics_user }}"
+      group: "{{ appdynamics_user }}"
+      mode: 0755  
 
-- name: Unzip the Machine agent file
-  unarchive: 
-    src:  "{{ machine_agent_dest_folder_linux }}/{{ ma_agent_dest_file }}"
-    dest: "{{ machine_agent_dest_folder_linux }}"
-    owner: "{{ appdynamics_user }}"
-    group: "{{ appdynamics_user }}"
-    creates: "{{ machine_agent_dest_folder_linux }}/bin/machine-agent"
-    copy: no
+  - name: Ensure machine agent file is executable
+    file:
+      path: "{{ machine_agent_dest_folder_linux }}/bin/machine-agent"
+      mode: 0755
 
-- name: Configure Machine Agent controller-info.xml file 
-  template:
-    src: templates/machine-agent-controller-info.xml.j2
-    dest: '{{ machine_agent_dest_folder_linux }}/conf/controller-info.xml' 
-    owner: "{{ appdynamics_user }}"
-    group: "{{ appdynamics_user }}"
-    mode: 0755  
+  - include_tasks: configure_log_analytics_linux.yml
+    when: enable_analytics_agent == true
 
-- name: Ensure machine agent file is executable
-  file:
-    path: "{{ machine_agent_dest_folder_linux }}/bin/machine-agent"
-    mode: 0755
+  - name: Add the Agent as a Service using Systemd
+    template:
+      src: templates/appdynamics-machine-agent.service.j2
+      dest: /etc/systemd/system/appdynamics-machine-agent.service
+      owner: root
+      group: root
+      mode: 0644  
+    register: machine_agent_systemd_result
 
-- include_tasks: configure_log_analytics_linux.yml
-  when: enable_analytics_agent == true
+  - name: Enable the Machine Agent to start at system startup
+    systemd:
+      name: appdynamics-machine-agent
+      enabled: yes
+      masked: no
 
-- name: Add the Agent as a Service using Systemd
-  template:
-    src: templates/appdynamics-machine-agent.service.j2
-    dest: /etc/systemd/system/appdynamics-machine-agent.service
-    owner: root
-    group: root
-    mode: 0644  
-  register: machine_agent_systemd_result
+  - name: Start the agent service
+    systemd:
+      name: appdynamics-machine-agent
+      state: restarted
+      daemon_reload: yes
 
-- name: Enable the Machine Agent to start at system startup
-  systemd:
-    name: appdynamics-machine-agent
-    enabled: yes
-    masked: no
+  - name: Make sure the service is running
+    command: systemctl status appdynamics-machine-agent
+    register: result
+    ignore_errors: yes
 
-- name: Start the agent service
-  systemd:
-    name: appdynamics-machine-agent
-    state: restarted
-    daemon_reload: yes
+  - name: Show Machine Agent status 
+    debug:
+      var: result
 
-- name: Make sure the service is running
-  command: systemctl status appdynamics-machine-agent
-  register: result
-  ignore_errors: yes
-
-- name: Show Machine Agent status 
-  debug:
-     var: result
-
-- name: Clean up - remove {{ ma_agent_dest_file }} 
-  file:
-    path: "{{ machine_agent_dest_folder_linux }}/{{ ma_agent_dest_file }}"
-    state: absent
+  - name: Clean up - remove {{ ma_agent_dest_file }} 
+    file:
+      path: "{{ machine_agent_dest_folder_linux }}/{{ ma_agent_dest_file }}"
+      state: absent
 

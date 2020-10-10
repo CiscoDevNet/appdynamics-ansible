@@ -1,8 +1,6 @@
 - include_tasks: validate_parameters.yml
 
 #- include_tasks: install_jq.yml
-  #become: true
-
 
 - debug: 
      msg:  "Agent variables: type=> {{agent_type}} version=> {{agent_version}}"
