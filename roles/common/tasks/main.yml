@@ -35,7 +35,4 @@
       controller_account_name={{ controller_account_name }} |
       analytics_event_endpoint={{ analytics_event_endpoint }} "
   debug: 
-    msg: "{{ params.split('|') }}" 
-  
-
-  
+    msg: "{{ params.split('|') }}"

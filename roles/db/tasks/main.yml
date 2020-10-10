@@ -1,4 +1,3 @@
-
 - include_tasks: db_agent.yml
 
 - name: Clean up - remove {{ ma_agent_dest_file }} 

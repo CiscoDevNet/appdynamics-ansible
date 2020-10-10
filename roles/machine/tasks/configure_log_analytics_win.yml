@@ -1,5 +1,4 @@
 ---
-
 - name: Turn on analytics agent monitoring
   win_lineinfile:
     dest: "{{ machine_agent_dest_folder_win }}/monitors/analytics-agent/monitor.xml"

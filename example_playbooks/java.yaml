@@ -17,4 +17,3 @@
         controller_account_name: "customer1"  # Please add this to your Vault 
         ssl_enabled: false
         controller_port: "443"
-    

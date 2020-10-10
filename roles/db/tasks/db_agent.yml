@@ -1,4 +1,3 @@
-
 - name: Ensures db agent {{db_agent_dest_folder_linux}} dir exists
   file: 
     path: "{{ db_agent_dest_folder_linux }}/"

@@ -1,4 +1,4 @@
-
+---
 - name: Ensures machine agent {{machine_agent_dest_folder_win}} dir exists
   win_file:
     path: "{{ machine_agent_dest_folder_win }}"

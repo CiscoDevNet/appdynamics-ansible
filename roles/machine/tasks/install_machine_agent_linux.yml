@@ -1,3 +1,4 @@
+---
 - name: Machine Agent linux Block
   become: true
   block: 
@@ -76,4 +77,3 @@
     file:
       path: "{{ machine_agent_dest_folder_linux }}/{{ ma_agent_dest_file }}"
       state: absent
-

@@ -1,4 +1,4 @@
-
+---
 # App owners would either need to chown the entire agent folder to their app's user  OR grant their app's user read/write access to the agent folder 
 - name: Java linux Block
   become: true
@@ -8,13 +8,15 @@
         path: "{{ java_agent_dest_folder_linux }}/"
         state: directory     
         mode: 0755
-        recurse: yes
-      
+        #recurse: yes
+      #changed_when: false # this ensures this task is idempotent 
+
     - name: Downloading Java Agent to target
       get_url:
         url: '{{ agent_download_url.stdout }}'
         dest: '{{ java_agent_dest_folder_linux }}/{{ java_agent_dest_file }}'
         force: 'true'
+      changed_when: false
 
     - name: Unzip the application agent file
       unarchive: 
@@ -41,4 +43,5 @@
     - name: Clean up - remove {{ java_agent_dest_file }} 
       file:
         path: "{{ java_agent_dest_folder_linux }}/{{ java_agent_dest_file }}"
-        state: absent
+        state: absent  
+      changed_when: false # this ensures this task is idempotent 

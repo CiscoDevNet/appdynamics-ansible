@@ -18,6 +18,3 @@
         controller_port: "443"
         analytics_event_endpoint: "https://fra-ana-api.saas.appdynamics.com:443"
         enable_analytics_agent: true
-    
-
-

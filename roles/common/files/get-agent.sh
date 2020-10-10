@@ -1,7 +1,7 @@
-#!/usr/bin/env sh
+#!/bin/bash
 
 # This script is not officially supported by AppDynamics 
-# Author: Israel Ogbole 
+# Author: Israel Ogbole  #!/usr/bin/env sh
 
 set -o nounset
 
@@ -134,11 +134,11 @@ check_dependencies() {
 
 #Supported agent types:
 download_options() {
-  if [ "$1" = "sun-java" -o "$1" = "java" ]; then
+  if [ "$1" = "sun-java" ] || [ "$1" = "java" ]; then
     _app_agent="jvm%2Cjava-jdk8" #_app_agent="jvm"
     _finder="sun-jvm"
     _os_platform="linux"
-  elif [ "$1" = "sun-java8" -o "$1" = "java8" ]; then
+  elif [ "$1" = "sun-java8" ] || [ "$1" = "java8" ]; then
     _app_agent="jvm%2Cjava-jdk8"
     _finder="java-jdk8"
     _os_platform="linux"
@@ -202,14 +202,14 @@ get_download_url() {
     exit_with_error "None 200 response code: ${http_response}" "${ERR_GENERIC}"
   fi
 
-  processed_payload=$(cat ${DOWNLOAD_PAGE_OUTPUT} | jq "first(.results[]  | select(.s3_path | test(\"${_finder}\"))) | .")
-  readonly d_s3_path=$(echo ${processed_payload} | jq -r .s3_path)
+  processed_payload=$(jq "first(.results[]  | select(.s3_path | test(\"${_finder}\"))) | ." < ${DOWNLOAD_PAGE_OUTPUT} )
+  readonly d_s3_path=$(echo "${processed_payload}" | jq -r .s3_path)
 
   if [ -z "$d_s3_path" ] || [ "$d_s3_path" = "" ]; then
     exit_with_error "Could not download your request ${1}. Please ensure that agent version exist in https://download.appdynamics.com " "${ERR_BAD_RESPONSE}"
   fi
 
-  echo $d_s3_path
+  echo "$d_s3_path"
 }
 
 # Runs `curl` command to download the agent archive. Network or HTTP failure
@@ -281,10 +281,6 @@ download() {
       shift
       readonly version="${1:-}"
       ;;
-    -u | --url)
-      shift
-      url="${1:-}"
-      ;;
     -d | --dryrun)
       shift
       dryrun="true"
@@ -310,14 +306,14 @@ download() {
 
   #Call download options
   download_options "${agent}"
-  readonly s3_download_uri="$(get_download_url ${agent} ${version})"
+  readonly s3_download_uri=$(get_download_url "${agent}" "${version}")
 
   if [ -z "$s3_download_uri" ] || [ "$s3_download_uri" = "" ]; then
     exit_with_error "Could not download your request . Please ensure that agent version exist in https://download.appdynamics.com " "${ERR_BAD_RESPONSE}"
 
   elif [ "${dryrun}" = "true" ]; then
     download_url="${DEFAULT_DOWNLOAD_SITE}/${s3_download_uri}"
-    echo $download_url
+    echo "$download_url"
     cleanup
   else
     download_url="${DEFAULT_DOWNLOAD_SITE}/${s3_download_uri}"

@@ -8,7 +8,7 @@
       cache_valid_time: 3600
     when: ansible_os_family == 'Debian'
   #roles:
-  #  - role: java
+    #- role: appdynamics.agents.java
 - import_playbook: ../../java.yaml
 
   vars:
