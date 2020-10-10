@@ -1,13 +1,13 @@
-- name: Validate parameters
-  include: validate_parameters.yml
+- include_tasks: validate_parameters.yml
 
-#- name: Install jq. It's a must to have jq installed on the ansible controller. 
-#  become: true
-#  include: install_jq.yml
+#- include_tasks: install_jq.yml
+  #become: true
 
-- name: "Get {{agent_type}}:{{agent_version}} Agent"
-  include: get_agent.yml
 
+- debug: 
+     msg:  "Agent variables: type=> {{agent_type}} version=> {{agent_version}}"
+
+- include_tasks: get_agent.yml
 
 - name: Set AppDynamics access key facts
   set_fact:

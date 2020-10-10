@@ -6,9 +6,7 @@
     name: "APPDYNAMICS_AGENT_UNIQUE_HOST_ID"
     value: "{{ ansible_hostname }}"
 
-- name: DotNet Agent Java Agent
-  include: dotnet-agent.yml
-
+- include_tasks: dotnet-agent.yml
 
 - name: Clean up - remove {{ dotnet_agent_dest_file }} 
   win_file:

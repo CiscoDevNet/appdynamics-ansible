@@ -1,5 +1,5 @@
-- name: "Get AppDynamics Agent Download URL type:{agent_type}}, version: {{agent_version}}"
-  shell: "{{role_path}}/files/get-agent.sh download {{agent_type}} -v {{agent_version}} --dryrun"
+- name: "Get AppDynamics Agent Download URL type:{{ agent_type}}, version: {{ agent_version }}"
+  shell: "{{role_path}}/files/get-agent.sh download {{ agent_type }} -v {{ agent_version }} --dryrun"
   register: agent_download_url
   delegate_to: localhost
   failed_when:

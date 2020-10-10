@@ -1,7 +1,5 @@
 
-
-- name: DB Java Agent
-  include: db_agent.yml
+- include_tasks: db_agent.yml
 
 - name: Clean up - remove {{ ma_agent_dest_file }} 
   file:
