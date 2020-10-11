@@ -17,13 +17,12 @@
         dest: '{{ java_agent_dest_folder_linux }}/{{ java_agent_dest_file }}'
         force: 'true'
       changed_when: false
-
+    
     - name: Unzip the application agent file
       unarchive: 
         src: "{{ java_agent_dest_folder_linux }}/{{ java_agent_dest_file }}"
         dest: "{{ java_agent_dest_folder_linux }}"   
         creates: "{{ java_agent_dest_folder_linux }}/javaagent.jar"
-        copy: no
 
     - name: Install java-agent config
       template:
