@@ -15,8 +15,8 @@
       get_url:
         url: '{{ agent_download_url.stdout }}'
         dest: '{{ java_agent_dest_folder_linux }}/{{ java_agent_dest_file }}'
-        force: 'true'
-        remote_src: yes
+        force: 'true'  
+      remote_src: yes
       changed_when: false
     
     - name: Unzip the application agent file
