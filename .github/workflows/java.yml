@@ -51,7 +51,6 @@ jobs:
       #  run: |
       #     cd /home/runner/.ansible/collections/ansible_collections/appdynamics/agents
       #     ansible-test sanity --docker default -v
-
       - name: Run role tests
         run: >-
           molecule --version &&
