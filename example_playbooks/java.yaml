@@ -2,7 +2,7 @@
 - hosts: all
   tasks:
     - include_role:
-        name: javaagent
+        name: appdynamics.agents.java
       vars:
         # Define Agent Type and Version 
         agent_version: 20.6.0

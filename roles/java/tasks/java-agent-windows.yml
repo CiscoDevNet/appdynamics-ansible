@@ -15,8 +15,7 @@
   win_unzip: 
     src: "{{ java_agent_dest_folder_win }}/{{ java_agent_dest_file }}"
     dest: "{{ java_agent_dest_folder_win }}"  
-    copy: no
-
+   
 - name: Install java-agent config
   template:
     src: templates/application-agent-controller-info.xml.j2

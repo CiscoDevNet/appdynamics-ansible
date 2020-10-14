@@ -4,10 +4,10 @@ dependency:
 driver:
   name: docker
 
-lint: |
-  set -e
-  yamllint .
-  ansible-lint
+#lint: |
+#  set -e
+#  yamllint .
+#  ansible-lint
 
 platforms:
   - name: instance

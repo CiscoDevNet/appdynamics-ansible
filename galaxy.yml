@@ -65,4 +65,3 @@ issues: https://github.com/Appdynamics/appdynamics-ansible/issues
 # and '.git' are always filtered
 build_ignore: 
   - build 
-
