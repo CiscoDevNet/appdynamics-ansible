@@ -1,5 +1,4 @@
 name: "appdynamics.agents.java"
-
 on:
   push:
     paths:
