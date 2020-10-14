@@ -17,9 +17,26 @@
         state: absent  
       changed_when: false # this ensures this task is idempotent 
       
-       # Leaving this here for some orgs who does not allow agent downloads on remote server. 
-       # add delegate_to: localhost 
+    - name: Check if java agent exists
+      stat: path="{{ java_agent_dest_folder_linux }}/javaagent.jar"
+      register: previous_agent
+      
+    - name: Backup old java agent to /tmp folder
+      archive: 
+        path: "{{ java_agent_dest_folder_linux }}"
+        dest: "/tmp/java_agent.{{ ansible_date_time.iso8601 }}.zip"   
+      when: previous_agent.stat.exists
+      changed_when: false
+             
+    - name: Clean up old agent after backup  
+      command: "rm -rf {{ java_agent_dest_folder_linux }}/*"
+      args:
+         warn: false
+      when: previous_agent.stat.exists
+      changed_when: false
 
+     
+     # add delegate_to: localhost for customers who are unable to download on the remote server 
     - name: Downloading Java Agent to target
       get_url:
         url: '{{ agent_download_url.stdout }}'
@@ -31,24 +48,6 @@
 
     - debug: 
          msg: "{{ result }}" 
-
-    - name: Check if java agent exists
-      stat: path="{{ java_agent_dest_folder_linux }}/javaagent.jar"
-      register: previous_agent
-      
-    - name: Backup old Java agent to /tmp folder
-      archive: 
-        path: "{{ java_agent_dest_folder_linux }}"
-        dest: "/tmp/java_agent.{{ ansible_date_time.iso8601 }}.zip"   
-      when: previous_agent.stat.exists
-      changed_when: false
-        
-    - name: Clean up old agent after backup  
-      command: "rm -rf {{ java_agent_dest_folder_linux }}/*"
-      args:
-         warn: false
-      when: previous_agent.stat.exists
-      changed_when: false
 
     - name: Unzip the application agent file
       unarchive: 

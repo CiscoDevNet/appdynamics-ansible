@@ -4,22 +4,66 @@
   win_file: 
     path: "{{ java_agent_dest_folder_win }}/"
     state: directory     
-  
-- name: Downloading Java Agent on targets
+
+- name: Remove previous {{ java_agent_dest_file }} 
+  win_file:
+    path: "{{ java_agent_dest_folder_win }}/{{ java_agent_dest_file }}"
+    state: absent  
+  changed_when: false # this ensures this task is idempotent 
+
+- name: Check if java agent exists
+  win_stat: path="{{ java_agent_dest_folder_win }}/javaagent.jar"
+  register: previous_agent
+
+#using Powershell as win_zip module doesn't exist in Ansible - 10/2020
+- name: Backup old java agent to  C:\Windows\Temp folder
+  win_shell: "Compress-Archive -Path {{ java_agent_dest_folder_win }} -DestinationPath  C:/Windows/Temp/java_agent.{{ ansible_date_time.iso8601 }}.zip"
+  when: previous_agent.stat.exists
+  changed_when: false
+
+- name: Clean up old agent after backup  
+  win_shell: "Remove-Item {{ java_agent_dest_folder_win }}/* -Recurse"
+  args:
+      warn: false
+  when: previous_agent.stat.exists
+  changed_when: false
+
+- name: Downloading Java Agent on remote
   win_get_url:
     url: '{{ agent_download_url.stdout }}'
     dest: '{{ java_agent_dest_folder_win }}/{{ java_agent_dest_file }}'
     force: 'true'
+  changed_when: false
+  register: result
+  failed_when: result.status_code != 200
 
-- name: Unarchive the application agent file
+- debug: 
+         msg: "{{ result }}" 
+
+- name: Unzip the Java agent 
   win_unzip: 
     src: "{{ java_agent_dest_folder_win }}/{{ java_agent_dest_file }}"
     dest: "{{ java_agent_dest_folder_win }}"  
-   
-- name: Install java-agent config
+    remote_src: yes 
+  changed_when: false
+
+- name: Configure Java agent's controller-info.xml
   template:
     src: templates/application-agent-controller-info.xml.j2
-    dest: '{{ java_agent_dest_folder_win }}/conf/controller-info.xml'
+    dest: "{{ java_agent_dest_folder_win }}/conf/controller-info.xml"
+  changed_when: false
+
+# requires Powershell 5 due to -Depth
+- name: "Get version folder name"
+  win_shell: "(Get-ChildItem {{ java_agent_dest_folder_win }} -Recurse -Depth 1 | Where{$_.Name -Match 'ver*'}  | Select-Object -ExpandProperty Name).Trim()"
+  register: ver
+
+- debug:
+    msg: "{{ ver.stdout | regex_replace ('\\r\\n', '') }}"
+  
+- name: Copy controller-info.xml to the versioned agent folder 
+  win_shell: "Copy-Item  {{ java_agent_dest_folder_win }}/conf/controller-info.xml  {{ java_agent_dest_folder_win }}/{{ ver.stdout | regex_replace ('\\r\\n', '') }}/conf/ -Force"
+  changed_when: false
 
 - name: Clean up - remove {{ java_agent_dest_file }} 
   win_file:
