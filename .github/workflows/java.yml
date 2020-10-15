@@ -34,6 +34,14 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.x'
+      - uses: docker-practice/actions-setup-docker@master
+        with:
+          docker_channel: nightly
+          # this value please see https://github.com/AkihiroSuda/moby-snapshot/releases
+          docker_nightly_version: snapshot-20201008
+      - run: |
+          set -x
+          docker version
 
       - name: Install test dependencies.
         run: pip3 install molecule docker yamllint ansible-lint
