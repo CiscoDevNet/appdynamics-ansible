@@ -22,8 +22,8 @@ jobs:
       fail-fast: true
       matrix:
         distro:
-          #- centos7
-          - ubuntu
+          - centos7
+         # - ubuntu
         collection_role:
           - machine
     steps:
