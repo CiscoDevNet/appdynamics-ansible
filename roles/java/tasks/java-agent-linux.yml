@@ -35,7 +35,6 @@
       when: previous_agent.stat.exists
       changed_when: false
 
-     
      # add delegate_to: localhost for customers who are unable to download on the remote server 
     - name: Download Java Agent 
       get_url:
@@ -54,6 +53,7 @@
     - name: Unzip the Java agent file 
       unarchive: 
         #src: "{{ agent_download_url.stdout }}" 
+        src: "{{ java_agent_dest_folder_linux }}/{{ java_agent_dest_file }}"
         dest: "{{ java_agent_dest_folder_linux }}"   
         remote_src: yes 
       changed_when: false

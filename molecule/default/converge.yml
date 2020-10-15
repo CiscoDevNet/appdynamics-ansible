@@ -9,7 +9,7 @@
     when: ansible_os_family == 'Debian'
   #roles:
     #- role: appdynamics.agents.java
-- import_playbook: ../../java.yaml
+- import_playbook: ../../machine.yaml
   vars:
         # Define Agent Type and Version 
         agent_version: 20.8.0
@@ -22,4 +22,8 @@
         controller_host_name: "saas.appdynamics.com" # Your AppDynamics controller 
         controller_account_name: "customer1"  # Please add this to your Vault 
         ssl_enabled: false
+        sim_enabled: true
         controller_port: "443"
+        analytics_event_endpoint: "http://ansible-20100nosshcont-bum4wzwa.appd-cx.com:7001"
+        enable_analytics_agent: true
+        machine_hierarchy: "AppName|Owners|Environment|" # Make sure it ends with a |

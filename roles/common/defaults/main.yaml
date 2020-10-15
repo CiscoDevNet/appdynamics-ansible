@@ -1,4 +1,16 @@
 ---
+#wheel user for Machine agent 
+appdynamics_user: appdynamics
+
+
+############ DO NOT CHANGE ANY OF THESE DEFAULTS - Except you know what you're doing#######################
+
+#windows_ma_finder_string
+win_ma_finder_string: machineagent-bundle-64bit-windows
+win_db_finder_string: db-agent-winx64
+linux_ma_finder_string: machineagent-bundle-64bit-linux
+linux_db_finder_string: db-agent
+
 host_name: '{{ ansible_hostname }}' # computername/hostname of the target machine 
 
 # DB Agent Linux
@@ -7,7 +19,7 @@ db_agent_dest_file: db-agent.zip
 
 # Machine Agent Win
 machine_agent_dest_folder_win: C:/appdynamics/machine-agent
-machine_agent_monitor_folder_win: "{{ machine_agent_dest_folder_win }}\\monitor"
+machine_agent_monitor_folder_win: "{{ machine_agent_dest_folder_win }}/monitor"
 temp_dir: /tmp
 
 # Machine Agent Linux
@@ -29,5 +41,4 @@ java_agent_dest_file: java-agent.zip
 # Java Agent Windows 
 java_agent_dest_folder_win: C:/appdynamics/java-agent
 
-#wheel user for Machine agent 
-appdynamics_user: appdynamics
+

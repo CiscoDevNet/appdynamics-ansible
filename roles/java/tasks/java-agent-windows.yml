@@ -17,7 +17,7 @@
 
 #using Powershell as win_zip module doesn't exist in Ansible - 10/2020
 - name: Backup old java agent to  C:\Windows\Temp folder
-  win_shell: "Compress-Archive -Path {{ java_agent_dest_folder_win }} -DestinationPath  C:/Windows/Temp/java_agent.{{ ansible_date_time.iso8601 }}.zip"
+  win_shell: "Compress-Archive -Path {{ java_agent_dest_folder_win }} -DestinationPath  C:/Windows/Temp/java_agent.{{ ansible_date_time.iso8601 }}.zip -Force"
   when: previous_agent.stat.exists
   changed_when: false
 
@@ -28,7 +28,7 @@
   when: previous_agent.stat.exists
   changed_when: false
 
-- name: Downloading Java Agent on remote
+- name: Downloading Java Agent
   win_get_url:
     url: '{{ agent_download_url.stdout }}'
     dest: '{{ java_agent_dest_folder_win }}/{{ java_agent_dest_file }}'

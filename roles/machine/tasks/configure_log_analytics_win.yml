@@ -5,6 +5,7 @@
     regexp: '<enabled>false</enabled>'
     line: '<enabled>true</enabled>'
     backrefs: yes
+  changed_when: false
 
 - name: Configure the analytics agent properties file
   win_lineinfile:
@@ -19,3 +20,4 @@
     - { setting: 'http.event.accessKey=', value: '{{ account_access_key }}' }
     - { setting: 'http.event.name=', value: '{{ account_name }}' }
   no_log: yes
+  changed_when: false

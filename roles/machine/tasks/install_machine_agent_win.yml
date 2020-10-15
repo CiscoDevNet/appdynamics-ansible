@@ -1,27 +1,70 @@
 ---
+- name: Validate that the agent download URL is fit for Windows 
+  assert:
+    that: "win_ma_finder_string in agent_download_url.stdout"
+    fail_msg: "Looks like you have downloaded the incorrect {{ agent_type }} agent for Windows. The URL: {{ agent_download_url.stdout }} is expected to contain {{ win_ma_finder_string }}"
+    success_msg: "Successfully validated {{agent_type }} for Windows"
+
 - name: Ensures machine agent {{machine_agent_dest_folder_win}} dir exists
   win_file:
     path: "{{ machine_agent_dest_folder_win }}"
     state: directory
 
+- name: Check if Machine Agent is already installed
+  win_stat: path="{{ machine_agent_dest_folder_win }}/InstallService.vbs"
+  register: previous_agent
 
-- name: Downloading Windows Machine Agent on targets
+#using Powershell as win_zip module doesn't exist in Ansible - 10/2020
+- name: Backup Machine Agent to  C:\Windows\Temp folder
+  win_shell: "Compress-Archive -Path {{ machine_agent_dest_folder_win }} -DestinationPath  C:/Windows/Temp/machine_agent.{{ ansible_date_time.iso8601 }}.zip -Force"
+  when: previous_agent.stat.exists
+  changed_when: false
+
+- name: Remove StdIn.Read in the UninstallService.vbs file which stops the playbook from returning
+  win_lineinfile:
+    dest: '{{ machine_agent_dest_folder_win }}/UninstallService.vbs'
+    regexp: "^WScript.StdIn.Read"
+    state: absent
+  register: remove_read_std_in_result
+  when: previous_agent.stat.exists
+
+- name: Remove the machine agent service
+  win_command: cscript.exe "{{ machine_agent_dest_folder_win }}/UninstallService.vbs"
+  register: install_win_service_result
+  when: previous_agent.stat.exists
+
+- name: Clean up old agent after backup  
+  win_shell: "Remove-Item {{ machine_agent_dest_folder_win }}/* -Recurse"
+  args:
+      warn: false
+  when: previous_agent.stat.exists
+  changed_when: false
+
+- name: Downloading Windows Machine Agent 
   win_get_url:
     url: "{{ agent_download_url.stdout }}"
     dest: "{{ machine_agent_dest_folder_win }}/{{ ma_agent_dest_file }}"
-    force: 'true'
+    force: true
+  changed_when: false
+  register: result
+  failed_when: result.status_code != 200
+  
+- debug: 
+    msg: "{{ result }}" 
 
 - name: Unzip machine agent file
   win_unzip:
     src: "{{ machine_agent_dest_folder_win }}/{{ ma_agent_dest_file }}"
     dest: "{{ machine_agent_dest_folder_win }}"
-    creates: "{{ machine_agent_dest_folder_win }}/InstallService.vbs"
+    remote_src: yes 
+  changed_when: false
 
 - name: Configure machine-agent controller-info.xml
   template:
     src: templates/machine-agent-controller-info.xml.j2
     dest: '{{ machine_agent_dest_folder_win }}/conf/controller-info.xml'
     force: yes
+  changed_when: false
 
 - name: Remove StdIn.Read in the InstallService.vbs file which stops the playbook from returning
   win_lineinfile:
@@ -29,10 +72,7 @@
     regexp: "^WScript.StdIn.Read"
     state: absent
   register: remove_read_std_in_result
-
-- name: Remove StdIn.Read result
-  debug:
-    var: remove_read_std_in_result
+  changed_when: false
 
 - include_tasks: configure_log_analytics_win.yml
   when: enable_analytics_agent == true
@@ -45,13 +85,8 @@
   debug:
     var: install_win_service_result
 
-- name: Clean up - remove {{ ma_agent_dest_file }} from Ansible controller 
-  file:
-    path: "{{ temp_dir }}/{{ ma_agent_dest_file }}"
-    state: absent
-  delegate_to: localhost
-
 - name: Clean up - remove {{ ma_agent_dest_file }} 
   win_file:
     path: "{{ machine_agent_dest_folder_win }}/{{ ma_agent_dest_file }}"
     state: absent
+  changed_when: false
