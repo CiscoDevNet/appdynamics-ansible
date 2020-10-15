@@ -22,6 +22,7 @@
     ssl_enabled: "{{ ssl_enabled }}"
     controller_port: "{{ controller_port }}"
     enable_analytics_agent: "{{ enable_analytics_agent }}"
+    machine_hierarchy : "{{ machine_hierarchy }}"
 
 - name: Set HTTPS Protocol facts
   set_fact:

@@ -11,12 +11,38 @@
       owner: "{{ appdynamics_user }}"
       group: "{{ appdynamics_user }}"
 
+#check existince, stop the service, backup, trash and download new one 
+   
+  - name: Check Machine Agent is already installed
+    stat: path="{{ machine_agent_dest_folder_linux }}/machineagent.jar"
+    register: previous_agent
+    
+  - name: Backup existing Machine Agent
+    archive: 
+      path: "{{ machine_agent_dest_folder_linux }}"
+      dest: "/tmp/machine_agent.{{ ansible_date_time.iso8601 }}.zip"   
+    when: previous_agent.stat.exists
+    changed_when: false
+            
+  - name: Clean up old Machine Agent  binaries after backup  
+    command: "rm -rf {{ machine_agent_dest_folder_linux }}/*"
+    args:
+        warn: false
+    when: previous_agent.stat.exists
+    changed_when: false
 
-  - name: Downloading Machine Agent to targets
+  - name: Downloading Machine Agent
     get_url:
       url: '{{ agent_download_url.stdout }}'
       dest: "{{ machine_agent_dest_folder_linux }}/{{ ma_agent_dest_file }}"
-      force: 'true'
+      force: true
+    changed_when: false
+    register: result
+    failed_when: result.status_code != 200
+  
+
+  - debug: 
+      msg: "{{ result }}" 
 
   - name: Unzip the Machine agent file
     unarchive: 
@@ -24,9 +50,9 @@
       dest: "{{ machine_agent_dest_folder_linux }}"
       owner: "{{ appdynamics_user }}"
       group: "{{ appdynamics_user }}"
-      creates: "{{ machine_agent_dest_folder_linux }}/bin/machine-agent"
-      copy: no
-
+      remote_src: yes 
+    changed_when: false
+   
   - name: Configure Machine Agent controller-info.xml file 
     template:
       src: templates/machine-agent-controller-info.xml.j2
@@ -47,7 +73,8 @@
     template:
       src: templates/appdynamics-machine-agent.service.j2
       dest: /etc/systemd/system/appdynamics-machine-agent.service
-      owner: root
+      force: true
+      owner: root # The Machine Agent must not run as root, you may change it. 
       group: root
       mode: 0644  
     register: machine_agent_systemd_result
@@ -56,7 +83,14 @@
     systemd:
       name: appdynamics-machine-agent
       enabled: yes
+      force: true # Force it to override existing symlink incase of an upgrade
       masked: no
+  
+   #Reload systemd if it is an upgrade or re-installation
+  - name:  Reload systemd configs 
+    systemd:
+      daemon_reload: yes
+    when: previous_agent.stat.exists
 
   - name: Start the agent service
     systemd:

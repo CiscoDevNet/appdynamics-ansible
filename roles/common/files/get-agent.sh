@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # This script is not officially supported by AppDynamics 
-# Author: Israel Ogbole  #!/usr/bin/env sh
+# Author: Israel Ogbole 
 
 set -o nounset
 
@@ -158,7 +158,7 @@ download_options() {
     _app_agent="dotnet"
     _finder="dotNetAgentSetup64"
     _os_platform="windows"
-  
+    
   elif [ "$1" = "dotnet-core" ]; then
     _app_agent="dotnet,dotnet-core"
     _finder="AppDynamics-DotNetCore-linux-x64"

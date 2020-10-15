@@ -16,7 +16,7 @@ machine_agent_monitor_folder_linux: "{{ machine_agent_dest_folder_linux }}/monit
 
 # Machine Common 
 ma_agent_dest_file: machine-agent.zip
-machine_agent_hierarchy_root: ACME 
+machine_hierarchy: "" 
 
 # DotNet Agent Win
 dotnet_agent_dest_folder_win: C:\\appdynamics\\dotnet-agent # '/' does not work with win_package due to msiexec. 

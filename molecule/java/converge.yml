@@ -16,7 +16,6 @@
         # The applicationName
         application_name: "IoT_API"
         tier_name: "login_service2" # ONLY required if agent type is not machine and db agent
-        application_environment: "production"
         # Your controller details 
         controller_account_access_key: "ffdsfs" # Please add this to your Vault 
         controller_host_name: "saas.appdynamics.com" # Your AppDynamics controller 

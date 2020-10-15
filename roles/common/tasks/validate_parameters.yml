@@ -10,11 +10,6 @@
     that:  agent_version is defined
     msg: 'The version of the agent must be provided.'
 
-- name: Validate application_environment
-  assert:
-    that: application_environment is defined
-    msg: 'An application environment must be provided'
-
 - name: Validate application_name
   assert:
     that:  application_name is defined

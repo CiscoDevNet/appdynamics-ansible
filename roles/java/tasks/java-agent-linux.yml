@@ -11,7 +11,7 @@
         recurse: yes
       changed_when: false # this ensures this task is idempotent 
 
-    - name: Remove previous {{ java_agent_dest_file }} 
+    - name: Clean out orphanned {{ java_agent_dest_file }} 
       file:
         path: "{{ java_agent_dest_folder_linux }}/{{ java_agent_dest_file }}"
         state: absent  
@@ -37,7 +37,7 @@
 
      
      # add delegate_to: localhost for customers who are unable to download on the remote server 
-    - name: Downloading Java Agent to target
+    - name: Download Java Agent 
       get_url:
         url: '{{ agent_download_url.stdout }}'
         dest: "{{ java_agent_dest_folder_linux }}/{{ java_agent_dest_file }}"
@@ -48,11 +48,12 @@
 
     - debug: 
          msg: "{{ result }}" 
-
-    - name: Unzip the application agent file
+     
+    # Keeping downloading and unziping seperate tasks
+    # as not all customers are allowd to download on the remote servers. 
+    - name: Unzip the Java agent file 
       unarchive: 
-        #src: "{{ agent_download_url.stdout }}"
-        src: "{{ java_agent_dest_folder_linux }}/{{ java_agent_dest_file }}"
+        #src: "{{ agent_download_url.stdout }}" 
         dest: "{{ java_agent_dest_folder_linux }}"   
         remote_src: yes 
       changed_when: false

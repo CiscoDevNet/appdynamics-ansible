@@ -7,7 +7,6 @@
         # Define Agent Type and Version 
         agent_version: 20.6.0
         agent_type: machine
-        application_environment: "production"
         # Your controller details 
         controller_account_access_key: "ffdsfs" # Please add this to your Vault 
         controller_global_analytics_account_name: 'customer1-guid' # Please add this to your Vault 

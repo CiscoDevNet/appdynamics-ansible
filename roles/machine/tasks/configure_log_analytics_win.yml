@@ -18,4 +18,4 @@
     - { setting: 'http.event.accountName=', value: '{{ global_analytics_account_name }}' }
     - { setting: 'http.event.accessKey=', value: '{{ account_access_key }}' }
     - { setting: 'http.event.name=', value: '{{ account_name }}' }
-  no_log: no
+  no_log: yes
