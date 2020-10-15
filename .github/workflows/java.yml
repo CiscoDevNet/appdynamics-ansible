@@ -23,7 +23,7 @@ jobs:
       matrix:
         distro:
           - centos7
-          #- ubuntu
+          - ubuntu
         collection_role:
           - java
     steps:

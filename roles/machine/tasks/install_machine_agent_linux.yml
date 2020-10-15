@@ -27,7 +27,15 @@
       dest: "/tmp/machine_agent.{{ ansible_date_time.iso8601 }}.zip"   
     when: previous_agent.stat.exists
     changed_when: false
-            
+  
+  - name: Stop Machine Agent service
+    systemd:
+      name: appdynamics-machine-agent
+      state: stopped
+      daemon_reload: yes
+    changed_when: false
+    when: previous_agent.stat.exists
+    
   - name: Clean up old Machine Agent  binaries after backup  
     command: "rm -rf {{ machine_agent_dest_folder_linux }}/*"
     args:
@@ -44,7 +52,6 @@
     register: result
     failed_when: result.status_code != 200
   
-
   - debug: 
       msg: "{{ result }}" 
 
