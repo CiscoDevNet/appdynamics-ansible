@@ -37,10 +37,10 @@ jobs:
 
       - name: Install Docker 
         run: | 
-          sudo yum check-update 
-          curl -fsSL https://get.docker.com/ | sh
-          sudo systemctl start docker
-          sudo usermod -aG docker $(whoami)
+           yum check-update 
+           curl -fsSL https://get.docker.com/ | sh
+           systemctl start docker
+           usermod -aG docker $(whoami)
 
       - name: Install test dependencies.
         run: pip3 install molecule docker yamllint ansible-lint
