@@ -35,11 +35,11 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.x'
-
+          
+      # molecule-docker
       - name: Install test dependencies.
-        run: | 
-         sudo apt install docker
-         pip3 install molecule[docker] docker yamllint ansible-lint
+        run: |
+         pip3 install molecule-docker docker yamllint ansible-lint
       
       - name: Build the collection
         run: |
