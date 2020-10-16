@@ -24,7 +24,7 @@ jobs:
       matrix:
         distro:
           - centos7
-         # - ubuntu
+        #  - debian10
         collection_role:
           - machine
     steps:
