@@ -22,7 +22,7 @@ jobs:
       fail-fast: true
       matrix:
         distro:
-          - centos7
+          - centos8
           #- ubuntu
         collection_role:
           - java
