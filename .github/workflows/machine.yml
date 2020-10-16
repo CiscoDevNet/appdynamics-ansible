@@ -20,6 +20,7 @@ jobs:
       ANSIBLE_FORCE_COLOR: 1
     strategy:
       fail-fast: true
+      max-parallel: 4
       matrix:
         distro:
           - centos7
@@ -35,15 +36,10 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install Docker 
-        run: | 
-           yum check-update 
-           curl -fsSL https://get.docker.com/ | sh
-           systemctl start docker
-           usermod -aG docker $(whoami)
-
       - name: Install test dependencies.
-        run: pip3 install molecule docker yamllint ansible-lint
+        run: | 
+         sudo apt install docker
+         pip3 install molecule docker yamllint ansible-lint
       
       - name: Build the collection
         run: |
