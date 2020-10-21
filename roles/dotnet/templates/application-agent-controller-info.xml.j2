@@ -9,7 +9,7 @@
   </logFileFolderAccessPermissions>
 <appdynamics-agent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <!-- Controller configuration -->
-  <controller host="{{ controller_host_name }}" port="443" ssl="true">
+  <controller host="{{ controller_host_name }}" port="{{ controller_port }}" ssl="{{ ssl_enabled | lower }}">
     <!-- The application is required -->
     <application name="{{ application_name }}"/>
     <!-- The account name and access key are required -->
@@ -23,11 +23,10 @@
   <app-agents>
     <profiler>
       <!-- Enable runtime reinstrumentation -->
-       <runtime-reinstrumentation enabled="{{ runtime_reinstrumentation }}" interval="60000" optimize="true" />
+       <runtime-reinstrumentation enabled="{{ runtime_reinstrumentation | lower }}" interval="60000" />
     </profiler>  
-     <app-agents>
      <IIS>
-      <automatic enabled="{{ monitor_all_IIS_apps }}" />
+      <automatic enabled="{{ monitor_all_IIS_apps | lower }}" />
     <applications>
     </applications>
     </IIS>  
