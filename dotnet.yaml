@@ -2,7 +2,7 @@
 - hosts: windows
   tasks:
     - include_role:
-        name: dotnetagent
+        name: dotnet
       vars:
         # Define Agent Type and Version 
         agent_version: 20.8.0
@@ -17,8 +17,11 @@
         controller_account_name: 'customer1' # Please add this to your Vault 
         ssl_enabled: true
         controller_port: "443"
-    
-        # Define the executables to monitor
+        # Enable automatic instrumentation of IIS applications 
+        monitor_all_IIS_apps: true
+        runtime_reinstrumentation: true
+        # Define standalone executive applications to monitor
         services:
           - login.exe
           - tmw.exe
+     

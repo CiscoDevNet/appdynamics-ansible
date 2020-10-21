@@ -23,11 +23,16 @@
   <app-agents>
     <profiler>
       <!-- Enable runtime reinstrumentation -->
-      <runtime-reinstrumentation enabled="true" interval="60000"/>
-    </profiler>    
+       <runtime-reinstrumentation enabled="{{ runtime_reinstrumentation }}" interval="60000" optimize="true" />
+    </profiler>  
+     <app-agents>
+     <IIS>
+      <automatic enabled="{{ monitor_all_IIS_apps }}" />
+    <applications>
+    </applications>
+    </IIS>  
     <!-- For a standalone application or Windows service the executable name should be provided -->
     <!-- as the standalone-application executable attribute -->
-    <!-- The exe extension is optional. -->
     <standalone-applications>
     {% for service in services %}
       <standalone-application executable="{{ service }}">

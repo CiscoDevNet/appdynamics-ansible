@@ -41,4 +41,12 @@ java_agent_dest_file: java-agent.zip
 # Java Agent Windows 
 java_agent_dest_folder_win: C:/appdynamics/java-agent
 
+# DotNet agent defaults 
+monitor_all_IIS_apps: false 
+runtime_reinstrumentation: false
+
+
+
+
+
 
