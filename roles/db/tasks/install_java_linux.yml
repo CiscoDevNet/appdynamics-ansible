@@ -1,0 +1,13 @@
+---
+- name: Install OpenJDK on Debian
+  apt:
+     name: openjdk-8-jdk
+     state: present
+  when: "ansible_os_family == 'Debian'"
+  
+- name: Install OpenJDK on Redhat
+  yum: 
+    update_cache: yes
+    name: java-1.8.0-openjdk
+    state: installed
+  when: "ansible_os_family == 'RedHat'"

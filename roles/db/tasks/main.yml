@@ -1,6 +1,6 @@
-- include_tasks: db_agent.yml
+- include_tasks: install_db_agent_linux.yml
+  when: ansible_os_family == 'RedHat' or  ansible_os_family == 'Debian'
 
-- name: Clean up - remove {{ ma_agent_dest_file }} 
-  file:
-    path: "{{ db_agent_dest_folder_linux }}/{{ db_agent_dest_file }}"
-    state: absent
+#todo
+#- include_tasks: install_db_agent_windows.yml 
+#  when: ansible_os_family == 'Windows'

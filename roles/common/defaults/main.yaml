@@ -16,6 +16,7 @@ host_name: '{{ ansible_hostname }}' # computername/hostname of the target machin
 # DB Agent Linux
 db_agent_dest_folder_linux: /opt/appdynamics/db-agent
 db_agent_dest_file: db-agent.zip
+db_agent_name: "AppDynamics"
 
 # Machine Agent Win
 machine_agent_dest_folder_win: C:/appdynamics/machine-agent

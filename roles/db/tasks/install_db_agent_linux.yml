@@ -1,0 +1,81 @@
+---
+- name: DB Agent Linux Block
+  become: true
+  block: 
+    - include_tasks: install_java_linux.yml
+    - name: Ensures DB agent dir exists
+      file: 
+        path: "{{db_agent_dest_folder_linux }}/"
+        state: directory     
+        mode: 0755
+        recurse: yes
+      changed_when: false # this ensures this task is idempotent 
+
+    - name: Clean out orphanned {{ db_agent_dest_file }} 
+      file:
+        path: "{{db_agent_dest_folder_linux }}/{{ db_agent_dest_file }}"
+        state: absent  
+      changed_when: false # this ensures this task is idempotent 
+      
+    - name: Check if DB agent exists
+      stat: path="{{db_agent_dest_folder_linux }}/db-agent.jar"
+      register: previous_db_agent
+      
+    - name: Backup old DB agent to /tmp folder
+      archive: 
+        path: "{{db_agent_dest_folder_linux }}"
+        dest: "/tmp/db_agent.{{ ansible_date_time.iso8601 }}.zip"   
+      when: previous_db_agent.stat.exists
+      changed_when: false
+
+    - name: Stop DB agent service 
+      shell: "kill -9  $(ps aux | grep 'appdynamics/db-agent' | awk '{print $2}')"
+      when: previous_db_agent.stat.exists
+      ignore_errors: yes
+      changed_when: false
+             
+    - name: Clean up old agent after backup  
+      command: "rm -rf {{db_agent_dest_folder_linux }}/*"
+      args:
+         warn: false
+      when: previous_db_agent.stat.exists
+      changed_when: false
+
+    - name: Download DB Agent 
+      get_url:
+        url: '{{ agent_download_url.stdout }}'
+        dest: "{{db_agent_dest_folder_linux }}/{{ db_agent_dest_file }}"
+        force: true # download a new file even if javaagent.zip exists. 
+      changed_when: false
+      register: result
+      failed_when: result.status_code != 200
+
+    - debug: 
+         msg: "{{ result }}" 
+
+    - name: Unzip DB agent file 
+      unarchive: 
+        #src: "{{ agent_download_url.stdout }}" 
+        src: "{{db_agent_dest_folder_linux }}/{{ db_agent_dest_file }}"
+        dest: "{{db_agent_dest_folder_linux }}"   
+        remote_src: yes 
+      changed_when: false
+
+    - name: Configure db-agent controller-info.xml file
+      template:
+        src: templates/db-agent-controller-info.xml.j2
+        dest: '{{ db_agent_dest_folder_linux }}/conf/controller-info.xml'
+        #owner: appdynamics
+        #group: appdynamics
+        mode: 0755  
+      changed_when: false
+    
+    - name: Start DB Agent service
+      command: "nohup java -Ddbagent.name={{ db_agent_name }} -Xms1536m -jar {{ db_agent_dest_folder_linux }}/db-agent.jar > /dev/null 2>&1 &"
+      #command: "{{ db_agent_dest_folder_linux }}/start-dbagent -Ddbagent.name={{ db_agent_name }} -Xms1536m -Xmx3g  > /dev/null 2>&1 & "
+
+    - name: Clean up - remove {{ db_agent_dest_file }} 
+      file:
+        path: "{{ db_agent_dest_folder_linux }}/{{ db_agent_dest_file }}"
+        state: absent
+      changed_when: false
