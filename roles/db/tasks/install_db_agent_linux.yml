@@ -27,12 +27,47 @@
         dest: "/tmp/db_agent.{{ ansible_date_time.iso8601 }}.zip"   
       when: previous_db_agent.stat.exists
       changed_when: false
-
-    - name: Stop DB agent service 
-      shell: "kill -9  $(ps aux | grep 'appdynamics/db-agent' | awk '{print $2}')"
+    
+    - name: Get running DB processes
+      shell: "ps -ef | grep -v grep | grep -w 'db-agent' | awk '{print $2}'"
+      register: running_processes
       when: previous_db_agent.stat.exists
-      ignore_errors: yes
       changed_when: false
+    
+    - debug: 
+       msg: "{{ running_processes.stdout_lines  }}"
+      when: previous_db_agent.stat.exists
+      changed_when: false
+
+    - name: Kill running DB processes
+      shell: "kill {{ item }}"
+      with_items: "{{ running_processes.stdout_lines }}"
+      when: previous_db_agent.stat.exists
+      changed_when: false
+
+    - wait_for:
+        path: "/proc/{{ item }}/status"
+        state: absent
+      with_items: "{{ running_processes.stdout_lines }}"
+      ignore_errors: yes
+      register: killed_processes
+      when: previous_db_agent.stat.exists
+      changed_when: false
+
+    - debug: 
+       msg: "{{ running_processes.stdout_lines }}"
+      when: previous_db_agent.stat.exists
+      changed_when: false
+
+    - name: Force kill stuck processes
+      shell: "kill -9 {{ item }}"
+      with_items: "{{ killed_processes.results | select('failed') | map(attribute='item') | list }}"
+
+    #- name: Stop DB agent service 
+    #  shell: "kill -9  $(ps aux | grep 'appdynamics/db-agent' | awk '{print $2}')"
+    #  when: previous_db_agent.stat.exists
+    #  ignore_errors: yes
+    #  changed_when: false
              
     - name: Clean up old agent after backup  
       command: "rm -rf {{db_agent_dest_folder_linux }}/*"
@@ -71,11 +106,21 @@
       changed_when: false
     
     - name: Start DB Agent service
-      command: "nohup java -Ddbagent.name={{ db_agent_name }} -Xms1536m -jar {{ db_agent_dest_folder_linux }}/db-agent.jar > /dev/null 2>&1 &"
-      #command: "{{ db_agent_dest_folder_linux }}/start-dbagent -Ddbagent.name={{ db_agent_name }} -Xms1536m -Xmx3g  > /dev/null 2>&1 & "
+      shell: "nohup java -Dappdynamics.agent.uniqueHostId={{ host_name }} -Ddbagent.name={{ db_agent_name }} -Xms1536m -jar {{ db_agent_dest_folder_linux }}/db-agent.jar </dev/null >/dev/null 2>&1 &"
+      #shell: "{{ db_agent_dest_folder_linux }}/start-dbagent  -Dappdynamics.agent.uniqueHostId={{ host_name }} -Ddbagent.name={{ db_agent_name }} -Xms1536m  </dev/null >/dev/null 2>&1 &"
+   
+    - name: Get new running DB processes
+      shell: "ps -ef | grep -v grep | grep -w 'db-agent' | awk '{print $2}'"
+      register: db_proc
+      failed_when: db_proc.stdout_lines == ""
+
+    - debug: 
+       msg: "{{ db_proc.stdout_lines  }}"
 
     - name: Clean up - remove {{ db_agent_dest_file }} 
       file:
         path: "{{ db_agent_dest_folder_linux }}/{{ db_agent_dest_file }}"
         state: absent
-      changed_when: false
+      changed_when: false 
+
+    

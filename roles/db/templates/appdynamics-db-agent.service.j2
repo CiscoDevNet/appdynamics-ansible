@@ -1,0 +1,15 @@
+
+[Unit]
+Description=AppDynamics Database Agent
+
+[Service]
+
+Type=simple
+
+ExecStart=/bin/sh -c "nohup java -Dappdynamics.agent.uniqueHostId={{ host_name }} -Ddbagent.name={{ db_agent_name }} -Xms1536m -jar {{ db_agent_dest_folder_linux }}/db-agent.jar >/dev/null 2>&1 &"
+ExecStop=/bin/sh -c "kill -9  $(ps aux | grep 'appdynamics/db-agent' | awk '{print $2}')"
+
+[Install]
+# Start the AppDynamics DB agent service during the setup for a
+# non-graphical multi-user system.
+WantedBy=multi-user.target

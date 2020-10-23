@@ -36,7 +36,7 @@
     changed_when: false
     when: previous_agent.stat.exists
     
-  - name: Clean up old Machine Agent  binaries after backup  
+  - name: Clean up old Machine Agent binaries after backup  
     command: "rm -rf {{ machine_agent_dest_folder_linux }}/*"
     args:
         warn: false
