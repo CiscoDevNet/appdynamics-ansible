@@ -3,11 +3,17 @@
 Description=AppDynamics Database Agent
 
 [Service]
+# You may change the user running the process if you so wish, but ensure the user can read and write to the {{ db_agent_dest_folder_linux }} path. 
+User={{ appdynamics_user }}
+
+# Killing the service using systemd causes Java to exit with status 143. This is OK.
+SuccessExitStatus=143
 
 Type=simple
 
-ExecStart=/bin/sh -c "nohup java -Dappdynamics.agent.uniqueHostId={{ host_name }} -Ddbagent.name={{ db_agent_name }} -Xms1536m -jar {{ db_agent_dest_folder_linux }}/db-agent.jar >/dev/null 2>&1 &"
-ExecStop=/bin/sh -c "kill -9  $(ps aux | grep 'appdynamics/db-agent' | awk '{print $2}')"
+# ExecStart=/user/bin/java -Dappdynamics.agent.uniqueHostId={{ host_name }} -Ddbagent.name={{ db_agent_name }} -Xms1536m -jar {{ db_agent_dest_folder_linux }}/db-agent.jar >/dev/null 2>&1 &
+ExecStart=/bin/sh -c {{ db_agent_dest_folder_linux }}/start-dbagent -Dappdynamics.agent.uniqueHostId={{ host_name }} -Ddbagent.name={{ db_agent_name }} -Xms1536m >/dev/null 2>&1 &
+ExecStop=/bin/kill -2 $MAINPID 
 
 [Install]
 # Start the AppDynamics DB agent service during the setup for a

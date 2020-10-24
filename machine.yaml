@@ -6,7 +6,7 @@
       vars:
         # Define Agent Type and Version 
         agent_version: 20.9.0
-        agent_type: machine-win
+        agent_type: machine-win # Use machine-win for Windows host
         # Your controller details 
         controller_account_access_key: "b0248ceb-c954-4a37-97b5-207e90418cb4" # Please add this to your Vault 
         controller_global_analytics_account_name: 'customer1_e2f90621-ab21-4bf4-908c-872d213c7f64' # Please add this to your Vault 
