@@ -68,6 +68,7 @@
     - name: Force kill stuck processes
       shell: "kill -9 {{ item }}"
       with_items: "{{ killed_processes.results | select('failed') | map(attribute='item') | list }}"
+      when: previous_db_agent.stat.exists
       changed_when: false
              
     - name: Clean up old agent after backup  

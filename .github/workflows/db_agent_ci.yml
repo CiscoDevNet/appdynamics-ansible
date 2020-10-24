@@ -1,4 +1,4 @@
-name: "appdynamics.agents.java"
+name: "appdynamics.agents.db"
 on:
   push:
     paths:
