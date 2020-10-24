@@ -1,0 +1,42 @@
+name: "appdynamics.agents.java"
+on:
+  push:
+  pull_request:
+jobs:
+  molecule:
+    runs-on: ubuntu-latest
+    env:
+      PY_COLORS: 1
+      ANSIBLE_FORCE_COLOR: 1
+    strategy:
+      fail-fast: true
+      max-parallel: 4
+      matrix:
+        distro:
+          - centos7
+        #  - debian10
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Set up Python 3
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install test dependencies.
+        run: pip3 install molecule-docker docker yamllint ansible-lint
+      
+      - name: Build the collection
+        run: |
+          collection_file=$( basename $(ansible-galaxy collection build -f | awk -F" " '{print $NF}'))
+          echo "COLLECTION_FILE=$collection_file" >> $GITHUB_ENV
+        
+      - name: Install the collection
+        run: ansible-galaxy collection install ${{ env.COLLECTION_FILE }}
+      
+      - name: Sanity test the collection
+        run: |
+           cd /home/runner/.ansible/collections/ansible_collections/appdynamics/agents
+           ansible-test sanity --docker default -v
+   

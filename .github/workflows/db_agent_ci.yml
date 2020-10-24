@@ -2,15 +2,15 @@ name: "appdynamics.agents.java"
 on:
   push:
     paths:
-      - 'roles/machine/**'
-      - 'molecule/machine/**'
-      - '.github/workflows/machine.yml'
+      - 'roles/db/**'
+      - 'molecule/db/**'
+      - '.github/workflows/db_agent_ci.yml'
       - 'roles/common/**'
   pull_request:
     paths:
-      - 'roles/machine/**'
-      - 'molecule/machine/**'
-      - '.github/workflows/machine.yml'
+      - 'roles/db/**'
+      - 'molecule/db/**'
+      - '.github/workflows/db_agent_ci.yml'
       - 'roles/common/**'
 jobs:
   molecule:
@@ -26,7 +26,7 @@ jobs:
           - centos7
         #  - debian10
         collection_role:
-          - machine
+          - db
     steps:
       - name: Check out code
         uses: actions/checkout@v2
