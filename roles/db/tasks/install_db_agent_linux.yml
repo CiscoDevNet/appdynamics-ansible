@@ -149,6 +149,7 @@
       shell: "ps -ef | grep -v grep | grep -w 'db-agent' | awk '{print $2}'"
       register: db_proc
       failed_when: db_proc.stdout_lines == ""
+      changed_when: false
 
     - debug: 
        msg: "{{ db_proc.stdout_lines  }}"
