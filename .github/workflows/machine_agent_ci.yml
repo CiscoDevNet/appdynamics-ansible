@@ -20,7 +20,6 @@ jobs:
       ANSIBLE_FORCE_COLOR: 1
     strategy:
       fail-fast: true
-      max-parallel: 4
       matrix:
         distro:
           - centos7

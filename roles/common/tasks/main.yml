@@ -2,8 +2,8 @@
 
 #- include_tasks: install_jq.yml
 
-- debug: 
-     msg:  "Agent variables: type=> {{agent_type}} version=> {{agent_version}}"
+- debug:
+     msg:  "Agent variables: type=> {{ agent_type }} version=> {{ agent_version }}"
 
 - include_tasks: get_agent.yml
 
@@ -26,14 +26,15 @@
 
 - name: Set HTTPS Protocol facts
   set_fact:
-      controller_protocol: "{% if ssl_enabled|bool == True %}https{% else %}http{% endif %}"
+      controller_protocol: "{% if ssl_enabled|bool %}https{% else %}http{% endif %}"
+      # controller_protocol: "{% if ssl_enabled|bool == True %}https{% else %}http{% endif %}"
 
-- name: Print params 
+- name: Print params
   vars:
      params: "
       SSL enabled = {{ ssl_enabled }} |
       Controller={{ controller_protocol }}://{{ controller_host_name }}:{{ controller_port }} |
       controller_account_name={{ controller_account_name }} |
       analytics_event_endpoint={{ analytics_event_endpoint }} "
-  debug: 
+  debug:
     msg: "{{ params.split('|') }}"

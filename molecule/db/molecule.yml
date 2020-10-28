@@ -4,11 +4,11 @@ dependency:
 driver:
   name: docker
 
-#lint: |
-#  set -e
-#  yamllint .
-#  flake8
-#  ansible-lint
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
+  flake8
 
 platforms:
   - name: instance

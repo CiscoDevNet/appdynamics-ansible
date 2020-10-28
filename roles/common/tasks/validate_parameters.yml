@@ -18,7 +18,7 @@
     msg: 'An application_name must be provided'
   when: "agent_type not in ('machine.*,db.*')"
 
-- name: Validate tier_name 
+- name: Validate tier_name
   assert:
     that:  tier_name is defined
     msg: 'A tier name must be provided'
@@ -33,7 +33,7 @@
   assert:
     that:  controller_global_analytics_account_name is defined
     msg: 'A controller_global_analytics_account_name must be provided'
-  when: enable_analytics_agent == true
+  when: enable_analytics_agent
 
 - name: Validate controller_host_name
   assert:
@@ -49,9 +49,9 @@
   assert:
     that:  controller_port is defined
     msg: 'A controller_port must be provided'
-    
+
 - name: Validate analytics_event_endpoint
   assert:
     that:  analytics_event_endpoint is defined
     msg: 'A analytics_event_endpoint must be provided'
-  when: enable_analytics_agent == true
+  when: enable_analytics_agent
