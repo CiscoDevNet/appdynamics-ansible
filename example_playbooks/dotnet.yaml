@@ -2,21 +2,27 @@
 - hosts: windows
   tasks:
     - include_role:
-        name: dotnet-agent
+        name: appdynamics.agents.dotnet
       vars:
         # Define Agent Type and Version 
-        agent_version: 20.6.0
+        agent_version: 20.9.0
         agent_type: dotnet
         # The applicationName
         application_name: 'IoT_API'
         tier_name: 'login_service2' # ONLY required if agent type is not machine and db agent
         # Your controller details 
-        controller_account_access_key: 'ffdsfs' # Please add this to your Vault
-        controller_global_analytics_account_name: 'customer1-guid' # Please add this to your Vault
-        controller_host_name: 'saas.appdynamics.com' # Your AppDynamics controller
-        controller_account_name: 'customer1' # Please add this to your Vault
-        analytics_event_endpoint: "https://fra-ana-api.saas.appdynamics.com:443"
-        # Define the executables to monitor
+        controller_account_access_key: "b0248ceb-c954-4a37-97b5-207e90418cb4" # Please add this to your Vault 
+        controller_global_analytics_account_name: 'customer1_e2f90621-ab21-4bf4-908c-872d213c7f64' # Please add this to your Vault 
+        controller_host_name: "ansible-20100nosshcont-bum4wzwa.appd-cx.com" # Your AppDynamics controller 
+        controller_account_name: "customer1" # Please add this to your Vault 
+        ssl_enabled: false
+        controller_port: "8090"
+        monitor_all_IIS_apps: true  # Enable automatic instrumentation of all IIS applications 
+        runtime_reinstrumentation: true # Runtime reinstrumentation works for .NET Framework 4.5.2 and greater. 
+        # Define standalone executive applications to monitor
         services:
           - login.exe
           - tmw.exe
+     
+
+      

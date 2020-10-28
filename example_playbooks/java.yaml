@@ -5,14 +5,15 @@
         name: appdynamics.agents.java
       vars:
         # Define Agent Type and Version 
-        agent_version: 20.6.0
+        agent_version: 20.8.0
         agent_type: sun-java
         # The applicationName
         application_name: "IoT_API"
-        tier_name: "login_service2" # ONLY required if agent type is not machine and db agent
+        tier_name: "java_tier" # ONLY required if agent type is not machine and db agent
         # Your controller details 
-        controller_account_access_key: "ffdsfs" # Please add this to your Vault
-        controller_host_name: "saas.appdynamics.com" # Your AppDynamics controller
-        controller_account_name: "customer1"  # Please add this to your Vault
+        controller_account_access_key: "b0248ceb-c954-4a37-97b5-207e90418cb4" # Please add this to your Vault 
+        controller_host_name: "ansible-20100nosshcont-bum4wzwa.appd-cx.com" # Your AppDynamics controller 
+        controller_account_name: "customer1" # Please add this to your Vault 
         ssl_enabled: false
-        controller_port: "443"
+        controller_port: "8090"
+    
