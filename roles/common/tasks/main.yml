@@ -3,7 +3,7 @@
 #- include_tasks: install_jq.yml
 
 - debug: 
-     msg:  "Agent variables: type=> {{agent_type}} version=> {{agent_version}}"
+     msg:  "Agent variables: type=> {{ agent_type }} version=> {{ agent_version }}"
 
 - include_tasks: get_agent.yml
 
@@ -26,7 +26,7 @@
 
 - name: Set HTTPS Protocol facts
   set_fact:
-      controller_protocol: "{% if ssl_enabled|bool == True %}https{% else %}http{% endif %}"
+      controller_protocol: "{% if ssl_enabled|bool %}https{% else %}http{% endif %}"
 
 - name: Print params 
   vars:

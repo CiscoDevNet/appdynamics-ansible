@@ -8,7 +8,7 @@
 
     - name: Ensures DB agent dir exists
       file: 
-        path: "{{db_agent_dest_folder_linux }}/"
+        path: "{{ db_agent_dest_folder_linux }}/"
         state: directory     
         mode: 0755
         owner: "{{ appdynamics_user }}"
@@ -18,18 +18,19 @@
 
     - name: Clean out orphanned {{ db_agent_dest_file }} 
       file:
-        path: "{{db_agent_dest_folder_linux }}/{{ db_agent_dest_file }}"
+        path: "{{ db_agent_dest_folder_linux }}/{{ db_agent_dest_file }}"
         state: absent  
       changed_when: false # this ensures this task is idempotent 
       
     - name: Check if DB agent exists
-      stat: path="{{db_agent_dest_folder_linux }}/db-agent.jar"
+      stat: path="{{ db_agent_dest_folder_linux }}/db-agent.jar"
       register: previous_db_agent
       
     - name: Backup old DB agent to /tmp folder
       archive: 
-        path: "{{db_agent_dest_folder_linux }}"
-        dest: "/tmp/db_agent.{{ ansible_date_time.iso8601 }}.zip"   
+        path: "{{ db_agent_dest_folder_linux }}"
+        dest: "/tmp/db_agent.{{ ansible_date_time.iso8601 }}.zip"
+        mode: 0755
       when: previous_db_agent.stat.exists
       changed_when: false
     
@@ -45,13 +46,14 @@
       changed_when: false
 
     - name: Kill running DB processes
-      shell: "kill {{ item }}"
+      command: "kill {{ item }}"
       with_items: "{{ running_processes.stdout_lines }}"
       ignore_errors: yes  # Skip 'kill: No such process' errors 
       when: previous_db_agent.stat.exists
       changed_when: false
-
-    - wait_for:
+    
+    - name: Force Kill DB process
+      wait_for:
         path: "/proc/{{ item }}/status"
         state: absent
       with_items: "{{ running_processes.stdout_lines }}"
@@ -66,13 +68,13 @@
       changed_when: false
 
     - name: Force kill stuck processes
-      shell: "kill -9 {{ item }}"
+      command: "kill -9 {{ item }}"
       with_items: "{{ killed_processes.results | select('failed') | map(attribute='item') | list }}"
       when: previous_db_agent.stat.exists
       changed_when: false
-             
+
     - name: Clean up old agent after backup  
-      command: "rm -rf {{db_agent_dest_folder_linux }}/*"
+      command: "rm -rf {{ db_agent_dest_folder_linux }}/*"
       args:
          warn: false
       when: previous_db_agent.stat.exists
@@ -81,20 +83,21 @@
     - name: Download DB Agent 
       get_url:
         url: '{{ agent_download_url.stdout }}'
-        dest: "{{db_agent_dest_folder_linux }}/{{ db_agent_dest_file }}"
+        dest: "{{ db_agent_dest_folder_linux }}/{{ db_agent_dest_file }}"
         force: true # download a new file even if dbagent.zip exists. 
       changed_when: false
       register: result
       failed_when: result.status_code != 200
 
     - debug: 
-         msg: "{{ result }}" 
+        msg: "{{ result }}" 
 
     - name: Unzip DB agent file 
       unarchive: 
         #src: "{{ agent_download_url.stdout }}" 
-        src: "{{db_agent_dest_folder_linux }}/{{ db_agent_dest_file }}"
-        dest: "{{db_agent_dest_folder_linux }}"   
+        src: "{{ db_agent_dest_folder_linux }}/{{ db_agent_dest_file }}"
+        dest: "{{ db_agent_dest_folder_linux }}" 
+        mode: 0755
         remote_src: yes 
       changed_when: false
 
@@ -132,7 +135,7 @@
       changed_when: false
 
     - name: Make sure the service is running
-      command: systemctl status appdynamics-db-agent
+      shell: systemctl status appdynamics-db-agent
       register: result
       ignore_errors: yes
       changed_when: false
@@ -148,16 +151,13 @@
     - name: Get new running DB processes
       shell: "ps -ef | grep -v grep | grep -w 'db-agent' | awk '{print $2}'"
       register: db_proc
-      failed_when: db_proc.stdout_lines == ""
       changed_when: false
 
     - debug: 
-       msg: "{{ db_proc.stdout_lines  }}"
+       msg: "{{ db_proc.stdout_lines }}"
 
     - name: Clean up - remove {{ db_agent_dest_file }} 
       file:
         path: "{{ db_agent_dest_folder_linux }}/{{ db_agent_dest_file }}"
         state: absent
       changed_when: false 
-
-    
