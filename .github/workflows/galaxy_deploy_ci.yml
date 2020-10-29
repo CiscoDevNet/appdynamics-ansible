@@ -6,6 +6,7 @@ jobs:
   deploy_galaxy:
     runs-on: ubuntu-latest
     env:
+      APPD_RELEASE_VERSION: ${ GITHUB_REF/refs\/tags\// }
       PY_COLORS: 1
       ANSIBLE_FORCE_COLOR: 1
     strategy:
@@ -46,9 +47,7 @@ jobs:
 
       - name: Deploy to Galaxy 
         run: >-
+          echo " GitHub tag: ${{ env.APPD_RELEASE_VERSION }} "  #expected out is semantic versioning format - X.Y.Z
           ansible-playbook build/galaxy_deploy.yml
         env: 
            ANSIBLE_GALAXY_TOKEN: ${{ secrets.ANSIBLE_GALAXY_TOKEN }}
-           APPD_RELEASE_VERSION: ${ GITHUB_REF/refs\/tags\// }
-      
-

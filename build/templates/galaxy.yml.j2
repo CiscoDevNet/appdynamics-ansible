@@ -8,7 +8,8 @@ namespace: appdynamics
 name: agents
 
 # The version of the collection. Must be compatible with semantic versioning
-version: "{{ tag }}"
+# It must obey semantic versioning rules - MAJOR.MINOR.PATCH
+version: "{{ tag }}" 
 
 # The path to the Markdown (.md) readme file. This path is relative to the root of the collection
 readme: README.md
@@ -63,5 +64,5 @@ issues: https://github.com/Appdynamics/appdynamics-ansible/issues
 # uses 'fnmatch' to match the files or directories. Some directories and files like 'galaxy.yml', '*.pyc', '*.retry',
 # and '.git' are always filtered
 build_ignore: 
-  build 
+  - build 
 
