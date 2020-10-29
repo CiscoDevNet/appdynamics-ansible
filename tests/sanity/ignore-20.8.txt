@@ -1,2 +1,0 @@
-roles/common/files/get-agent.sh shebang!skip
-roles/common/tasks/get_agent.yml shebang!skip
