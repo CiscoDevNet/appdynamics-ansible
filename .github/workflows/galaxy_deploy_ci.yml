@@ -38,11 +38,6 @@ jobs:
         
       - name: Install the collection
         run: ansible-galaxy collection install ${{ env.COLLECTION_FILE }}
-
-      - name: Sanity test the collection
-        run: |
-           cd /home/runner/.ansible/collections/ansible_collections/appdynamics/agents
-           ansible-test sanity --docker default -v
       
       #Cal me paranoid if you like, but this too must pass before I deploy to galaxy :) 
       - name: Test ALL AppDynamics roles 
