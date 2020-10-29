@@ -6,7 +6,6 @@ jobs:
   deploy_galaxy:
     runs-on: ubuntu-latest
     env:
-      APPD_RELEASE_VERSION: ${ GITHUB_REF/refs\/tags\// }
       PY_COLORS: 1
       ANSIBLE_FORCE_COLOR: 1
     strategy:
@@ -22,6 +21,9 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
+     
+      - name: Set APPD_RELEASE_VERSION
+        run: echo "APPD_RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
       - name: Set up Python 3s
         uses: actions/setup-python@v2
