@@ -47,7 +47,7 @@ jobs:
 
       - name: Deploy to Galaxy 
         run: >-
-          echo " GitHub tag: ${{ env.APPD_RELEASE_VERSION }} "  #expected out is semantic versioning format - X.Y.Z
+          echo " GitHub tag: ${{ env.APPD_RELEASE_VERSION }} "  # Expected out is semantic versioning format - X.Y.Z
           ansible-playbook build/galaxy_deploy.yml
         env: 
            ANSIBLE_GALAXY_TOKEN: ${{ secrets.ANSIBLE_GALAXY_TOKEN }}
