@@ -1,17 +1,24 @@
 ---
 #example run:
 # export ANSIBLE_GALAXY_TOKEN="xxxxxxxxx"
-# ansible-playbook galaxy_deploy.yml -e github_tag=20.8.0 
+#
+# ansible-playbook galaxy_deploy.yml 
 - hosts: localhost
   connection: local
   gather_facts: false
   vars:
-    tag: "{{ github_tag.split('/')[-1] }}"
+    tag: "{{ lookup('env','APPD_RELEASE_VERSION') }}"
   pre_tasks:
     - name: Ensure the ANSIBLE_GALAXY_TOKEN environment variable is set.
       fail:
         msg: ANSIBLE_GALAXY_TOKEN is not set.
       when: "lookup('env','ANSIBLE_GALAXY_TOKEN') | length == 0"
+
+    - name: Ensure the APPD_RELEASE_VERSION is set from GitHubRef .
+      fail:
+        msg: APPD_RELEASE_VERSION is not set.
+      when: "lookup('env','APPD_RELEASE_VERSION') | length == 0"
+
     - name: Ensure the ~/.ansible directory exists.
       file:
         path: ~/.ansible
@@ -29,7 +36,7 @@
       register: galaxy_yml
     - name: Build the collection. 
       command: >
-        ansible-galaxy collection build
+        ansible-galaxy collection build -f
         chdir=../
       when: galaxy_yml.changed
     - name: Publish the collection. 

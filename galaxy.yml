@@ -8,13 +8,12 @@ namespace: appdynamics
 name: agents
 
 # The version of the collection. Must be compatible with semantic versioning
-version: "20.8.0"
+version: "20.9"
 
 # The path to the Markdown (.md) readme file. This path is relative to the root of the collection
 readme: README.md
 
 # A list of the collection's content authors. Can be just the name or in the format 'Full Name <email> (url)
-# @nicks:irc/im.site#channel'
 authors:
 - Israel Ogbole
 
@@ -40,7 +39,8 @@ tags:
   - performance
   - agent
   - appdynamics
-  
+  - appd
+
 # Collections that this collection requires to be installed for it to be usable. The key of the dict is the
 # collection label 'namespace.name'. The value is a version range
 # L(specifiers,https://python-semanticversion.readthedocs.io/en/latest/#requirement-specification). Multiple version
@@ -54,8 +54,7 @@ repository: https://github.com/Appdynamics/appdynamics-ansible
 documentation: https://github.com/Appdynamics/appdynamics-ansible
 
 # The URL to the homepage of the collection/project
-homepage: http://example.com
-
+homepage: https://github.com/Appdynamics/appdynamics-ansible
 # The URL to the collection issue tracker
 issues: https://github.com/Appdynamics/appdynamics-ansible/issues
 
@@ -64,4 +63,5 @@ issues: https://github.com/Appdynamics/appdynamics-ansible/issues
 # uses 'fnmatch' to match the files or directories. Some directories and files like 'galaxy.yml', '*.pyc', '*.retry',
 # and '.git' are always filtered
 build_ignore: 
-  - build 
+  build 
+
