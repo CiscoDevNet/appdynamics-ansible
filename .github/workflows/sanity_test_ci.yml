@@ -1,6 +1,5 @@
 name: "appdynamics.sanity.test"
 on:
-  push:
   pull_request:
 jobs:
   molecule:
