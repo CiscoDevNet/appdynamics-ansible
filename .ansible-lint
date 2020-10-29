@@ -1,7 +1,5 @@
 exclude_paths:
-  - ./my/excluded/directory/
-  - ./my/other/excluded/directory/
-  - ./last/excluded/directory/
+  - ./tests/sanity/
 parseable: true
 quiet: true
 rulesdir:
@@ -10,7 +8,5 @@ skip_list:
   - '201'
   - '303'
   - '305'
-tags:
-  - run_this_tag
 use_default_rules: true
 verbosity: 1
