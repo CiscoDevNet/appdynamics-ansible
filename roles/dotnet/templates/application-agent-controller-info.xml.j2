@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<winston>
+  <logFileDirectory directory="{{ dotnet_agent_dest_folder_win }}Logs" />
+  <logFileFolderAccessPermissions defaultAccountsEnabled="false">
+    <account name="NT AUTHORITY\LOCAL SERVICE" displayName="LOCAL SERVICE" />
+    <account name="NT AUTHORITY\SYSTEM" displayName="SYSTEM" />
+    <account name="NT AUTHORITY\NETWORK SERVICE" displayName="NETWORK SERVICE" />
+    <account name="IIS_IUSRS" displayName="ApplicationPool Identity" />
+  </logFileFolderAccessPermissions>
+<appdynamics-agent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <!-- Controller configuration -->
+  <controller host="{{ controller_host_name }}" port="{{ controller_port }}" ssl="{{ ssl_enabled | lower }}">
+    <!-- The application is required -->
+    <application name="{{ application_name }}"/>
+    <!-- The account name and access key are required -->
+    <account name="{{ account_name }}" password="{{ account_access_key }}"/>
+  </controller>
+
+  <!-- Machine agent configuration -->
+  <machine-agent/>
+
+  <!-- App agents configuration -->
+  <app-agents>
+    <profiler>
+      <!-- Enable runtime reinstrumentation -->
+       <runtime-reinstrumentation enabled="{{ runtime_reinstrumentation | lower }}" interval="60000" />
+    </profiler>  
+     <IIS>
+      <automatic enabled="{{ monitor_all_IIS_apps | lower }}" />
+    <applications>
+    </applications>
+    </IIS>  
+    <!-- For a standalone application or Windows service the executable name should be provided -->
+    <!-- as the standalone-application executable attribute -->
+    <standalone-applications>
+    {% for service in services %}
+      <standalone-application executable="{{ service }}">
+        <tier name="{{ service }}"/>
+      </standalone-application>
+     {% endfor %} 
+    </standalone-applications>
+  </app-agents>
+</appdynamics-agent>
+</winston>

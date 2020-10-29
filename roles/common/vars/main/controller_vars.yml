@@ -1,14 +1,8 @@
 ---
 analytics_event_endpoint: "https://fra-ana-api.saas.appdynamics.com:443"
-controller_environment:
-  production:
-    host_name: acme.saas.appdynamics.com
-    access_key: acme-dddd # please load this from your vault 
-    account_name: customer1
-    global_account_name: customer1_GUID
-  nonproduction:
-    host_name: acme-dev.saas.appdynamics.com # do not include HTTP(S) and port. Refer to the template files 
-    access_key: dev-dddxx
-    account_name: customer1
-    global_account_name: customer1_GUID
-
+sim_enabled: false
+ssl_enabled: false
+controller_port: "443"
+controller_account_name: "customer1"
+controller_global_analytics_account_name: "customer1-guid"
+enable_analytics_agent: "true"

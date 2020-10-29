@@ -1,0 +1,21 @@
+- name: Install jq to ansible controller -  Debian variants 
+  become: true
+  apt:
+    update_cache: yes
+    state: present
+    name:
+    - jq
+  delegate_to: localhost
+  when: "ansible_os_family == 'Debian'"
+
+- name: Install jq to ansible controller -  RedHat variants 
+  become: true
+  yum:
+    update_cache: yes
+    state: installed
+    name:
+     - jq
+  delegate_to: localhost
+  when: "ansible_os_family == 'RedHat'"
+
+  # TODO : Add more unix variants 

@@ -1,0 +1,36 @@
+---
+language: python
+services: docker
+
+env:
+  global:
+    - COLLECTION_NAMESPACE: appdynamics
+    - COLLECTION_NAME: agents
+  matrix:
+    - DISTRO: centos7
+      PYTHON_INTERPRETER: /usr/bin/python
+    - DISTRO: ubuntu1804
+      PYTHON_INTERPRETER: /usr/bin/python3
+
+install:
+  # Install Ansible.
+  - pip install ansible
+
+before_script:
+  # Move the collection into the required path to make ansible-test work.
+  - cd ../
+  - mkdir -p ansible_collections/$COLLECTION_NAMESPACE
+  - mv ansible-collection-$COLLECTION_NAME ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
+  - cd ansible_collections/$COLLECTION_NAMESPACE/$COLLECTION_NAME
+
+script:
+  # Run tests.
+  - ansible-test sanity --docker default -v
+  - ansible-test integration --color --docker ubuntu1804
+
+deploy:
+  provider: script
+  script: ansible-playbook -i 'localhost,' build/galaxy_deploy.yml -e "tag=$TRAVIS_TAG"
+  'on':
+    tags: true
+    condition: $DISTRO = centos7

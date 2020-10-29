@@ -1,0 +1,23 @@
+---
+- name:  Turn on analytics agent monitoring
+  lineinfile:
+    dest: "{{ machine_agent_dest_folder_linux }}/monitors/analytics-agent/monitor.xml"
+    regexp: '<enabled>false</enabled>'
+    line: '<enabled>true</enabled>'
+    backrefs: yes
+  changed_when: false
+
+- name: Configure the analytics agent properties file
+  lineinfile:
+    dest: "{{ machine_agent_dest_folder_linux }}/monitors/analytics-agent/conf/analytics-agent.properties"
+    regexp: "^{{ item.setting }}"
+    line: "{{ item.setting }}{{ item.value }}"
+  with_items:
+    #- { setting: 'ad.agent.name=', value: '{{ tier_name }}-ag' }
+    - { setting: 'http.event.endpoint=', value: '{{ analytics_event_endpoint }}' }
+    - { setting: 'ad.controller.url=', value: '{{ controller_protocol }}://{{ controller_host_name }}:{{ controller_port }}' } 
+    - { setting: 'http.event.accountName=', value: '{{ global_analytics_account_name }}' }
+    - { setting: 'http.event.accessKey=', value: '{{ account_access_key }}' }
+    - { setting: 'http.event.name=', value: '{{ account_name }}' }
+  no_log: yes
+  changed_when: false

@@ -1,25 +1,39 @@
-- name: Validate parameters
-  include: validate_parameters.yml
+- include_tasks: validate_parameters.yml
 
-- name:  Set Installation facts - specific to Nexus
-  set_fact:
-    machine_agent_search_parameters: "r={{ nexus.appd.repositoryId }}&g={{ nexus.appd.groupId }}&a={{ nexus.appd.machine_agent_artifactId }}&v={{ nexus.appd.machine_agent_version }}&p={{ nexus.appd.machine_agent_packaging }}"
-    application_agent_search_parameters: "r={{ nexus.appd.repositoryId }}&g={{ nexus.appd.groupId }}&a={{ nexus.appd.application_agent_artifactId }}&v={{ nexus.appd.application_agent_version }}&p={{ nexus.appd.application_agent_packaging }}"
+#- include_tasks: install_jq.yml
 
-- name: Set AppDynamics controller and account facts - Production Controller 
-  when: application_environment|lower is match('prod.*')
+- debug: 
+     msg:  "Agent variables: type=> {{ agent_type }} version=> {{ agent_version }}"
+
+- include_tasks: get_agent.yml
+
+- name: Set AppDynamics access key facts
   set_fact:
-    account_access_key: "{{ controller_environment.production.access_key }}"
-    account_name: "{{ controller_environment.production.account_name }}"
-    global_analytics_account_name: "{{ controller_environment.production.global_account_name}}"
-    controller_host_name: "{{ controller_environment.production.host_name }}"
+    account_access_key: "{{ controller_account_access_key }}"
   no_log: yes
 
-- name: Set AppDynamics controller and account facts - NonProduction Controller 
-  when: application_environment|lower is not match('prod.*')
+- name: Set AppDynamics controller facts
   set_fact:
-    account_access_key: "{{ controller_environment.nonproduction.access_key }}"
-    account_name: "{{ controller_environment.nonproduction.account_name }}"
-    global_analytics_account_name: "{{ controller_environment.nonproduction.global_account_name}}"
-    controller_host_name: "{{ controller_environment.nonproduction.host_name }}"
-  no_log: yes
+    account_name: "{{ controller_account_name }}"
+    global_analytics_account_name: "{{ controller_global_analytics_account_name }}"
+    controller_host_name: "{{ controller_host_name }}"
+    analytics_event_endpoint: "{{ analytics_event_endpoint }}"
+    sim_enabled: "{{ sim_enabled }}"
+    ssl_enabled: "{{ ssl_enabled }}"
+    controller_port: "{{ controller_port }}"
+    enable_analytics_agent: "{{ enable_analytics_agent }}"
+    machine_hierarchy: "{{ machine_hierarchy }}"
+
+- name: Set HTTPS Protocol facts
+  set_fact:
+      controller_protocol: "{% if ssl_enabled|bool %}https{% else %}http{% endif %}"
+
+- name: Print params 
+  vars:
+     params: "
+      SSL enabled = {{ ssl_enabled }} |
+      Controller={{ controller_protocol }}://{{ controller_host_name }}:{{ controller_port }} |
+      controller_account_name={{ controller_account_name }} |
+      analytics_event_endpoint={{ analytics_event_endpoint }} "
+  debug: 
+    msg: "{{ params.split('|') }}"

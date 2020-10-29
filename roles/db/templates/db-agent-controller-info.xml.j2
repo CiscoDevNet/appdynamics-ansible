@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<controller-info>
+    <!-- For a more detailed information on different configurations that an agent can support
+    and the respective rules, one should reference following URL:
+    https://docs.appdynamics.com/display/PRO42/Java+Agent+Configuration+Properties
+    In general configuration properties may be set in different ways. Here is the order
+    of precedence how the agent will read and respect specific configurations.
+      1. Environment Variables
+      2. System Properties
+      3. Version specific controller-info.xml. See .../$(Agent-Base-Install-Dir)/ver$(agent-version-no)/conf/controller-info.xml
+      4. Default/Root controller-info.xml. See .../$(Agent-Base-Install-Dir)/conf/controller-info.xml -->
+
+    <!-- This is the host name or the IP address of the AppDynamics Controller e.g. 192.168.1.22 or myhost or myhost.abc.com
+    This is the same host that you use to access the AppDynamics browser based User interface.
+    This can be overridden with an environment variable 'CONTROLLER_HOST_NAME' or
+    the system property '-Dappdynamics.controller.hostName' -->
+    <controller-host>{{ controller_host_name }}</controller-host>
+
+    <!-- This is the http(s) port of the AppDynamics Controller , If 'controller-ssl-enabled' below is set to true, you must
+    specify the HTTPS port of the Controller, otherwise specify the HTTP port. The default values are 8090 for HTTP and 8181 for HTTPS
+    This is the same port that you use to access the AppDynamics browser based User interface.
+    This can be overridden with an environment variable 'APPDYNAMICS_CONTROLLER_PORT' or
+    the system property '-Dappdynamics.controller.port' -->
+    <controller-port>{{ controller_port }}</controller-port>
+
+    <!-- This specifies if the AppDynamics agent should use SSL(HTTPS) to connect to the Controller. If you set this to true,
+    the controller port property above should be set to the HTTPs port of the Controller.
+    This can be overridden with an environment variable 'APPDYNAMICS_CONTROLLER_SSL_ENABLED' or
+    the system property '-Dappdynamics.controller.ssl.enabled' -->
+    <controller-ssl-enabled>{{ ssl_enabled | lower }}</controller-ssl-enabled>
+
+    <!-- If this value is set to true, it indicates all the passwords and access-keys must be encrypted.
+    If this value is false or undefined, passwords and access-keys will be in plain-text.
+    One must reference following URL for the process and guidelines of encrypting passwords:
+    https://docs.appdynamics.com/display/PRO42/Java+Agent+Configuration+Properties -->
+    <use-encrypted-credentials></use-encrypted-credentials>
+    <!-- Full qualified path name for the SCS-KeyStore file name. -->
+    <credential-store-filename></credential-store-filename>
+    <!-- Password for the 'Secure Credential Store' (SCS). This password must be obfuscated. -->
+    <credential-store-password></credential-store-password>
+
+    <!-- If the AppDynamics Controller is running in multi-tenant mode or you are using the AppDynamics SaaS Controller
+    you must specify the account name and account access key for this agent to authenticate with the controller.
+    If you are running in single-tenant mode (the default) there is no need to configure these values.
+    This can be overridden with an environment variable 'APPDYNAMICS_AGENT_ACCOUNT_NAME' or
+    the system property '-Dappdynamics.agent.accountName' -->
+
+    <account-name>{{ account_name }}</account-name>
+
+    <!-- This can be overridden with an environment variable 'APPDYNAMICS_AGENT_ACCOUNT_ACCESS_KEY' or
+    the system property '-Dappdynamics.agent.accountAccessKey'
+    This account-access-key must be encrypted if 'use-encrypted-credentials' is set to true -->
+    
+    <account-access-key>{{ account_access_key }}</account-access-key>
+</controller-info>

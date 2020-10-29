@@ -1,0 +1,6 @@
+- include_tasks: install_db_agent_linux.yml
+  when: ansible_os_family == 'RedHat' or  ansible_os_family == 'Debian'
+
+#todo
+#- include_tasks: install_db_agent_windows.yml 
+#  when: ansible_os_family == 'Windows'

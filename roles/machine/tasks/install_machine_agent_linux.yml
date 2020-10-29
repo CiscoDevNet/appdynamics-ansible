@@ -1,0 +1,128 @@
+---
+- name: Validate that the agent download URL is fit for Linux 
+  assert:
+    that: "linux_ma_finder_string in agent_download_url.stdout"
+    fail_msg: "It looks like you have downloaded the Windows machine agent instead of the Linux machine agent. You entered '{{ agent_type }}' in the playbook. The URL: {{ agent_download_url.stdout }} is expected to contain {{ linux_ma_finder_string }}"
+    success_msg: "Successfully validated {{agent_type }} for Linux"
+    
+- name: Machine Agent linux Block
+  become: true
+  block: 
+  - include_tasks: appd_sudoer.yml
+  - name: Ensures machine agent {{machine_agent_dest_folder_linux}} dir exists
+    file: 
+      path: "{{ machine_agent_dest_folder_linux }}/"
+      state: directory     
+      mode: 0755
+      owner: "{{ appdynamics_user }}"
+      group: "{{ appdynamics_user }}"
+   
+  - name: Check if Machine Agent is already installed
+    stat: path="{{ machine_agent_dest_folder_linux }}/machineagent.jar"
+    register: previous_agent
+    
+  - name: Backup existing Machine Agent
+    archive: 
+      path: "{{ machine_agent_dest_folder_linux }}"
+      dest: "/tmp/machine_agent.{{ ansible_date_time.iso8601 }}.zip"   
+    when: previous_agent.stat.exists
+    changed_when: false
+  
+  - name: Stop Machine Agent service
+    systemd:
+      name: appdynamics-machine-agent
+      state: stopped
+      daemon_reload: yes
+    changed_when: false
+    when: previous_agent.stat.exists
+    
+  - name: Clean up old Machine Agent binaries after backup  
+    command: "rm -rf {{ machine_agent_dest_folder_linux }}/*"
+    args:
+        warn: false
+    when: previous_agent.stat.exists
+    changed_when: false
+
+  - name: Downloading Machine Agent
+    get_url:
+      url: '{{ agent_download_url.stdout }}'
+      dest: "{{ machine_agent_dest_folder_linux }}/{{ ma_agent_dest_file }}"
+      force: true
+    changed_when: false
+    register: result
+    failed_when: result.status_code != 200
+  
+  - debug: 
+      msg: "{{ result }}" 
+
+  - name: Unzip the Machine agent file
+    unarchive: 
+      src:  "{{ machine_agent_dest_folder_linux }}/{{ ma_agent_dest_file }}"
+      dest: "{{ machine_agent_dest_folder_linux }}"
+      owner: "{{ appdynamics_user }}"
+      group: "{{ appdynamics_user }}"
+      remote_src: yes 
+    changed_when: false
+   
+  - name: Configure Machine Agent controller-info.xml file 
+    template:
+      src: templates/machine-agent-controller-info.xml.j2
+      dest: '{{ machine_agent_dest_folder_linux }}/conf/controller-info.xml' 
+      owner: "{{ appdynamics_user }}"
+      group: "{{ appdynamics_user }}"
+      mode: 0755 
+    changed_when: false
+
+  - name: Ensure machine agent file is executable
+    file:
+      path: "{{ machine_agent_dest_folder_linux }}/bin/machine-agent"
+      mode: 0755
+
+  - include_tasks: configure_log_analytics_linux.yml
+    when: enable_analytics_agent == true
+
+  - name: Add the Agent as a Service using Systemd
+    template:
+      src: templates/appdynamics-machine-agent.service.j2
+      dest: /etc/systemd/system/appdynamics-machine-agent.service
+      force: true
+      owner: root # The Machine Agent must not run as root, you may change it. 
+      group: root
+      mode: 0644  
+    register: machine_agent_systemd_result
+
+  - name: Enable the Machine Agent to start at system startup
+    systemd:
+      name: appdynamics-machine-agent
+      enabled: yes
+      force: true # Force it to override existing symlink incase of an upgrade
+      masked: no
+  
+   #Reload systemd if it is an upgrade or re-installation
+  - name:  Reload systemd configs 
+    systemd:
+      daemon_reload: yes
+    when: previous_agent.stat.exists
+
+  - name: Start the agent service
+    systemd:
+      name: appdynamics-machine-agent
+      state: restarted
+      daemon_reload: yes
+    changed_when: false
+
+  - name: Make sure the service is running
+    command: systemctl status appdynamics-machine-agent
+    register: result
+    ignore_errors: yes
+    changed_when: false
+
+  - name: Show Machine Agent status 
+    debug:
+      var: result
+
+  - name: Clean up - remove {{ ma_agent_dest_file }} 
+    file:
+      path: "{{ machine_agent_dest_folder_linux }}/{{ ma_agent_dest_file }}"
+      state: absent
+    changed_when: false

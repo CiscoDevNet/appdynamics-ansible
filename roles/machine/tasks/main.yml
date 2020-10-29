@@ -1,0 +1,5 @@
+- include_tasks: install_machine_agent_linux.yml
+  when: ansible_os_family == 'RedHat' or  ansible_os_family == 'Debian'
+
+- include_tasks: install_machine_agent_win.yml
+  when: ansible_os_family == 'Windows'

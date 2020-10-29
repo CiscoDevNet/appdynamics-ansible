@@ -1,5 +1,0 @@
----
-aws_s3_: # The additional `_` is to avoid conflict with the aws_s3 module
-  bucket_name: appd-ansible-agents
-  object_keys:
-    db_agent: database/db-agent-20.7.0.1892.zip

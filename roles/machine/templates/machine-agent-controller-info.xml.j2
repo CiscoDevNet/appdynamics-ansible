@@ -1,0 +1,84 @@
+<controller-info>
+
+    <!--  For more detailed information on different configurations that an agent can support and the respective rules,
+    consult the online documentation. In general, configuration properties may be set in different ways. Here is the
+    order of precedence of how the agent will read and respect specific configurations.
+      1. Environment Variables
+      2. System Properties
+      3. Default/Root controller-info.xml. See .../$(Agent-Base-Install-Dir)/conf/controller-info.xml  -->
+
+    <!--  This is the host name or the IP address of the AppDynamics Controller (e.g., 192.168.1.22 or myhost or
+    myhost.abc.com). This is the same host that you use to access the AppDynamics browser-based User interface. This can
+    be overridden with the environment variable 'CONTROLLER_HOST_NAME' or the system property
+    '-Dappdynamics.controller.hostName'  -->
+
+    <controller-host>{{ controller_host_name }}</controller-host>
+
+    <!--  This is the http(s) port of the AppDynamics Controller. If 'controller-ssl-enabled' (below) is set to true, you
+    must specify the HTTPS port of the Controller; otherwise, specify the HTTP port. The default values are 8090 for
+    HTTP and 8181 for HTTPS. This is the same port that you use to access the AppDynamics browser-based User interface.
+    This can be overridden with the environment variable 'APPDYNAMICS_CONTROLLER_PORT' or the system property
+    '-Dappdynamics.controller.port'  -->
+
+    <controller-port>{{ controller_port }}</controller-port>
+
+    <!--  This specifies if the AppDynamics agent should use SSL (HTTPS) to connect to the Controller. If you set this to
+    true, the controller port property above should be set to the HTTPS port of the Controller. This can be overridden
+    with the environment variable 'APPDYNAMICS_CONTROLLER_SSL_ENABLED' or the system property
+    '-Dappdynamics.controller.ssl.enabled'  -->
+
+    <controller-ssl-enabled>{{ ssl_enabled | lower }}</controller-ssl-enabled>
+
+    <!--  Set this flag to 'true' to enable features required for AppDynamics Orchestration, including the following:
+    1) Enables the agent to execute tasks specified in AppDynamics Orchestration workflows.
+    2) Enables the agent to resolve the AppDynamics Controller host and port when the host machine where this agent
+       resides is created through AppDynamics Orchestration.  -->
+
+    <enable-orchestration>false</enable-orchestration>
+
+    <!--  The Machine Agent uses the Java API to get the host name of the agent. The results from the API can be
+    inconsistent, and the same JVM can sometimes return a different value for the same machine each time the machine
+    agent is restarted. It is recommended to set this field in the following scenarios:
+
+    1) The machine host name is not constant
+    2) You prefer to use a specific name in the UI
+    3) The machine has both a machine agent and app agents on it.
+
+    This can be overridden with the environment variable 'APPDYNAMICS_AGENT_UNIQUE_HOST_ID' or the system property
+    '-Dappdynamics.agent.uniqueHostId'  -->
+
+    <unique-host-id>{{ host_name }}</unique-host-id>
+
+    <!--  This key is generated at installation time and can be found by viewing the license information in the
+    controller settings. This can be overridden with the environment variable 'APPDYNAMICS_AGENT_ACCOUNT_ACCESS_KEY' or
+    the system property '-Dappdynamics.agent.accountAccessKey'  -->
+
+    <account-access-key>{{ account_access_key }}</account-access-key>
+
+    <!--  If the AppDynamics Controller is running in multi-tenant mode or you are using the AppDynamics SaaS Controller,
+    you must specify the account name for this agent to authenticate with the controller. If you are running in
+    single-tenant mode (the default) there is no need to configure this value. This can be overridden with the
+    environment variable 'APPDYNAMICS_AGENT_ACCOUNT_NAME' or the system property '-Dappdynamics.agent.accountName'  -->
+
+    <account-name>{{ account_name }}</account-name>
+
+    <!--  If this agent is licensed for Server Monitoring, set this flag to 'true' to enable Server Monitoring expanded
+    metrics. This can be overridden with the environment variable 'APPDYNAMICS_SIM_ENABLED' or the system property
+    '-Dappdynamics.sim.enabled'  -->
+
+    <sim-enabled>{{ sim_enabled | lower }}</sim-enabled>
+
+    <!--  This value is used to create the hierarchy infrastructure view in the UI for this machine. Each hierarchy level
+    should be separated with a vertical bar ("|"). For example, if this machine belongs to "DataRack1" and it is located
+    in "Virginia Data Center", then the machine path could be set to "Virginia Data Center|DataRack1|Machine1" and the
+    UI will display it in that hierarchy ("Virginia Data Center|DataRack1"). The last element of the path indicates the
+    server name (e.g., "Machine1") and appears as the name on the servers list in the UI. This can be overridden with
+    the environment variable 'APPDYNAMICS_MACHINE_HIERARCHY_PATH' or the system property
+    '-Dappdynamics.machine.agent.hierarchyPath'.
+
+    Note: The number of characters up to but not including the last vertical bar must not exceed 95.  -->
+
+    <machine-path>{{ machine_hierarchy }}</machine-path>
+
+</controller-info>
+

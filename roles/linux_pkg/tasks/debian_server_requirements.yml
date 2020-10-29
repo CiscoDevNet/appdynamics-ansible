@@ -1,0 +1,10 @@
+---
+#- name: update apt cache
+#  apt: update_cache=yes force_apt_get=yes
+
+- name: install tools and pre-requisites for Debian variants
+  apt:
+    state: present
+    update_cache: yes
+    name:
+    - unzip
