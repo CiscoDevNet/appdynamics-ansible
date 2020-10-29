@@ -15,8 +15,6 @@ jobs:
           - centos7
         #  - debian10
         collection_role:
-          - db
-          - java
           - machine
     steps:
       - name: Check out code
@@ -33,8 +31,36 @@ jobs:
       - name: Install test dependencies.
         run: pip3 install molecule-docker docker yamllint ansible-lint flake8 ansible
       
-      - name: Deploy to Galaxy 
+      - name: Test Building the collection
+        run: |
+          collection_file=$( basename $(ansible-galaxy collection build -f | awk -F" " '{print $NF}'))
+          echo "COLLECTION_FILE=$collection_file" >> $GITHUB_ENV
+        
+      - name: Test Install the collection
+        run: ansible-galaxy collection install ${{ env.COLLECTION_FILE }}
+
+      - name: Test Machine role 
         run: >-
+          molecule --version &&
+          ansible --version &&
+          molecule --debug test -s machine 
+        env: 
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
+          MOLECULE_DISTRO: ${{ matrix.distro }}  
+      
+      - name: Test Java Role 
+        run: >-
+          molecule --version &&
+          ansible --version &&
+          molecule --debug test -s java 
+        env: 
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
+          MOLECULE_DISTRO: ${{ matrix.distro }}
+
+      - name: Publish to Galaxy 
+        run: |
           ansible-playbook build/galaxy_deploy.yml
         env: 
            ANSIBLE_GALAXY_TOKEN: ${{ secrets.ANSIBLE_GALAXY_TOKEN }}
