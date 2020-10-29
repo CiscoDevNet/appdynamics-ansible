@@ -15,6 +15,10 @@ jobs:
         distro:
           - centos7
         #  - debian10
+        collection_role:
+          - db
+          - java
+          - machine
     steps:
       - name: Check out code
         uses: actions/checkout@v2
@@ -34,12 +38,18 @@ jobs:
         
       - name: Install the collection
         run: ansible-galaxy collection install ${{ env.COLLECTION_FILE }}
+
+      - name: Sanity test the collection
+        run: |
+           cd /home/runner/.ansible/collections/ansible_collections/appdynamics/agents
+           ansible-test sanity --docker default -v
       
+      #Cal me paranoid if you like, but this too must pass before I deploy to galaxy :) 
       - name: Test ALL AppDynamics roles 
         run: >-
           molecule --version &&
           ansible --version &&
-          molecule --debug test 
+          molecule --debug test -s ${{ matrix.collection_role }} 
         env: 
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
