@@ -3,14 +3,6 @@
 - name: Java Linux Block
   become: true
   block: 
-    - name: Ensures application agent dir exists
-      file: 
-        path: "{{ java_agent_dest_folder_linux }}/"
-        state: directory     
-        mode: 0755
-        recurse: yes
-      changed_when: false # this ensures this task is idempotent 
-
     - name: Clean out orphanned {{ java_agent_dest_file }} 
       file:
         path: "{{ java_agent_dest_folder_linux }}/{{ java_agent_dest_file }}"
@@ -24,23 +16,31 @@
     - name: Backup old java agent to /tmp folder
       archive: 
         path: "{{ java_agent_dest_folder_linux }}"
-        dest: "/tmp/java_agent.{{ ansible_date_time.iso8601 }}.zip"   
+        dest: "/tmp/java_agent.{{ ansible_date_time.iso8601 }}.zip"
       when: previous_agent.stat.exists
       changed_when: false
              
     - name: Clean up old agent after backup  
-      command: "rm -rf {{ java_agent_dest_folder_linux }}/*"
+      shell: "rm -rf {{ java_agent_dest_folder_linux }}/*"
       args:
          warn: false
       when: previous_agent.stat.exists
       changed_when: false
+  
+    - name: Ensures application agent dir exists
+      file: 
+        path: "{{ java_agent_dest_folder_linux }}/"
+        state: directory     
+        mode: 0755
+        recurse: yes
+      changed_when: false # this ensures this task is idempotent 
 
-     # add delegate_to: localhost for customers who are unable to download on the remote server 
+     # add delegate_to: localhost for customers who are unable to download on the remote server
     - name: Download Java Agent 
       get_url:
-        url: '{{ agent_download_url.stdout }}'
+        url: "{{ agent_download_url.stdout }}"
         dest: "{{ java_agent_dest_folder_linux }}/{{ java_agent_dest_file }}"
-        force: true # download a new file even if javaagent.zip exists. 
+        force: true # download a new file even if javaagent.zip exists.
       changed_when: false
       register: result
       failed_when: result.status_code != 200
@@ -66,11 +66,11 @@
       changed_when: false
 
     - name: Copy controller-info.xml to the versioned agent folder 
-      shell: cp  {{ java_agent_dest_folder_linux }}/conf/controller-info.xml  {{ java_agent_dest_folder_linux }}/ver*/conf/
+      shell: cp  {{ java_agent_dest_folder_linux }}/conf/controller-info.xml  {{ java_agent_dest_folder_linux }}/ver{{ agent_version}}*/conf/
       changed_when: false
 
     - name: Clean up - remove {{ java_agent_dest_file }} 
       file:
         path: "{{ java_agent_dest_folder_linux }}/{{ java_agent_dest_file }}"
         state: absent  
-      changed_when: false # this ensures this task is idempotent 
+      changed_when: false # this ensures this task is idempotent

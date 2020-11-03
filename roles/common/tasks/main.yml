@@ -14,9 +14,7 @@
 
 - name: Set Controller Proxy configuration
   set_fact:
-    proxy_host: "{{ proxy_host }}"
-    proxy_port: "{{ proxy_port }}"
-    enable_proxy: "{{ enable_proxy }} | bool | string | lower"
+    enable_proxy: "{{ enable_proxy }} | bool | lower"
   
 - name: Set AppDynamics controller facts
   set_fact:

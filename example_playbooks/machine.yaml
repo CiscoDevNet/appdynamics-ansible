@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: windows
   tasks:
     - include_role:
         name: appdynamics.agents.machine
