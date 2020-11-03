@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: linux
   tasks:
     - include_role:
         name: appdynamics.agents.db
@@ -11,4 +11,4 @@
         controller_account_name: "customer1" # Please add this to your Vault 
         enable_ssl: false
         controller_port: "8090"
-        db_agent_name: "ProdDBAgent"
+        db_agent_name: "ProdDBAgent" 
