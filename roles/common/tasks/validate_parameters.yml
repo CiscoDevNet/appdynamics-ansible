@@ -49,7 +49,7 @@
   assert:
     that:  controller_port is defined
     msg: 'A controller_port must be provided'
-    
+
 - name: Validate analytics_event_endpoint
   assert:
     that:  analytics_event_endpoint is defined
