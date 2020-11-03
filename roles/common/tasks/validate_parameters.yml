@@ -1,6 +1,6 @@
 ---
 - debug:
-   msg: "{{ agent_type|lower }}"
+   msg: "{{ agent_type | lower }}"
 
 - name: Validate agent_type
   assert:
@@ -55,3 +55,15 @@
     that:  analytics_event_endpoint is defined
     msg: 'A analytics_event_endpoint must be provided'
   when: enable_analytics_agent
+
+- name: Validate Proxy Host configurations 
+  assert: 
+    that:  proxy_host is defined
+    msg:  'A proxy_host is required if enable_proxy is true'
+  when:  enable_proxy
+
+- name: Validate Proxy Port configurations 
+  assert: 
+    that:  proxy_port is defined
+    msg:  'A proxy_port is required if enable_proxy is true'
+  when:  enable_proxy
