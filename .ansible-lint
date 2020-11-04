@@ -1,5 +1,7 @@
 exclude_paths:
-  - ./tests/sanity/
+  - tests/sanity/*
+  - .github
+  - galaxy.yml
 parseable: true
 quiet: true
 rulesdir:
