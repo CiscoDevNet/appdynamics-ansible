@@ -3,6 +3,7 @@
 extends: default
 ignore: |
   galaxy.yml
+  .github/*
   #lib/molecule/cookiecutter/molecule/{{cookiecutter.role_name}}
   #lib/molecule/cookiecutter/scenario/verifier/ansible/{{cookiecutter.molecule_directory}}
 rules:
