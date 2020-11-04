@@ -1,4 +1,4 @@
-name: "Master verification tests"
+name: "Master verification Tests"
 on:
   push:
    branches: [ master ]
@@ -66,10 +66,3 @@ jobs:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
           MOLECULE_DISTRO: ${{ matrix.distro }}
-
-      - name: Publish to Galaxy 
-        run: |
-          ansible-playbook build/galaxy_deploy.yml
-        env: 
-           ANSIBLE_GALAXY_TOKEN: ${{ secrets.ANSIBLE_GALAXY_TOKEN }}
-           APPD_RELEASE_VERSION: ${{ env.APPD_RELEASE_VERSION }}
