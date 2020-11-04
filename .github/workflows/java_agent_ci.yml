@@ -46,10 +46,6 @@ jobs:
       - name: Install the collection
         run: ansible-galaxy collection install ${{ env.COLLECTION_FILE }}
       
-      #- name: Test the collection
-      #  run: |
-      #     cd /home/runner/.ansible/collections/ansible_collections/appdynamics/agents
-      #     ansible-test sanity --docker default -v
       - name: Run role tests
         run: >-
           molecule --version &&
