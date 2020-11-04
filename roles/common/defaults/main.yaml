@@ -32,7 +32,7 @@ ma_agent_dest_file: machine-agent.zip
 machine_hierarchy: "" 
 
 # DotNet Agent Win
-dotnet_agent_dest_folder_win: C:\appdynamics\dotnet-agent # '/' does not work with win_package due to msiexec. 
+dotnet_agent_dest_folder_win: C:\\appdynamics\\dotnet-agent # '/' does not work with win_package due to msiexec. 
 dotnet_agent_dest_file: dotNetAgentSetup64.msi
 
 # Java Agent Linux 
@@ -47,4 +47,5 @@ monitor_all_IIS_apps: false
 runtime_reinstrumentation: false
 
 #controller defaults
-ssl_enabled: false
+enable_ssl: false
+enable_proxy: false

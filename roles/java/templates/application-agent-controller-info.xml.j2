@@ -37,7 +37,7 @@
     You can override this configuration with an environment variable 'APPDYNAMICS_CONTROLLER_SSL_ENABLED' or
     the system property '-Dappdynamics.controller.ssl.enabled'  -->
 
-    <controller-ssl-enabled>{{ ssl_enabled | lower }}</controller-ssl-enabled>
+    <controller-ssl-enabled>{{ enable_ssl | lower }}</controller-ssl-enabled>
 
     <!--  Truncate the hostname to remove the domain name.
     For example, 'server.mydomain.com' becomes 'server'. Hostnames with no domain remain unchanged.

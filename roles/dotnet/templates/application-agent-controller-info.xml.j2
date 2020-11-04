@@ -9,11 +9,12 @@
   </logFileFolderAccessPermissions>
 <appdynamics-agent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <!-- Controller configuration -->
-  <controller host="{{ controller_host_name }}" port="{{ controller_port }}" ssl="{{ ssl_enabled | lower }}">
+  <controller host="{{ controller_host_name }}" port="{{ controller_port }}" ssl="{{ enable_ssl | lower }}">
+  <account name="{{ account_name }}" password="{{ account_access_key }}"/>
+  <proxy enabled="{{ enable_proxy | lower }}" host="{{ proxy_host }}" port="{{ proxy_port }}"  />
     <!-- The application is required -->
-    <application name="{{ application_name }}"/>
+    <application name="{{ application_name }}" />
     <!-- The account name and access key are required -->
-    <account name="{{ account_name }}" password="{{ account_access_key }}"/>
   </controller>
 
   <!-- Machine agent configuration -->

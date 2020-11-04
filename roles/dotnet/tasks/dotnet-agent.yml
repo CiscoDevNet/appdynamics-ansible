@@ -23,7 +23,7 @@
     log_path: "{{ dotnet_agent_dest_folder_win }}/Logs.txt"
     state: absent
   
-- name: Remove the conf file #Since it does not update during installation 
+- name: Remove the conf file # Since it does not update during installation 
   win_file:
     path: "C:\\ProgramData\\AppDynamics\\DotNetAgent\\Config\\config.xml"
     state: absent
@@ -31,16 +31,16 @@
 
 - name: Install application agent service
   win_package: 
-    path: "{{ dotnet_agent_dest_folder_win }}\\{{ dotnet_agent_dest_file }}"
     arguments: "AD_SetupFile={{ dotnet_agent_dest_folder_win }}\\controller-info.xml"
-    product_id: "{84B2C875-943E-4E0B-A231-8174D42E01C0}"
+    path: "{{ dotnet_agent_dest_folder_win }}\\{{ dotnet_agent_dest_file }}"
     log_path: "{{ dotnet_agent_dest_folder_win }}/Logs.txt"
+    product_id: "{84B2C875-943E-4E0B-A231-8174D42E01C0}"
     state: present
   register: install_app_agent_result
 
-#- name: Install agent service 
-#  register: install_app_agent_result
-#  win_shell: "msiexec /i {{ dotnet_agent_dest_folder_win }}\\{{ dotnet_agent_dest_file }} /q /norestart /lv {{ dotnet_agent_dest_folder_win }}\\AgentInstaller.log AD_SetupFile={{ dotnet_agent_dest_folder_win }}\\controller-info.xml"
+- name: Install agent service 
+  register: install_app_agent_result
+  win_shell: "msiexec /i {{ dotnet_agent_dest_folder_win }}\\{{ dotnet_agent_dest_file }} /q /norestart /lv {{ dotnet_agent_dest_folder_win }}\\AgentInstaller.log AD_SetupFile={{ dotnet_agent_dest_folder_win }}\\controller-info.xml"
 
 - name: Install service result
   debug:

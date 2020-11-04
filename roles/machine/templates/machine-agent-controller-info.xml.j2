@@ -27,7 +27,7 @@
     with the environment variable 'APPDYNAMICS_CONTROLLER_SSL_ENABLED' or the system property
     '-Dappdynamics.controller.ssl.enabled'  -->
 
-    <controller-ssl-enabled>{{ ssl_enabled | lower }}</controller-ssl-enabled>
+    <controller-ssl-enabled>{{ enable_ssl | lower }}</controller-ssl-enabled>
 
     <!--  Set this flag to 'true' to enable features required for AppDynamics Orchestration, including the following:
     1) Enables the agent to execute tasks specified in AppDynamics Orchestration workflows.

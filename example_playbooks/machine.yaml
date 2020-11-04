@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: windows
   tasks:
     - include_role:
         name: appdynamics.agents.machine
@@ -13,7 +13,7 @@
         controller_host_name: "ansible-20100nosshcont-bum4wzwa.appd-cx.com" # Your AppDynamics controller
         controller_account_name: "customer1" # Please add this to your Vault
         sim_enabled: true
-        ssl_enabled: false
+        enable_ssl: false
         controller_port: "8090"
         analytics_event_endpoint: "http://ansible-20100nosshcont-bum4wzwa.appd-cx.com:7001"
         enable_analytics_agent: true
