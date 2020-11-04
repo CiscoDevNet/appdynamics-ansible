@@ -3,7 +3,7 @@ on:
   push:
    branches: [ master ]
 jobs:
-  deploy_galaxy:
+  master_CI:
     runs-on: ubuntu-latest
     env:
       PY_COLORS: 1
