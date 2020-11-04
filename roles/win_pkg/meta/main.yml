@@ -1,9 +1,9 @@
 ---
 galaxy_info:
   author: israel.ogbole
-  role_name: dotnet
+  role_name: win_pkg
   company: AppDynamics
-  description: This role installs and configures the AppDynamics DotNet Agent on Windows OS 
+  description: This is an AppDynamics Windows package role, Installations on Windows inherits tasks from this role
   license: Apache2
   min_ansible_version: 2.8
   platforms:
@@ -18,7 +18,4 @@ galaxy_info:
   galaxy_tags:
     - apm 
     - monitoring
-    - appdynamics
-
-dependencies:
- - { role: common }
+dependencies: []

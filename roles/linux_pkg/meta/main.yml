@@ -1,9 +1,9 @@
 ---
 galaxy_info:
   author: israel.ogbole
-  role_name: java
+  role_name: linux_pkg
   company: AppDynamics
-  description: This role installs and configures the AppDynamics Java Agent
+  description: This is an AppDynamics linux package helper role, all installations on Linux depends on this role. 
   license: Apache2
   min_ansible_version: 2.8
   platforms:
@@ -28,22 +28,8 @@ galaxy_info:
         - 8
         - 7
         - 6
-    - name: Windows
-      versions:
-        - 2008x64
-        - 2008R2
-        - 2012
-        - 2012R2
-        - 2016
-        - 2019
-
+        
   galaxy_tags:
     - apm 
     - monitoring
-    - appdynamics
-
-dependencies:
- - { role: common }
- - { role: linux_pkg, when: ansible_os_family == 'RedHat' or  ansible_os_family == 'Debian'}
- #- { role: win_pkg, when: ansible_os_family == 'Windows' }
- #when: lookup('env', 'MOLECULE_FILE')
+dependencies: []
