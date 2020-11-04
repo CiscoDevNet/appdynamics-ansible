@@ -8,7 +8,10 @@ rulesdir:
   - ./rule/directory/
 skip_list:
   - '201'
+  - '204'
+  - '208'
   - '303'
   - '305'
+  - '701'
 use_default_rules: true
 verbosity: 1
