@@ -1,9 +1,16 @@
 ---
+- name: add openjdk-r ppa
+  apt_repository:
+    repo: 'deb http://security.debian.org/debian-security stretch/updates main'
+    state: present
+    update_cache: true
+
 - name: Install OpenJDK on Debian
   apt:
      update_cache: yes
-     cache_valid_time: 3600
-     name: openjdk-8-jdk
+     name: 
+      - software-properties-common
+      - openjdk-8-jdk
      state: present
   when: "ansible_os_family == 'Debian'"
   
