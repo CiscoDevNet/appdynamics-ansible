@@ -1,62 +1,33 @@
-# win_appd
+# AppDynamics role to install the DotNet Agent
 
-This role installs and configures the AppDynamics machine agent and application agents for Windows application servers
-
-## Parameters
-
-### application_environment
-Theenvironment that the role is being deployed to
-
-`required: yes`
-
-### application_name
-The application name that will appear in AppDynamics Controller.
-
-`required: yes`
-
-### tier_name
-The tier name of the application
-
-`required: yes`
-
-### services
-A list of the service executable names to monitor. These will appear as separate processes in the AppDynamics Controller  
-
-`required: yes`
-
-## Notes
-
-When upgrading the versions, you will need to upgrade the `product_id` for the msi installer.  https://stackoverflow.com/questions/29937568/how-can-i-find-the-product-guid-of-an-installed-msi-setup
-
-## Nexus uploads
-
-### Windows Machine Agent (download from AppDynamics)
-
-- Appd Download: Machine Agent Bundle - 64-bit windows (zip)  
-
-- repository: software
-- group: com.appdynamics
-- artifact: machine-agent-windows
-- packaging: zip
-- version: 1.0.0.0
-
-### Windows Application Agent (download from AppDynamics)
-
-- Appd Download: .NET Agent - 64-bit windows (msi)
-
-- repository: software
-- group: com.appdynamics
-- artifact: application-agent-windows
-- packaging: msi
-- version: 1.0.0.0
-
-### Windows Netviz Agent (download from AppDynamics)
-
-- Appd Download: appd-netviz-agent - 64-bit windows (zip)
-
-- repository: software
-- group: com.appdynamics
-- artifact: netviz-agent-windows
-- packaging: zip
-- version: 1.0.0.0
-
+```yml
+---
+- hosts: windows
+  tasks:
+    - include_role:
+        name: appdynamics.agents.dotnet
+      vars:
+        # Define Agent Type and Version 
+        agent_version: 20.8.0
+        agent_type: dotnet
+        # The applicationName
+        application_name: 'IoT_API'
+        tier_name: 'login_service2' # ONLY required if agent type is not machine and db agent
+        # Your controller details 
+        controller_account_access_key: "b0248ceb-c954-4a37-97b5-207e90418cb4" # Please add this to your Vault 
+        controller_global_analytics_account_name: "customer1_e2f90621-ab21-4bf4-908c-872d213c7f64" # Please add this to your Vault 
+        controller_host_name: "ansible-20100nosshcont-bum4wzwa.appd-cx.com" # Your AppDynamics controller 
+        controller_account_name: "customer1" # Please add this to your Vault 
+        enable_ssl: "false"
+        controller_port: "8090"
+        enable_proxy: "false"  #use quotes please 
+        proxy_host: "10.0.1.3"
+        proxy_port: "80"
+        monitor_all_IIS_apps: "false"  # Enable automatic instrumentation of all IIS applications 
+        runtime_reinstrumentation: "true" # Runtime reinstrumentation works for .NET Framework 4.5.2 and greater. 
+        # Define standalone executive applications to monitor
+        services:
+          - login.exe
+          - tmw.exe
+          - mso.exe
+```

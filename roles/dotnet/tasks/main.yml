@@ -7,8 +7,3 @@
     value: "{{ ansible_hostname }}"
 
 - include_tasks: dotnet-agent.yml
-
-- name: Clean up - remove {{ dotnet_agent_dest_file }} 
-  win_file:
-    path: "{{ dotnet_agent_dest_folder_win }}\\{{ dotnet_agent_dest_file }}"
-    state: absent

@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  author: israel.ogbole
+  author: Israel Ogbole (@iogbole)
   role_name: dotnet
   company: AppDynamics
   description: This role installs and configures the AppDynamics DotNet Agent on Windows OS 
