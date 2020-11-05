@@ -8,7 +8,7 @@ collection_file="$(basename "$(ansible-galaxy collection build -f | awk -F" " '{
 
 echo "Built file - ${collection_file}"
 
-#echo "Install collection from - ${collection_file}"
-#ansible-galaxy collection install "${collection_file}" -f
+echo "Install collection from - ${collection_file}"
+ansible-galaxy collection install "${collection_file}" -f
 
-#rm -rf "${collection_file}"
+rm -rf "${collection_file}"
