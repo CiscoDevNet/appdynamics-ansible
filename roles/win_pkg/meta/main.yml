@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  author: israel.ogbole
+  author: Israel Ogbole (https://galaxy.ansible.com/iogbole)
   role_name: win_pkg
   company: AppDynamics
   description: This is an AppDynamics Windows package role, Installations on Windows inherits tasks from this role

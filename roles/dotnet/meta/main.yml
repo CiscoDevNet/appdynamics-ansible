@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  author: Israel Ogbole (@iogbole)
+  author: Israel Ogbole (https://galaxy.ansible.com/iogbole)
   role_name: dotnet
   company: AppDynamics
   description: This role installs and configures the AppDynamics DotNet Agent on Windows OS 

@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  author: israel.ogbole
+  author: Israel Ogbole (https://galaxy.ansible.com/iogbole)
   role_name: db
   company: AppDynamics
   description: This role installs and configures the AppDynamics Database Agent

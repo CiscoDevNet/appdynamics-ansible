@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  author: israel.ogbole
+  author: Israel Ogbole (https://galaxy.ansible.com/iogbole)
   role_name: linux_pkg
   company: AppDynamics
   description: This is an AppDynamics linux package helper role, all installations on Linux depends on this role. 
