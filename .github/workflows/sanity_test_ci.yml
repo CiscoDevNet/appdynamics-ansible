@@ -2,7 +2,7 @@ name: "appdynamics.sanity.test"
 on:
   pull_request:
 jobs:
-  molecule:
+  sanity_test:
     runs-on: ubuntu-latest
     env:
       PY_COLORS: 1
