@@ -16,5 +16,5 @@
         enable_ssl: "false"
         controller_port: "8090"
         analytics_event_endpoint: "http://ansible-20100nosshcont-bum4wzwa.appd-cx.com:7001"
-        enable_analytics_agent: true
+        enable_analytics_agent: "true"
         machine_hierarchy: "AppName|Owners|Environment|" # Make sure it ends with a |

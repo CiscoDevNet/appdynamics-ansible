@@ -153,14 +153,15 @@ ansible-galaxy collection install appdynamics.agents
 
 ## Role Variables
 
-|<img width="200"/>  variable   | Description |
+|<img width="200"/>  Variable   | Description |
 |--|--|
 |`agent_type`   | AppDynamics agent type.  java, machine, etc  |
 |`agent_version`  | AppDynamics agent version. AppDynamics uses calendar versioning. For example, if a Java agent is released in November of 2020, it’s version will begin with 20.11.0. When the Java agent team releases again in the month of November, the new agent will be 20.11.1  |
-|`application_name`   | The AppDynamics business application name, this variable is compulsory for all the  dotnet, java and dotnetcore roles  |
-|`tier_name`   | The AppDynamics tier name, this variable is compulsory for all the  dotnet, java and dotnetcore roles  |
+|`application_name`   | The AppDynamics business application name, this variable is compulsory for all the  `dotnet`, `java` and `dotnetcore` roles  |
+|`tier_name`   | The AppDynamics tier name, this variable is compulsory for all the `dotnet`, `java` and `dotnetcore` roles  |
 |`controller_host_name`   | The  controller host name, do not include `http(s)` |
 |`controller_account_name`   | Controller account name   |
-|`controller_port`   | The Controller port   |
+|`controller_port`   | The controller port   |
 |`enable_ssl`   | Indicate if SSL is enabled in the controller or not |
-|`enable_ssl`   | Indicate if SSL is enable or not  |
+|`analytics_event_endpoint`   | Your Events Service URL   |
+|`enable_analytics_agent`   | Indicate if analytics agent should be enabled in the Machine agent |
