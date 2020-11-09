@@ -23,13 +23,15 @@ ansible-galaxy collection install appdynamics.agents
 
 ## Supported Agents
 
-| Agent type | Description |
+|  <img width="200"/> Agent type | Description |
 |--|--|
-|`dotnet` | Agent to monitor Full .Net Framework application on Windows |
+|`sun-java`   or     `java`   | Agent to monitor Java applications (All Vendors) running on JRE version 1.7 and less |
 |`sun-java8`   or     `java8`   | Agent to monitor Java applications (All Vendors) running on JRE version 1.8 and above |
+|`ibm-java` | Agent to monitor Java applications (All Vendors) running on IBM JRE |
+|`dotnet` | Agent to monitor Full .Net Framework application on Windows |
 |`machine` | 64 Bit Machine agent ZIP bundle with JRE to monitor your Linux servers |
 |`machine-win` | 64 Bit Machine agent ZIP bundle with JRE to monitor your windows servers. |
-|`db` | Agent to monitor any combination of DB2, Oracle, SQL Server, Sybase, MySQL, Sybase IQ and PostgreSQL database platforms. Linux install |
+|`db` | Agent to monitor Databases|
 |`db-win*` | Agent to monitor any combination of DB2, Oracle, SQL Server, Sybase, MySQL, Sybase IQ and PostgreSQL database platforms. Windows Install|
 |`dotnet-core*` | Agent to Monitor .NetCore applications on Linux|
 |`dotnet-core-win*` | Agent to Monitor .NetCore applications on Windows |
@@ -71,16 +73,16 @@ ansible-galaxy collection install appdynamics.agents
     - include_role:
         name: appdynamics.agents.dotnet
       vars:
-        # Define Agent Type and Version 
+        # Define Agent Type and Version
         agent_version: 20.8.0
         agent_type: dotnet
         # The applicationName
         application_name: 'IoT_API'
         tier_name: 'login_service2' # ONLY required if agent type is not machine and db agent
         # Your controller details 
-        controller_account_access_key: "b0248ceb-c954-4a37-97b5-207e90418cb4" # Please add this to your Vault 
-        controller_global_analytics_account_name: "customer1_e2f90621-ab21-4bf4-908c-872d213c7f64" # Please add this to your Vault 
-        controller_host_name: "ansible-20100nosshcont-bum4wzwa.appd-cx.com" # Your AppDynamics controller 
+        controller_account_access_key: "b0248ceb-c954-4a37-97b5-207e90418cb4" # Please add this to your Vault
+        controller_global_analytics_account_name: "customer1_e2f90621-ab21-4bf4-908c-872d213c7f64" # Please add this to your Vault
+        controller_host_name: "ansible-20100nosshcont-bum4wzwa.appd-cx.com" # Your AppDynamics controller
         controller_account_name: "customer1" # Please add this to your Vault 
         enable_ssl: "false"
         controller_port: "8090"
@@ -88,7 +90,7 @@ ansible-galaxy collection install appdynamics.agents
         proxy_host: "10.0.1.3"
         proxy_port: "80"
         monitor_all_IIS_apps: "false"  # Enable automatic instrumentation of all IIS applications 
-        runtime_reinstrumentation: "true" # Runtime reinstrumentation works for .NET Framework 4.5.2 and greater. 
+        runtime_reinstrumentation: "true" # Runtime reinstrumentation works for .NET Framework 4.5.2 and greater.
         # Define standalone executive applications to monitor
         services:
           - login.exe
@@ -116,7 +118,7 @@ ansible-galaxy collection install appdynamics.agents
         # Define Agent Type and Version
         agent_version: 20.9.0
         agent_type: machine
-        # Your controller details 
+        # Your controller details
         controller_account_access_key: "b0248ceb-c954-4a37-97b5-207e90418cb4" # Please add this to your Vault
         controller_global_analytics_account_name: 'customer1_e2f90621-ab21-4bf4-908c-872d213c7f64' # Please add this to your Vault
         controller_host_name: "ansible-20100nosshcont-bum4wzwa.appd-cx.com" # Your AppDynamics controller
@@ -151,8 +153,14 @@ ansible-galaxy collection install appdynamics.agents
 
 ## Role Variables
 
-| Name  | Description |
+|<img width="200"/>  variable   | Description |
 |--|--|
-|agent_type   | AppDynamics agent type.  java, machine, etc  |
-|agent_version   | AppDynamics agent version. AppDynamics uses calendar versioning. For example, if a Java agent is released in November of 2020, it’s version will begin with 20.11.0. When the Java agent team releases again in the month of November, the new agent will be 20.11.1  |
-|application_name   | The AppDynamics business application name  |
+|`agent_type`   | AppDynamics agent type.  java, machine, etc  |
+|`agent_version`  | AppDynamics agent version. AppDynamics uses calendar versioning. For example, if a Java agent is released in November of 2020, it’s version will begin with 20.11.0. When the Java agent team releases again in the month of November, the new agent will be 20.11.1  |
+|`application_name`   | The AppDynamics business application name, this variable is compulsory for all the  dotnet, java and dotnetcore roles  |
+|`tier_name`   | The AppDynamics tier name, this variable is compulsory for all the  dotnet, java and dotnetcore roles  |
+|`controller_host_name`   | The  controller host name, do not include `http(s)` |
+|`controller_account_name`   | Controller account name   |
+|`controller_port`   | The Controller port   |
+|`enable_ssl`   | Indicate if SSL is enabled in the controller or not |
+|`enable_ssl`   | Indicate if SSL is enable or not  |
