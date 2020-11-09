@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  author: israel.ogbole
+  author: Israel Ogbole (https://galaxy.ansible.com/iogbole)
   role_name: common
   company: AppDynamics
   description: This is an AppDynamics helper role, all other agent roles depends on the common role. 
