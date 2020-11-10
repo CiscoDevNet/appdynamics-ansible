@@ -9,24 +9,18 @@ name: agents
 
 # The version of the collection. Must be compatible with semantic versioning
 # It must obey semantic versioning rules - MAJOR.MINOR.PATCH
-version: "20.9.0" 
+version: "20.11.6" 
 
 # The path to the Markdown (.md) readme file. This path is relative to the root of the collection
 readme: README.md
 
 # A list of the collection's content authors. Can be just the name or in the format 'Full Name <email> (url)
 authors:
-- Israel.Ogbole[at]appdynamics.com
-
+- Israel Ogbole
 
 ### OPTIONAL but strongly recommended
 # A short summary description of the collection
 description: Install and Configure AppDynamics agents
-
-# Either a single license or a list of licenses for content inside of a collection. Ansible Galaxy currently only
-# accepts L(SPDX,https://spdx.org/licenses/) licenses. This key is mutually exclusive with 'license_file'
-# license:
-# - GPL-2.0-or-later
 
 # The path to the license file for the collection. This path is relative to the root of the collection. This key is
 # mutually exclusive with 'license'
@@ -66,7 +60,7 @@ issues: https://github.com/Appdynamics/appdynamics-ansible/issues
 build_ignore: 
   - build 
   - '*.tar.gz'
-  - install_collection.short
+  - install_collection.sh
   - .github
 
 

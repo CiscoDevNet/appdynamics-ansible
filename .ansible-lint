@@ -12,6 +12,5 @@ skip_list:
   - '208'
   - '303'
   - '305'
-  - '701'
 use_default_rules: true
 verbosity: 1

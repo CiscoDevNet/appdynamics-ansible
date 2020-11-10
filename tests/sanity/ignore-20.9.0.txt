@@ -1,0 +1,7 @@
+roles/common/files/get-agent.sh shebang!skip
+roles/common/tasks/get_agent.yml shebang!skip
+README.md no-smart-quotes!skip
+roles/java/README.md no-smart-quotes!skip
+roles/dotnet/README.md no-smart-quotes!skip
+roles/machine/README.md no-smart-quotes!skip
+roles/db/README.md no-smart-quotes!skip

@@ -1,4 +1,47 @@
 ---
+galaxy_info:
+  author: Israel Ogbole (https://galaxy.ansible.com/iogbole)
+  role_name: java
+  company: AppDynamics
+  description: This role installs and configures the AppDynamics Java Agent
+  license: Apache2
+  min_ansible_version: 2.8
+  platforms:
+    - name: Ubuntu
+      versions:
+        - precise
+        - quantal
+        - raring
+        - saucy
+        - trusty
+        - xenial
+        - artful
+        - bionic
+    - name: Debian
+      versions:
+        - wheezy
+        - jessie
+        - stretch
+        - buster
+    - name: EL
+      versions:
+        - 8
+        - 7
+        - 6
+    - name: Windows
+      versions:
+        - 2008x64
+        - 2008R2
+        - 2012
+        - 2012R2
+        - 2016
+        - 2019
+
+  galaxy_tags:
+    - apm 
+    - monitoring
+    - appdynamics
+
 dependencies:
  - { role: common }
  - { role: linux_pkg, when: ansible_os_family == 'RedHat' or  ansible_os_family == 'Debian'}

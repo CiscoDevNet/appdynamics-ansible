@@ -1,45 +1,20 @@
-# appd
+# AppDynamics role to install the Database agent
 
-This role installs and configures the AppDynamics DB agent on Linux
+This role currently supports Linux only, Windows support will be released soon.
 
-## Example 
-
-````
-
+```yml
 ---
 - hosts: linux
-  become: true
   tasks:
     - include_role:
-        name: db-agent
+        name: appdynamics.agents.db
       vars:
-        dir: '.'
-        db_agent_name: 'ACME' 
-        application_environment: 'dev'
-        aws_access_key: xxxxxx #read from vault or environment variable 
-        aws_secret_key: xxxxxx #read from vault or environment variable 
-
-
-````
-
-## Nexus uploads
-
-### Linux Machine Agent (download from AppDynamics)
-
-- Appd Download: Machine Agent Bundle - 64-bit linux (zip)  
-
-- repository: software
-- group: com.appdynamics
-- artifact: machine-agent-linux
-- packaging: zip
-- version: 1.0.0 (using 1st 3 numbers of archive)
-
-### Linux Application (Java) Agent (download from AppDynamics)
-
-- Appd Download: Java Agent - Sun and JRockit JVM (zip) 
-
-- repository: software
-- group: com.appdynamics
-- artifact: application-agent-linux
-- packaging: zip
-- version: 1.0.0.0
+        agent_version: 20.9.0
+        agent_type: db
+        controller_account_access_key: "b0248ceb-c954-4a37-97b5-207e90418cb4" # Please add this to your Vault
+        controller_host_name: "ansible-20100nosshcont-bum4wzwa.appd-cx.com" # Your AppDynamics controller
+        controller_account_name: "customer1" # Please add this to your Vault
+        enable_ssl: "false"
+        controller_port: "8090"
+        db_agent_name: "ProdDBAgent"
+```
