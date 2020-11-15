@@ -25,7 +25,7 @@
     - name: Check if DB agent exists
       stat: path="{{ db_agent_dest_folder_linux }}/db-agent.jar"
       register: previous_db_agent
-      
+
     - name: Backup old DB agent to /tmp folder
       archive: 
         path: "{{ db_agent_dest_folder_linux }}"
@@ -33,15 +33,15 @@
         mode: 0755
       when: previous_db_agent.stat.exists
       changed_when: false
-    
+
     - name: Get running DB processes
       shell: "ps -ef | grep -v grep | grep -w 'db-agent' | awk '{print $2}'"
       register: running_processes
       when: previous_db_agent.stat.exists
       changed_when: false
-    
+
     - debug: 
-       msg: "{{ running_processes.stdout_lines  }}"
+       msg: "{{ running_processes.stdout_lines }}"
       when: previous_db_agent.stat.exists
       changed_when: false
 
@@ -51,7 +51,7 @@
       ignore_errors: yes  # Skip 'kill: No such process' errors 
       when: previous_db_agent.stat.exists
       changed_when: false
-    
+
     - name: Force Kill DB process
       wait_for:
         path: "/proc/{{ item }}/status"
@@ -82,7 +82,7 @@
 
     - name: Download DB Agent 
       get_url:
-        url: '{{ agent_download_url.stdout }}'
+        url: "{{ agent_download_url.stdout }}"
         dest: "{{ db_agent_dest_folder_linux }}/{{ db_agent_dest_file }}"
         force: true # download a new file even if dbagent.zip exists. 
       changed_when: false
@@ -90,13 +90,15 @@
       failed_when: result.status_code != 200
 
     - debug: 
-        msg: "{{ result }}" 
+        msg: "{{ result }}"
 
     - name: Unzip DB agent file 
       unarchive: 
         #src: "{{ agent_download_url.stdout }}" 
         src: "{{ db_agent_dest_folder_linux }}/{{ db_agent_dest_file }}"
-        dest: "{{ db_agent_dest_folder_linux }}" 
+        dest: "{{ db_agent_dest_folder_linux }}"
+        owner: "{{ appdynamics_user }}"
+        group: "{{ appdynamics_user }}"
         mode: 0755
         remote_src: yes 
       changed_when: false
@@ -126,7 +128,7 @@
         enabled: yes
         force: true # Force it to override existing symlink incase of an upgrade
         masked: no
-    
+
     - name: Start the agent service
       systemd:
         name: appdynamics-db-agent
@@ -143,11 +145,11 @@
     - name: Show DB Agent status 
       debug:
         var: result
-  
+
     #- name: Start DB Agent service
-    #  shell: "nohup java -Dappdynamics.agent.uniqueHostId={{ host_name }} -Ddbagent.name={{ db_agent_name }} -Xms1536m -jar {{ db_agent_dest_folder_linux }}/db-agent.jar </dev/null >/dev/null 2>&1 &"
+     #  shell: "nohup java -Dappdynamics.agent.uniqueHostId={{ host_name }} -Ddbagent.name={{ db_agent_name }} -Xms1536m -jar {{ db_agent_dest_folder_linux }}/db-agent.jar </dev/null >/dev/null 2>&1 &"
       #shell: "{{ db_agent_dest_folder_linux }}/start-dbagent  -Dappdynamics.agent.uniqueHostId={{ host_name }} -Ddbagent.name={{ db_agent_name }} -Xms1536m  </dev/null >/dev/null 2>&1 &"
-   
+
     - name: Get new running DB processes
       shell: "ps -ef | grep -v grep | grep -w 'db-agent' | awk '{print $2}'"
       register: db_proc
@@ -156,7 +158,12 @@
     - debug: 
        msg: "{{ db_proc.stdout_lines }}"
 
-    - name: Clean up - remove {{ db_agent_dest_file }} 
+    - name: "Validate DB PID"
+      assert: 
+         that:  db_proc.stdout_lines | first | length != 0 
+         msg:  "DB PID must be present"
+  
+    - name: Clean up
       file:
         path: "{{ db_agent_dest_folder_linux }}/{{ db_agent_dest_file }}"
         state: absent
