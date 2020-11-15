@@ -59,7 +59,7 @@
         mode: 0755
         remote_src: yes 
       changed_when: false
-
+  
     - name: Configure Java agent's controller-info.xml
       template:
         src: templates/application-agent-controller-info.xml.j2
@@ -69,6 +69,20 @@
 
     - name: Copy controller-info.xml to the versioned agent folder 
       shell: cp  {{ java_agent_dest_folder_linux }}/conf/controller-info.xml  {{ java_agent_dest_folder_linux }}/ver{{ agent_version }}*/conf/
+      changed_when: false
+    
+    - name: Recursively change ownership of the Java agent directory
+      file: 
+        path: "{{ java_agent_dest_folder_linux }}"
+        recurse: yes
+        owner: "{{ agent_dir_permission.user | default('root') }}" 
+        group: "{{ agent_dir_permission.group | default('root') }}"
+      when:
+        - agent_dir_permission.user is defined
+        - agent_dir_permission.group is defined
+        - agent_dir_permission.user | length ! = 0
+        - agent_dir_permission.group | length ! = 0
+      ignore_errors: yes
       changed_when: false
 
     - name: Clean up - remove {{ java_agent_dest_file }} 

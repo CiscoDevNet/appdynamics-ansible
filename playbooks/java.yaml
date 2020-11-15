@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: linux
   tasks:
     - include_role:
         name: appdynamics.agents.java
@@ -16,4 +16,6 @@
         controller_account_name: "customer1" # Please add this to your Vault 
         enable_ssl: "false"
         controller_port: "8090"
-    
+        agent_dir_permission:  #defaults to root:root
+            user:  "appdynamics" # This user must pre-exist. It is recommended to use the PID owner of your Java app 
+            group: "appdynamics" # This group must pre-exist 
