@@ -2,8 +2,8 @@
 - name: Validate that the agent download URL is fit for Windows 
   assert:
     that: "win_ma_finder_string in agent_download_url.stdout"
-    fail_msg: "It looks like you have downloaded the Linux machine agent instead of the Windows machine agent. You entered '{{ agent_type }}' in the playbook. Try using 'machine-win' instead. The URL: {{ agent_download_url.stdout }} is expected to contain {{ win_ma_finder_string }}"
-    success_msg: "Successfully validated {{ agent_type }} for Windows"
+    fail_msg: "It looks like you have downloaded the Linux machine agent instead of the Windows machine agent. You entered '{{ agent_type_fact }}' in the playbook. Try using 'machine-win' instead. The URL: {{ agent_download_url.stdout }} is expected to contain {{ win_ma_finder_string }}"
+    success_msg: "Successfully validated {{ agent_type_fact }} for Windows"
 
 - name: Ensures machine agent {{ machine_agent_dest_folder_win }} dir exists
   win_file:
@@ -75,7 +75,7 @@
   changed_when: false
 
 - include_tasks: configure_log_analytics_win.yml
-  when: enable_analytics_agent
+  when: enable_analytics_agent | bool
 
 - name: 'Install machine agent service'
   win_command: cscript.exe "{{ machine_agent_dest_folder_win }}/InstallService.vbs"

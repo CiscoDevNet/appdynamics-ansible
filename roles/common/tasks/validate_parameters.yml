@@ -33,7 +33,7 @@
   assert:
     that:  controller_global_analytics_account_name is defined
     msg: 'A controller_global_analytics_account_name must be provided'
-  when: enable_analytics_agent
+  when: enable_analytics_agent | bool
 
 - name: Validate controller_host_name
   assert:
@@ -54,16 +54,16 @@
   assert:
     that:  analytics_event_endpoint is defined
     msg: 'A analytics_event_endpoint must be provided'
-  when: enable_analytics_agent
+  when: enable_analytics_agent | bool
 
-- name: Validate Proxy Host configurations 
+- name: Validate Proxy Host configurations
   assert: 
     that:  proxy_host is defined
     msg:  'A proxy_host is required if enable_proxy is true'
-  when:  enable_proxy
+  when:  enable_proxy | bool
 
 - name: Validate Proxy Port configurations 
   assert: 
     that:  proxy_port is defined
     msg:  'A proxy_port is required if enable_proxy is true'
-  when:  enable_proxy
+  when:  enable_proxy | bool

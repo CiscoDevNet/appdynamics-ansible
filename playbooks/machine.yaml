@@ -1,5 +1,5 @@
 ---
-- hosts: linux
+- hosts: all
   tasks:
     - include_role:
         name: appdynamics.agents.machine

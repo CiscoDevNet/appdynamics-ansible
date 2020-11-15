@@ -2,8 +2,8 @@
 - name: Validate that the agent download URL is fit for Linux 
   assert:
     that: "linux_ma_finder_string in agent_download_url.stdout"
-    fail_msg: "It looks like you have downloaded the Windows machine agent instead of the Linux machine agent. You entered '{{ agent_type }}' in the playbook. The URL: {{ agent_download_url.stdout }} is expected to contain {{ linux_ma_finder_string }}"
-    success_msg: "Successfully validated {{ agent_type }} for Linux"
+    fail_msg: "It looks like you have downloaded the Windows machine agent instead of the Linux machine agent. You entered '{{ agent_type_fact }}' in the playbook. The URL: {{ agent_download_url.stdout }} is expected to contain {{ linux_ma_finder_string }}"
+    success_msg: "Successfully validated {{ agent_type_fact }} for Linux"
     
 - name: Machine Agent linux Block
   become: true
@@ -81,7 +81,7 @@
       mode: 0755
 
   - include_tasks: configure_log_analytics_linux.yml
-    when: enable_analytics_agent
+    when: enable_analytics_agent | bool
 
   - name: Add the Agent as a Service using Systemd
     template:
