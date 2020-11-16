@@ -81,7 +81,7 @@
       mode: 0755
 
   - include_tasks: configure_log_analytics_linux.yml
-    when: enable_analytics_agent
+    when: enable_analytics_agent | bool
 
   - name: Add the Agent as a Service using Systemd
     template:

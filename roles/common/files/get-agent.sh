@@ -24,7 +24,8 @@ readonly ERR_MISSING_LIB_DEPS=8
 readonly ERR_UNSUPPORTED_PLATFORM=9
 readonly ERR_GENERIC=10
 
-DOWNLOAD_PAGE_OUTPUT="tmp.json"
+rand="$(echo $RANDOM$RANDOM)"
+DOWNLOAD_PAGE_OUTPUT="get-agent-$rand.json"
 
 #download page search params
 _app_agent=""
@@ -202,11 +203,18 @@ get_download_url() {
     exit_with_error "None 200 response code: ${http_response}" "${ERR_GENERIC}"
   fi
 
-  processed_payload=$(jq "first(.results[]  | select(.s3_path | test(\"${_finder}\"))) | ." < ${DOWNLOAD_PAGE_OUTPUT} )
+  processed_payload=$(jq "first(.results[]  | select(.s3_path | test(\"${_finder}\"))) | ." < "${DOWNLOAD_PAGE_OUTPUT}" )
   readonly d_s3_path=$(echo "${processed_payload}" | jq -r .s3_path)
 
   if [ -z "$d_s3_path" ] || [ "$d_s3_path" = "" ]; then
-    exit_with_error "Could not download your request ${1}. Please ensure that agent version exist in https://download.appdynamics.com " "${ERR_BAD_RESPONSE}"
+    echo "S3 path: $d_s3_path"
+    echo "processed paymoad : $processed_payload"
+    echo "https://download.appdynamics.com responded with unexpected reponse. Please ensure you have connectivity to the download page"
+    echo "===========Begincontent============"
+    cat "${DOWNLOAD_PAGE_OUTPUT}"
+    echo "===========End content============"
+    cp "${DOWNLOAD_PAGE_OUTPUT}" ~/appd-download-agent-error.json
+    exit_with_error "Could not download your request ${1}. Check the download page to ensure the agent type and version exist" "${ERR_BAD_RESPONSE}"
   fi
 
   echo "$d_s3_path"

@@ -1,9 +1,24 @@
 - include_tasks: validate_parameters.yml
 
-#- include_tasks: install_jq.yml
+- debug: 
+     msg:  "Role Agent variables: type=> {{ agent_type }} version=> {{ agent_version }}"
+
+# Role varibables has precedence over facts, so use agent_type_fact instead so we can manipulate it
+- name: Reassign agent_type var to a fact 
+  set_fact: 
+   agent_type_fact: "{{ agent_type }}"
 
 - debug: 
-     msg:  "Agent variables: type=> {{ agent_type }} version=> {{ agent_version }}"
+     msg:  "Reassigned agent_type_fact: {{ agent_type_fact }}"
+   
+- name: Set agent_type_fact for Windows Machine Agent
+  set_fact: 
+    agent_type_fact: machine-win
+  when: "agent_type == 'machine' and ansible_os_family == 'Windows'"
+
+- debug: 
+     msg:  "Agent variables for Machine Agent on  Windows => {{ agent_type_fact }}"
+  when: "agent_type == 'machine' and ansible_os_family == 'Windows'"
 
 - include_tasks: get_agent.yml
 
@@ -14,7 +29,7 @@
 
 - name: Set Controller Proxy configuration
   set_fact:
-    enable_proxy: "{{ enable_proxy }} | bool | lower"
+    enable_proxy: "{{ enable_proxy | bool | lower }}"
   
 - name: Set AppDynamics controller facts
   set_fact:
@@ -22,10 +37,10 @@
     global_analytics_account_name: "{{ controller_global_analytics_account_name }}"
     controller_host_name: "{{ controller_host_name }}"
     analytics_event_endpoint: "{{ analytics_event_endpoint }}"
-    sim_enabled: "{{ sim_enabled }} | bool | lower"
-    enable_ssl: "{{ enable_ssl }} | bool | lower "
+    sim_enabled: "{{ sim_enabled | bool | lower }}"
+    enable_ssl: "{{ enable_ssl | bool | lower }}"
     controller_port: "{{ controller_port }}"
-    enable_analytics_agent: "{{ enable_analytics_agent }} | bool | lower"
+    enable_analytics_agent: "{{ enable_analytics_agent | bool | lower}}"
     machine_hierarchy: "{{ machine_hierarchy }}"
 
 - name: Set HTTPS Protocol facts
@@ -36,8 +51,10 @@
   vars:
      params: "
       SSL enabled = {{ enable_ssl }} |
-      Controller={{ controller_protocol }}://{{ controller_host_name }}:{{ controller_port }} |
-      controller_account_name={{ controller_account_name }} |
-      analytics_event_endpoint={{ analytics_event_endpoint }} "
+      Controller= {{ controller_protocol }}://{{ controller_host_name }}:{{ controller_port }} |
+      controller_account_name = {{ controller_account_name }} |
+      analytics_event_endpoint = {{ analytics_event_endpoint }} |
+      enable_analytics_agent = {{ enable_analytics_agent }}  |  
+      enable_proxy = {{ enable_proxy }}"
   debug: 
     msg: "{{ params.split('|') }}"

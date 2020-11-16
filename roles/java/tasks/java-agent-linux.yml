@@ -1,5 +1,5 @@
 ---
-# App owners would either need to chown the entire agent folder to their app's user  OR grant their app's user read/write access to the agent folder 
+# App owners would either need to chown the entire agent folder to their app's user OR grant their app's user read/write access to the agent folder 
 - name: Java Linux Block
   become: true
   block: 
