@@ -49,3 +49,6 @@ runtime_reinstrumentation: false
 #controller defaults
 enable_ssl: false
 enable_proxy: false
+
+#java home
+java_home: ""
