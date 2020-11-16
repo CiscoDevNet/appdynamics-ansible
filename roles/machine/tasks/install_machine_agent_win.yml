@@ -78,7 +78,7 @@
   when: enable_analytics_agent | bool
 
 - name: 'Install machine agent service'
-  win_command: cscript.exe "{{ machine_agent_dest_folder_win }}/InstallService.vbs {{ java_system_properties }}"
+  win_command: "cscript.exe {{ machine_agent_dest_folder_win }}/InstallService.vbs {{ java_system_properties }}"
   register: install_win_service_result
 
 - name: Install service result
