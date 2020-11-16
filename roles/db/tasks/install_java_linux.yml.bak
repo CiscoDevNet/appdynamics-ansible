@@ -6,7 +6,6 @@
     state: installed
   when: "ansible_os_family == 'RedHat'"
 
-#credit - https://github.com/geerlingguy/ansible-role-java/blob/master/tasks/setup-Debian.yml
 - name: Ensure 'man' directory exists.
   file: # noqa 208
     path: /usr/share/man/man1
