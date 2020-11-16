@@ -24,10 +24,15 @@
     - name: ensure add-apt-repositories is present
       package: name=software-properties-common state=present
 
+    - name: apt-get update --allow-releaseinfo-change
+      shell: apt-get update --allow-releaseinfo-change
+      args: 
+        warn: false
+
     - name: Install openjdk-8-jdk 
       apt:
-        update_cache: yes
         name: 
+          - gnupg2
           - openjdk-8-jdk
         state: present
 
