@@ -24,7 +24,7 @@ readonly ERR_MISSING_LIB_DEPS=8
 readonly ERR_UNSUPPORTED_PLATFORM=9
 readonly ERR_GENERIC=10
 
-rand="$(echo $RANDOM$RANDOM)"
+rand="$RANDOM$RANDOM"
 DOWNLOAD_PAGE_OUTPUT="get-agent-$rand.json"
 
 #download page search params
@@ -103,7 +103,7 @@ exit_bad_args() {
 # Removes temporary file during exit or interrupt.
 cleanup() {
   rm -f "${HTTP_STATUS_FILE}"
-  rm -f ${DOWNLOAD_PAGE_OUTPUT}
+  rm -f "${DOWNLOAD_PAGE_OUTPUT}"
 
 }
 trap cleanup EXIT TERM INT
@@ -193,7 +193,7 @@ get_download_url() {
 
   portal_page="https://download.appdynamics.com/download/downloadfile/?version=${_version}&apm=${_app_agent}&os=${_os_platform}&platform_admin_os=${_os_platform}&events=${_events}&eum=${_eum}&apm_os=${_os_platform}"
 
-  http_response=$(curl -s -o ${DOWNLOAD_PAGE_OUTPUT} -w "%{http_code}" -X GET "$portal_page")
+  http_response=$(curl -s -o "${DOWNLOAD_PAGE_OUTPUT}" -w "%{http_code}" -X GET "$portal_page")
 
   if [ "${http_response}" -ge 400 ] && [ "${http_code}" -lt 600 ]; then
     exit_with_error "bad HTTP response code: ${http_response}" "${ERR_BAD_RESPONSE}"
@@ -210,7 +210,7 @@ get_download_url() {
     echo "S3 path: $d_s3_path"
     echo "processed paymoad : $processed_payload"
     echo "https://download.appdynamics.com responded with unexpected reponse. Please ensure you have connectivity to the download page"
-    echo "===========Begincontent============"
+    echo "===========Begin content============"
     cat "${DOWNLOAD_PAGE_OUTPUT}"
     echo "===========End content============"
     cp "${DOWNLOAD_PAGE_OUTPUT}" ~/appd-download-agent-error.json
