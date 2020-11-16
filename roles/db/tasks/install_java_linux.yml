@@ -20,9 +20,8 @@
   block:
     - name: Install gnupg2 
       apt:
-        name: 
-          - gnupg2
-      state: present
+        name: gnupg2
+        state: present
   
     - name: add openjdk-r ppa
       apt_repository: repo='ppa:openjdk-r/ppa'
@@ -37,8 +36,7 @@
 
     - name: Install openjdk-8-jdk 
       apt:
-        name: 
-          - openjdk-8-jdk
+        name: openjdk-8-jdk
         state: present
 
    # - name: select correct java version
