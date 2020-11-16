@@ -21,13 +21,15 @@ Environment=JAVA_HOME={{ machine_agent_dest_folder_linux }}/jre
 # Specify agent system properties for systemd here by setting or editing JAVA_OPTS, e.g.,
 #Environment="JAVA_OPTS=-D<sys-property1>=<value1> -D<sys-property2>=<value2>"
 
+Environment="JAVA_OPTS={{ java_system_properties }}"
+
 # Modify the next two lines to specify the user to run the machine agent as. Note that
 # you will need to ensure that:
 # 1. The controller-info.xml in the agent conf directory is readable by this user
 # 2. The logs directory is writeable by this user
 # 3. The scripts directory is writeable by this user
-User=appdynamics
-Environment=MACHINE_AGENT_USER=appdynamics
+User={{ appdynamics_user }}
+Environment=MACHINE_AGENT_USER={{ appdynamics_user }}
 
 # The next three lines must point to the same location (i.e. the
 # PIDFILE env var and the PIDFile property.)

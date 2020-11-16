@@ -12,3 +12,5 @@
         enable_ssl: "false"
         controller_port: "8090"
         db_agent_name: "ProdDBAgent" 
+        #https://docs.appdynamics.com/display/latest/Database+Agent+Configuration+Properties
+        java_system_properties: "-Dappdynamics.http.proxyHost=10.0.4.2 -Dappdynamics.http.proxyPort=9090" # mind the space between each property
