@@ -40,7 +40,7 @@
     sim_enabled: "{{ sim_enabled | bool | lower }}"
     enable_ssl: "{{ enable_ssl | bool | lower }}"
     controller_port: "{{ controller_port }}"
-    enable_analytics_agent: "{{ enable_analytics_agent | bool | lower}}"
+    enable_analytics_agent: "{{ enable_analytics_agent | bool | lower }}"
     machine_hierarchy: "{{ machine_hierarchy }}"
 
 - name: Set HTTPS Protocol facts

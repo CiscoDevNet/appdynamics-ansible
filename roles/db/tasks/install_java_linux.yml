@@ -8,7 +8,7 @@
 
 #credit - https://github.com/geerlingguy/ansible-role-java/blob/master/tasks/setup-Debian.yml
 - name: Ensure 'man' directory exists.
-  file:  # noqa 208
+  file: # noqa 208
     path: /usr/share/man/man1
     state: directory
     recurse: true
@@ -29,7 +29,7 @@
         update_cache: yes
         name: 
           - openjdk-8-jdk
-        state: latest
+        state: present
 
    # - name: select correct java version
    #  alternatives: name=java path=/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
