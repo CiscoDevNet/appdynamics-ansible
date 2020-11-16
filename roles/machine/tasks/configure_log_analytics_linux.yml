@@ -5,6 +5,9 @@
     regexp: '<enabled>false</enabled>'
     line: '<enabled>true</enabled>'
     backrefs: yes
+    owner: "{{ appdynamics_user }}"
+    group: "{{ appdynamics_user }}"
+    mode: 0755
   changed_when: false
 
 - name: Configure the analytics agent properties file
@@ -12,6 +15,9 @@
     dest: "{{ machine_agent_dest_folder_linux }}/monitors/analytics-agent/conf/analytics-agent.properties"
     regexp: "^{{ item.setting }}"
     line: "{{ item.setting }}{{ item.value }}"
+    owner: "{{ appdynamics_user }}"
+    group: "{{ appdynamics_user }}"
+    mode: 0755
   with_items:
     #- { setting: 'ad.agent.name=', value: '{{ tier_name }}-ag' }
     - { setting: 'http.event.endpoint=', value: '{{ analytics_event_endpoint }}' }

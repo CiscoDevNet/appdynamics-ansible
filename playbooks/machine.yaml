@@ -1,5 +1,5 @@
 ---
-- hosts: linux
+- hosts: all
   tasks:
     - include_role:
         name: appdynamics.agents.machine
@@ -18,3 +18,5 @@
         analytics_event_endpoint: "http://ansible-20100nosshcont-bum4wzwa.appd-cx.com:7001"
         enable_analytics_agent: "true"
         machine_hierarchy: "AppName|Owners|Environment|" # Make sure it ends with a |
+        # config properties docs - https://docs.appdynamics.com/display/latest/Machine+Agent+Configuration+Properties
+        java_system_properties: "-Dappdynamics.http.proxyHost=10.0.4.2 -Dappdynamics.http.proxyPort=9090" # mind the space between each property

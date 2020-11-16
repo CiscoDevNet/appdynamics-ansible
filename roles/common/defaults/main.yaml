@@ -1,17 +1,15 @@
 ---
 #wheel user for Machine agent 
 appdynamics_user: appdynamics
-
-
 ############ DO NOT CHANGE ANY OF THESE DEFAULTS - Except you know what you're doing#######################
+java_system_properties: ""
+host_name: '{{ ansible_hostname }}' # computername/hostname of the target machine 
 
 #windows_ma_finder_string
 win_ma_finder_string: machineagent-bundle-64bit-windows
 win_db_finder_string: db-agent-winx64
 linux_ma_finder_string: machineagent-bundle-64bit-linux
 linux_db_finder_string: db-agent
-
-host_name: '{{ ansible_hostname }}' # computername/hostname of the target machine 
 
 # DB Agent Linux
 db_agent_dest_folder_linux: /opt/appdynamics/db-agent
@@ -43,9 +41,10 @@ java_agent_dest_file: java-agent.zip
 java_agent_dest_folder_win: C:/appdynamics/java-agent
 
 # DotNet agent defaults 
-monitor_all_IIS_apps: false 
-runtime_reinstrumentation: false
+monitor_all_IIS_apps: "false" 
+runtime_reinstrumentation: "false"
 
 #controller defaults
-enable_ssl: false
-enable_proxy: false
+enable_ssl: "false"
+enable_proxy: "false"
+sim_enabled: "false"
