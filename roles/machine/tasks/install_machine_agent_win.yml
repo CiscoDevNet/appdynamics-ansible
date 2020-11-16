@@ -61,7 +61,7 @@
 
 - name: Configure machine-agent controller-info.xml
   template:
-    src: templates/machine-agent-controller-info.xml.j2
+    src: templates/win-machine-agent-controller-info.xml.j2
     dest: '{{ machine_agent_dest_folder_win }}/conf/controller-info.xml'
     force: yes
   changed_when: false
@@ -78,7 +78,7 @@
   when: enable_analytics_agent | bool
 
 - name: 'Install machine agent service'
-  win_command: cscript.exe "{{ machine_agent_dest_folder_win }}/InstallService.vbs"
+  win_command: cscript.exe "{{ machine_agent_dest_folder_win }}/InstallService.vbs {{ java_system_properties }}"
   register: install_win_service_result
 
 - name: Install service result

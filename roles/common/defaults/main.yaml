@@ -5,6 +5,8 @@ appdynamics_user: appdynamics
 
 ############ DO NOT CHANGE ANY OF THESE DEFAULTS - Except you know what you're doing#######################
 
+java_system_properties: ""
+
 #windows_ma_finder_string
 win_ma_finder_string: machineagent-bundle-64bit-windows
 win_db_finder_string: db-agent-winx64
