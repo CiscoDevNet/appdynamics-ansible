@@ -18,6 +18,12 @@
 
 - name: Install Java on Debian
   block:
+    - name: Install gnupg2 
+      apt:
+      name: 
+        - gnupg2
+      state: present
+  
     - name: add openjdk-r ppa
       apt_repository: repo='ppa:openjdk-r/ppa'
 
@@ -32,7 +38,6 @@
     - name: Install openjdk-8-jdk 
       apt:
         name: 
-          - gnupg2
           - openjdk-8-jdk
         state: present
 
@@ -40,5 +45,4 @@
    #  alternatives: name=java path=/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
    #- name: set java home
    #   set_fact: java_home=/usr/lib/jvm/java-8-openjdk-amd64
-
   when: "ansible_os_family == 'Debian'"
