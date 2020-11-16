@@ -1,0 +1,46 @@
+---
+- name: Install OpenJDK on Redhat
+  yum: 
+    update_cache: yes
+    name: java-1.8.0-openjdk
+    state: installed
+  when: "ansible_os_family == 'RedHat'"
+
+- name: Ensure 'man' directory exists.
+  file: # noqa 208
+    path: /usr/share/man/man1
+    state: directory
+    recurse: true
+  when:
+    - ansible_distribution == 'Ubuntu'
+    - ansible_distribution_major_version | int >= 18
+
+- name: Install Java on Debian
+  block:
+    - name: Install gnupg2 
+      apt:
+        name: gnupg2
+        state: present
+  
+    - name: add openjdk-r ppa
+      apt_repository: repo='ppa:openjdk-r/ppa'
+
+    - name: ensure add-apt-repositories is present
+      package: name=software-properties-common state=present
+
+    - name: apt-get update --allow-releaseinfo-change
+      shell: apt-get update --allow-releaseinfo-change
+      args: 
+        warn: false
+
+    - name: Install openjdk-8-jdk 
+      apt:
+        name: openjdk-8-jdk
+        state: present
+        update_cache: false
+
+   # - name: select correct java version
+   #  alternatives: name=java path=/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
+   #- name: set java home
+   #   set_fact: java_home=/usr/lib/jvm/java-8-openjdk-amd64
+  when: "ansible_os_family == 'Debian'"

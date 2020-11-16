@@ -6,34 +6,9 @@
     state: installed
   when: "ansible_os_family == 'RedHat'"
 
-#credit - https://github.com/geerlingguy/ansible-role-java/blob/master/tasks/setup-Debian.yml
-- name: Ensure 'man' directory exists.
-  file: # noqa 208
-    path: /usr/share/man/man1
-    state: directory
-    recurse: true
-  when:
-    - ansible_distribution == 'Ubuntu'
-    - ansible_distribution_major_version | int >= 18
-
 - name: Install Java on Debian
-  block:
-    - name: add openjdk-r ppa
-      apt_repository: repo='ppa:openjdk-r/ppa'
-
-    - name: ensure add-apt-repositories is present
-      package: name=software-properties-common state=present
-
-    - name: Install openjdk-8-jdk 
-      apt:
-        update_cache: yes
-        name: 
-          - openjdk-8-jdk
-        state: present
-
-   # - name: select correct java version
-   #  alternatives: name=java path=/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
-   #- name: set java home
-   #   set_fact: java_home=/usr/lib/jvm/java-8-openjdk-amd64
-
+  apt:
+    name: default-jre
+    state: present
+    update_cache: yes
   when: "ansible_os_family == 'Debian'"
