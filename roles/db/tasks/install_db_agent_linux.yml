@@ -162,6 +162,7 @@
       assert: 
          that:  db_proc.stdout_lines | first | length != 0 
          msg:  "DB PID must be present"
+      when: lookup('env', 'MOLECULE_FILE') is not defined
   
     - name: Clean up
       file:
