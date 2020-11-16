@@ -20,8 +20,8 @@
   block:
     - name: Install gnupg2 
       apt:
-      name: 
-        - gnupg2
+        name: 
+          - gnupg2
       state: present
   
     - name: add openjdk-r ppa
