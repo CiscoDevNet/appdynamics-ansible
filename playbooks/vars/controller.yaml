@@ -1,0 +1,8 @@
+controller_host_name: "lncontroller20103-2010-o8evv8rp.appd-cx.com" # Your AppDynamics controller
+controller_account_name: "customer1" # Please add this to your Vault
+controller_account_access_key: "2498dd59-d059-48c1-8ec2-8dc2f3efa112" # Please add this to your Vault
+enable_ssl: "FALSE"
+controller_port: "8090"
+analytics_event_endpoint: "https://fra-ana-api.saas.appdynamics.com:443"
+enable_analytics_agent: "true"
+controller_global_analytics_account_name: 'customer1_e52eb4e7-25d2-41c4-a5bc-9685502317f2' # Please add this to your Vault

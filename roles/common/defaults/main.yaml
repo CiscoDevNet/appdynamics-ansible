@@ -1,5 +1,5 @@
 ---
-#wheel user for Machine agent 
+#wheel user for Machine agent
 appdynamics_user: appdynamics
 
 
@@ -11,12 +11,15 @@ win_db_finder_string: db-agent-winx64
 linux_ma_finder_string: machineagent-bundle-64bit-linux
 linux_db_finder_string: db-agent
 
-host_name: '{{ ansible_hostname }}' # computername/hostname of the target machine 
+host_name: '{{ ansible_hostname }}' # computername/hostname of the target machine
 
 # DB Agent Linux
 db_agent_dest_folder_linux: /opt/appdynamics/db-agent
 db_agent_dest_file: db-agent.zip
 db_agent_name: "AppDynamics"
+
+# DB Agent Linux
+db_agent_dest_folder_windows: C:/appdynamics/db-agent
 
 # Machine Agent Win
 machine_agent_dest_folder_win: C:/appdynamics/machine-agent
@@ -27,23 +30,23 @@ temp_dir: /tmp
 machine_agent_dest_folder_linux: /opt/appdynamics/machine-agent
 machine_agent_monitor_folder_linux: "{{ machine_agent_dest_folder_linux }}/monitor/"
 
-# Machine Common 
+# Machine Common
 ma_agent_dest_file: machine-agent.zip
-machine_hierarchy: "" 
+machine_hierarchy: ""
 
 # DotNet Agent Win
-dotnet_agent_dest_folder_win: C:\\appdynamics\\dotnet-agent # '/' does not work with win_package due to msiexec. 
+dotnet_agent_dest_folder_win: C:\\appdynamics\\dotnet-agent # '/' does not work with win_package due to msiexec.
 dotnet_agent_dest_file: dotNetAgentSetup64.msi
 
-# Java Agent Linux 
+# Java Agent Linux
 java_agent_dest_folder_linux: /opt/appdynamics/java-agent
 java_agent_dest_file: java-agent.zip
 
-# Java Agent Windows 
+# Java Agent Windows
 java_agent_dest_folder_win: C:/appdynamics/java-agent
 
-# DotNet agent defaults 
-monitor_all_IIS_apps: false 
+# DotNet agent defaults
+monitor_all_IIS_apps: false
 runtime_reinstrumentation: false
 
 #controller defaults

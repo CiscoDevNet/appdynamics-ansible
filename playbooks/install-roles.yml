@@ -1,0 +1,15 @@
+---
+- hosts: localhost
+  tasks:
+    - file:
+        path:  ../playbooks/roles
+        state: absent
+
+    - local_action:
+        command ansible-galaxy install -r ../requirements.yml --roles-path ../playbooks/roles
+
+    - lineinfile:
+        dest:   ../.gitignore
+        regexp: '^\/roles$'
+        line:   '/playbooks/roles'
+        state:  present
