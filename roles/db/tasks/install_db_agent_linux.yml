@@ -74,12 +74,27 @@
       when: previous_db_agent.stat.exists
       changed_when: false
 
-    - name: Clean up old agent after backup
-      command: "rm -rf {{ db_agent_dest_folder_linux }}/*"
-      args:
-         warn: false
-      when: previous_db_agent.stat.exists
+    # - name: Clean up old agent after backup
+    #   command: "rm -rf {{ db_agent_dest_folder_linux }}/*"
+    #   args:
+    #      warn: false
+    #   when: previous_db_agent.stat.exists
+    #   changed_when: false
+    - name: Clean up old DB Agent binaries after backup
+      file:
+        path: "{{ db_agent_dest_folder_linux }}"
+        state: absent
       changed_when: false
+
+    - name: Ensures DB agent dir exists
+      file:
+        path: "{{ db_agent_dest_folder_linux }}/"
+        state: directory
+        mode: 0755
+        owner: "{{ appdynamics_user }}"
+        group: "{{ appdynamics_user }}"
+        recurse: yes
+      changed_when: false # this ensures this task is idempotent
 
     - name: Download DB Agent
       get_url:
