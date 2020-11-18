@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# This script is not officially supported by AppDynamics 
-# Author: Israel Ogbole 
+# This script is not officially supported by AppDynamics
+# Author: Israel Ogbole
 
 set -o nounset
 
@@ -24,7 +24,8 @@ readonly ERR_MISSING_LIB_DEPS=8
 readonly ERR_UNSUPPORTED_PLATFORM=9
 readonly ERR_GENERIC=10
 
-DOWNLOAD_PAGE_OUTPUT="tmp.json"
+# DOWNLOAD_PAGE_OUTPUT=$(mktemp ./tmp.XXXXXX) # "tmp.json"
+# ßecho $DOWNLOAD_PAGE_OUTPUT
 
 #download page search params
 _app_agent=""
@@ -35,6 +36,8 @@ _version=""
 
 # Switch to the script's directory.
 cd "${HERE}" || exit
+
+DOWNLOAD_PAGE_OUTPUT=$(mktemp tmp.XXXXXX) # "tmp.json" - using a static mane here seems to cause clashes
 
 ###################################################################################################################
 #                                   USAGE AND ERROR HANDLING FUNCTIONS                                            #
@@ -103,7 +106,6 @@ exit_bad_args() {
 cleanup() {
   rm -f "${HTTP_STATUS_FILE}"
   rm -f ${DOWNLOAD_PAGE_OUTPUT}
-
 }
 trap cleanup EXIT TERM INT
 
@@ -158,7 +160,7 @@ download_options() {
     _app_agent="dotnet"
     _finder="dotNetAgentSetup64"
     _os_platform="windows"
-    
+
   elif [ "$1" = "dotnet-core" ]; then
     _app_agent="dotnet,dotnet-core"
     _finder="AppDynamics-DotNetCore-linux-x64"
@@ -182,7 +184,7 @@ download_options() {
 # argument results in exit with `ERR_BAD_ARGS`.
 #
 # Args:
-#   $1 - agent type 
+#   $1 - agent type
 #   $3 - agent version
 # Returns:
 #   the downlod URL for the specified agent and version.
@@ -193,6 +195,12 @@ get_download_url() {
   portal_page="https://download.appdynamics.com/download/downloadfile/?version=${_version}&apm=${_app_agent}&os=${_os_platform}&platform_admin_os=${_os_platform}&events=${_events}&eum=${_eum}&apm_os=${_os_platform}"
 
   http_response=$(curl -s -o ${DOWNLOAD_PAGE_OUTPUT} -w "%{http_code}" -X GET "$portal_page")
+  # echo "http_response=\$(curl -s -o ${DOWNLOAD_PAGE_OUTPUT} -w \"%{http_code}\" -X GET \"$portal_page\")"
+  # echo $http_response
+  # cat ${DOWNLOAD_PAGE_OUTPUT}
+  # echo " ------ "
+  # pwd
+
 
   if [ "${http_response}" -ge 400 ] && [ "${http_code}" -lt 600 ]; then
     exit_with_error "bad HTTP response code: ${http_response}" "${ERR_BAD_RESPONSE}"
@@ -270,7 +278,7 @@ do_unzip() {
 #                                            DOWLOAD COMMAND FUNCTION                                                   #
 ###################################################################################################################
 
-# Implements the `download` sub-command. 
+# Implements the `download` sub-command.
 #
 # Args: [agent-type] --version VERSION --dryrun
 download() {
