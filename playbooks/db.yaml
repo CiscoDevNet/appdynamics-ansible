@@ -1,20 +1,21 @@
 ---
 - hosts: all
   tasks:
-    - name: Set agent type for Linux
-      set_fact:
-        agent_type: db
-      when: ansible_os_family == 'RedHat' or  ansible_os_family == 'Debian'
-
-    - name: Set agent type for Windows
-      set_fact:
-        agent_type: db-win
-      when: ansible_os_family == 'Windows'
+    # - name: Set agent type for Linux
+    #   set_fact:
+    #     agent_type: db
+    #   when: ansible_os_family == 'RedHat' or  ansible_os_family == 'Debian'
+    #
+    # - name: Set agent type for Windows
+    #   set_fact:
+    #     agent_type: db-win
+    #   when: ansible_os_family == 'Windows'
 
     - include_vars: vars/controller.yaml
     - include_role:
         name: appdynamics.agents.db
       vars:
+        agent_type: db
         agent_version: 20.9.0
         db_agent_name: "ProdDBAgent"
-        install_jre: true # set to false if the target machine already contains a JRE
+        install_jre: false # set to false if the target machine already contains a JRE

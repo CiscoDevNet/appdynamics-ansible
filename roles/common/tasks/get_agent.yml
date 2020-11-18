@@ -1,12 +1,25 @@
 ---
+# LN - Initialize the qualified_agent_type
+# This allows a generic agent type to be used, rather than an OS specific one
+# We set the OS specific agent type based on the base type and os family
+- set_fact:
+    qualified_agent_type: "{{ agent_type }}"
+
+# Override the agent type for the DB agent on Window. The windows package
+# includes scripts to install the agent as a service.
+- name: Adjust the agent type to match the target OS
+  set_fact:
+    qualified_agent_type: "db-win"
+  when: ansible_os_family == 'Windows' and agent_type == 'db'
+
 - name: "Get AppDynamics Agent Download URL type"
-  command: "{{ role_path }}/files/get-agent.sh download {{ agent_type }} -v {{ agent_version }} --dryrun"
+  command: "{{ role_path }}/files/get-agent.sh download {{ qualified_agent_type }} -v {{ agent_version }} --dryrun"
   register: agent_download_url
   delegate_to: localhost
   failed_when:
-   (agent_download_url.rc != 0) or 
+   (agent_download_url.rc != 0) or
    (agent_download_url.stdout is not match("https://download-files.appdynamics.com/download-file/"))
   changed_when: False
 
-- debug: 
-   msg: "{{ agent_download_url.stdout }}"
+- debug:
+   msg: "Agent Download URL = {{ agent_download_url.stdout }}"
