@@ -27,6 +27,14 @@
   when: previous_agent.stat.exists
   changed_when: false
 
+- name: Remove the DB agent service
+  win_command: cscript.exe "{{ db_agent_dest_folder_windows }}/UninstallService.vbs"
+  register: uninstall_win_service_result
+  when: previous_agent.stat.exists
+
+- debug:
+    msg: "{{ uninstall_win_service_result }}"
+
 - name: Clean up old agent after backup
   win_shell: "Remove-Item {{ db_agent_dest_folder_windows }}/* -Recurse"
   args:
@@ -63,3 +71,10 @@
   win_file:
     path: "{{ db_agent_dest_folder_windows }}/{{ db_agent_dest_file }}"
     state: absent
+
+- name: 'Install DB agent service'
+  win_command: cscript.exe "{{ db_agent_dest_folder_windows }}/InstallService.vbs" -Ddbagent.name="{{db_agent_name}}"
+  register: install_win_service_result
+
+- debug:
+    msg: "{{ install_win_service_result }}"
