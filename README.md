@@ -8,10 +8,10 @@ The AppDynamics collection installs and configures AppDynamics agents and config
 
 - Requires Ansible >=2.8.0
 - Supports most Debian and RHEL-based Linux distributions, and Windows.
-- Windows OS requires >= Powershell 5.0 for the `Machine Agent`
+- Windows OS requires >= Powershell 5.0 for the `Machine agent`, `DotNet agent` and `Java agent`
 - Network firewall access to download AppDynamics agents from `https://download-files.appdynamics.com` and `https://download.appdynamics.com` to the Ansible controller.  
 
-Note:  <a href="https://stedolan.github.io/jq/"> `jq` </a> is required on the Ansible controller. The AppDynamics collection installs automatically installed `jq` if it is not installed on the Ansible controller.
+Note:  <a href="https://stedolan.github.io/jq/"> `jq` </a> is required on the Ansible controller. The AppDynamics collection installs `jq` if it is not installed on the Ansible controller node.
 
 ### Installation
 
