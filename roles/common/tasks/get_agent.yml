@@ -30,4 +30,4 @@
   changed_when: False
 
 - debug:
-   msg: "{{agent_type}} agent (OS specific agent name: {{qualified_agent_type}}) Download URL = {{ agent_download_url.stdout }}"
+   msg: "{{ agent_type }} agent (OS specific agent name: {{ qualified_agent_type }}) Download URL = {{ agent_download_url.stdout }}"
