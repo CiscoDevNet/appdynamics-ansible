@@ -1,15 +1,15 @@
 ---
-# App owners would either need to chown the entire agent folder to their app's user  OR grant their app's user read/write access to the agent folder 
+# App owners would either need to chown the entire agent folder to their app's user  OR grant their app's user read/write access to the agent folder
 - name: Ensures application agent {{ java_agent_dest_folder_win }} dir exists
-  win_file: 
+  win_file:
     path: "{{ java_agent_dest_folder_win }}/"
-    state: directory     
+    state: directory
 
-- name: Remove previous {{ java_agent_dest_file }} 
+- name: Remove previous {{ java_agent_dest_file }}
   win_file:
     path: "{{ java_agent_dest_folder_win }}/{{ java_agent_dest_file }}"
-    state: absent  
-  changed_when: false # this ensures this task is idempotent 
+    state: absent
+  changed_when: false # this ensures this task is idempotent
 
 - name: Check if java agent exists
   win_stat: path="{{ java_agent_dest_folder_win }}/javaagent.jar"
@@ -21,7 +21,7 @@
   when: previous_agent.stat.exists
   changed_when: false
 
-- name: Clean up old agent after backup  
+- name: Clean up old agent after backup
   win_shell: "Remove-Item {{ java_agent_dest_folder_win }}/* -Recurse"
   args:
       warn: false
@@ -37,14 +37,14 @@
   register: result
   failed_when: result.status_code != 200
 
-- debug: 
-         msg: "{{ result }}" 
+- debug:
+         msg: "{{ result }}"
 
-- name: Unzip the Java agent 
-  win_unzip: 
+- name: Unzip the Java agent
+  win_unzip:
     src: "{{ java_agent_dest_folder_win }}/{{ java_agent_dest_file }}"
-    dest: "{{ java_agent_dest_folder_win }}"  
-    remote_src: yes 
+    dest: "{{ java_agent_dest_folder_win }}"
+    remote_src: yes
   changed_when: false
 
 - name: Configure Java agent's controller-info.xml
@@ -57,15 +57,17 @@
 - name: "Get version folder name"
   win_shell: "(Get-ChildItem {{ java_agent_dest_folder_win }} -Recurse -Depth 1 | Where{$_.Name -Match 'ver*'}  | Select-Object -ExpandProperty Name).Trim()"
   register: ver
+  changed_when: false
 
 - debug:
     msg: "{{ ver.stdout | regex_replace ('\\r\\n', '') }}"
-  
-- name: Copy controller-info.xml to the versioned agent folder 
+
+- name: Copy controller-info.xml to the versioned agent folder
   win_shell: "Copy-Item  {{ java_agent_dest_folder_win }}/conf/controller-info.xml  {{ java_agent_dest_folder_win }}/{{ ver.stdout | regex_replace ('\\r\\n', '') }}/conf/ -Force"
   changed_when: false
 
-- name: Clean up - remove {{ java_agent_dest_file }} 
+- name: Clean up - remove {{ java_agent_dest_file }}
   win_file:
     path: "{{ java_agent_dest_folder_win }}/{{ java_agent_dest_file }}"
     state: absent
+  changed_when: false
