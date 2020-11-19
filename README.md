@@ -8,10 +8,10 @@ The AppDynamics collection installs and configures AppDynamics agents and config
 
 - Requires Ansible >=2.8.0
 - Supports most Debian and RHEL-based Linux distributions, and Windows.
-- Windows OS requires >= Powershell 5.0 for the `Machine Agent`
+- Windows OS requires >= Powershell 5.0 for the `Machine agent`, `DotNet agent` and `Java agent`
 - Network firewall access to download AppDynamics agents from `https://download-files.appdynamics.com` and `https://download.appdynamics.com` to the Ansible controller.  
 
-Note:  <a href="https://stedolan.github.io/jq/"> `jq` </a> is required on the Ansible controller. The AppDynamics collection installs automatically installed `jq` if it is not installed on the Ansible controller.
+Note:  <a href="https://stedolan.github.io/jq/"> `jq` </a> is required on the Ansible controller. The AppDynamics collection installs `jq` if it is not installed on the Ansible controller node.
 
 ### Installation
 
@@ -44,14 +44,14 @@ ansible-galaxy collection install appdynamics.agents
 
 ```yml
 ---
-- hosts: all
+- hosts: linux
   tasks:
     - include_role:
         name: appdynamics.agents.java
       vars:
         # Define Agent Type and Version 
-        agent_type: sun-java
         agent_version: 20.9.0
+        agent_type: sun-java
         # The applicationName
         application_name: "IoT_API" # ONLY required if agent type is not machine or db
         tier_name: "java_tier" # ONLY required if agent type is not machine or db
@@ -61,6 +61,9 @@ ansible-galaxy collection install appdynamics.agents
         controller_account_name: "customer1" # Please add this to your Vault 
         enable_ssl: "false"
         controller_port: "8090"
+        agent_dir_permission:  #defaults to root:root if not specified
+          user:  "appdynamics" # This user must pre-exist. It is recommended to use the PID owner of your Java app
+          group: "appdynamics" # This group must pre-exist
 
 ```
 
