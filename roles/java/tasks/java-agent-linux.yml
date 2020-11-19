@@ -1,43 +1,44 @@
 ---
-# App owners would either need to chown the entire agent folder to their app's user  OR grant their app's user read/write access to the agent folder 
+# App owners would either need to chown the entire agent folder to their app's user  OR grant their app's user read/write access to the agent folder
 - name: Java Linux Block
   become: true
-  block: 
-    - name: Clean out orphanned {{ java_agent_dest_file }} 
+  block:
+    - name: Clean out orphanned {{ java_agent_dest_file }}
       file:
         path: "{{ java_agent_dest_folder_linux }}/{{ java_agent_dest_file }}"
-        state: absent  
-      changed_when: false # this ensures this task is idempotent 
-      
+        state: absent
+      changed_when: false # this ensures this task is idempotent
+
     - name: Check if java agent exists
       stat: path="{{ java_agent_dest_folder_linux }}/javaagent.jar"
       register: previous_agent
-      
+
     - name: Backup old java agent to /tmp folder
-      archive: 
+      archive:
         path: "{{ java_agent_dest_folder_linux }}"
         dest: "/tmp/java_agent.{{ ansible_date_time.iso8601 }}.zip"
         mode: 0755
       when: previous_agent.stat.exists
       changed_when: false
-             
-    - name: Clean up old agent after backup  
+
+# Todo : Make sure the directory is properly cleared out
+    - name: Clean up old agent after backup
       shell: "rm -rf {{ java_agent_dest_folder_linux }}/*"
       args:
          warn: false
       when: previous_agent.stat.exists
       changed_when: false
-  
+
     - name: Ensures application agent dir exists
-      file: 
+      file:
         path: "{{ java_agent_dest_folder_linux }}/"
-        state: directory     
+        state: directory
         mode: 0755
         recurse: yes
-      changed_when: false # this ensures this task is idempotent 
+      changed_when: false # this ensures this task is idempotent
 
      # add delegate_to: localhost for customers who are unable to download on the remote server
-    - name: Download Java Agent 
+    - name: Download Java Agent
       get_url:
         url: "{{ agent_download_url.stdout }}"
         dest: "{{ java_agent_dest_folder_linux }}/{{ java_agent_dest_file }}"
@@ -46,33 +47,59 @@
       register: result
       failed_when: result.status_code != 200
 
-    - debug: 
-         msg: "{{ result }}" 
-     
+    - debug:
+         msg: "{{ result }}"
+
     # Keeping downloading and unziping seperate tasks
-    # as not all customers are allowd to download on the remote servers. 
-    - name: Unzip the Java agent file 
-      unarchive: 
-        #src: "{{ agent_download_url.stdout }}" 
+    # as not all customers are allowd to download on the remote servers.
+    - name: Unzip the Java agent file
+      unarchive:
+        #src: "{{ agent_download_url.stdout }}"
         src: "{{ java_agent_dest_folder_linux }}/{{ java_agent_dest_file }}"
         dest: "{{ java_agent_dest_folder_linux }}"
         mode: 0755
-        remote_src: yes 
+        remote_src: yes
       changed_when: false
 
     - name: Configure Java agent's controller-info.xml
       template:
         src: templates/application-agent-controller-info.xml.j2
         dest: '{{ java_agent_dest_folder_linux }}/conf/controller-info.xml'
-        mode: 0755  
+        mode: 0755
       changed_when: false
 
-    - name: Copy controller-info.xml to the versioned agent folder 
+    - name: Copy controller-info.xml to the versioned agent folder
       shell: cp  {{ java_agent_dest_folder_linux }}/conf/controller-info.xml  {{ java_agent_dest_folder_linux }}/ver{{ agent_version }}*/conf/
       changed_when: false
 
-    - name: Clean up - remove {{ java_agent_dest_file }} 
+    - name: Change the ownership if the java agent directories and files if the apm_user is set
+      file:
+        dest: '{{ java_agent_dest_folder_linux }}'
+        owner: '{{apm_user}}'
+        group: '{{apm_user}}'
+        mode: u=rwX,g=rX,o=rX
+        recurse: false
+      register: result
+      when: (apm_user is defined) and (apm_user|length > 0)
+
+
+    - name: Change the ownership of content
+      file:
+        dest: '{{ java_agent_dest_folder_linux }}/'
+        owner: '{{apm_user}}'
+        group: '{{apm_user}}'
+        mode: u=rwX,g=rX,o=rX
+        recurse: true
+      register: result
+      when: (apm_user is defined) and (apm_user|length > 0)
+      changed_when: false
+
+
+    - debug:
+        msg: '{{result}}'
+
+    - name: Clean up - remove {{ java_agent_dest_file }}
       file:
         path: "{{ java_agent_dest_folder_linux }}/{{ java_agent_dest_file }}"
-        state: absent  
+        state: absent
       changed_when: false # this ensures this task is idempotent

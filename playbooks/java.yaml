@@ -8,6 +8,14 @@
         # Define Agent Type and Version
         agent_version: 20.9.0
         agent_type: sun-java
+
+        # Specify a global APM user here, or define a server specific one associated
+        # with the specific host (in the inventory file or a dedicated vars file )
+        # if the apm_user is set here, it will apply to all the hosts
+        # if left blank, it will default to root
+        # NOTE: the user must already exist on the host
+        apm_user: '{{appdynamics_user}}' # <--- Specify the user to install the java agent for.
+
         # The applicationName
         application_name: "IoT_API" # ONLY required if agent type is not machine or db
         tier_name: "java_tier" # ONLY required if agent type is not machine or db
