@@ -1,24 +1,7 @@
 - include_tasks: validate_parameters.yml
 
-- debug: 
+- debug:
      msg:  "Role Agent variables: type=> {{ agent_type }} version=> {{ agent_version }}"
-
-# Role varibables has precedence over facts, so use agent_type_fact instead so we can manipulate it
-- name: Reassign agent_type var to a fact 
-  set_fact: 
-   agent_type_fact: "{{ agent_type }}"
-
-- debug: 
-     msg:  "Reassigned agent_type_fact: {{ agent_type_fact }}"
-   
-- name: Set agent_type_fact for Windows Machine Agent
-  set_fact: 
-    agent_type_fact: machine-win
-  when: "agent_type == 'machine' and ansible_os_family == 'Windows'"
-
-- debug: 
-     msg:  "Agent variables for Machine Agent on  Windows => {{ agent_type_fact }}"
-  when: "agent_type == 'machine' and ansible_os_family == 'Windows'"
 
 - include_tasks: get_agent.yml
 
@@ -30,7 +13,7 @@
 - name: Set Controller Proxy configuration
   set_fact:
     enable_proxy: "{{ enable_proxy | bool | lower }}"
-  
+
 - name: Set AppDynamics controller facts
   set_fact:
     account_name: "{{ controller_account_name }}"
@@ -47,14 +30,14 @@
   set_fact:
     controller_protocol: "{% if enable_ssl|bool %}https{% else %}http{% endif %}"
 
-- name: Print params 
+- name: Print params
   vars:
      params: "
       SSL enabled = {{ enable_ssl }} |
       Controller= {{ controller_protocol }}://{{ controller_host_name }}:{{ controller_port }} |
       controller_account_name = {{ controller_account_name }} |
       analytics_event_endpoint = {{ analytics_event_endpoint }} |
-      enable_analytics_agent = {{ enable_analytics_agent }}  |  
+      enable_analytics_agent = {{ enable_analytics_agent }}  |
       enable_proxy = {{ enable_proxy }}"
-  debug: 
+  debug:
     msg: "{{ params.split('|') }}"
