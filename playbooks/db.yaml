@@ -4,13 +4,15 @@
     - include_role:
         name: appdynamics.agents.db
       vars:
+        install_jre: "false" # set to false if the target machine already contains a JRE
         agent_version: 20.9.0
         agent_type: db
-        controller_account_access_key: "b0248ceb-c954-4a37-97b5-207e90418cb4" # Please add this to your Vault 
-        controller_host_name: "ansible-20100nosshcont-bum4wzwa.appd-cx.com" # Your AppDynamics controller 
-        controller_account_name: "customer1" # Please add this to your Vault 
+        controller_account_access_key: "b0248ceb-c954-4a37-97b5-207e90418cb4" # Please add this to your Vault
+        controller_host_name: "ansible-20100nosshcont-bum4wzwa.appd-cx.com" # Your AppDynamics controller
+        controller_account_name: "customer1" # Please add this to your Vault
         enable_ssl: "false"
         controller_port: "8090"
         db_agent_name: "ProdDBAgent" 
         #https://docs.appdynamics.com/display/latest/Database+Agent+Configuration+Properties
-        java_system_properties: "-Dappdynamics.http.proxyHost=10.0.4.2 -Dappdynamics.http.proxyPort=9090" # mind the space between each property
+        # mind the space between each property
+        java_system_properties: "-Dappdynamics.http.proxyHost=10.0.4.2 -Dappdynamics.http.proxyPort=9090" 

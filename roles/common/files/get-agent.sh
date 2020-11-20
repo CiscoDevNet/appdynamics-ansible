@@ -24,9 +24,6 @@ readonly ERR_MISSING_LIB_DEPS=8
 readonly ERR_UNSUPPORTED_PLATFORM=9
 readonly ERR_GENERIC=10
 
-rand="$RANDOM$RANDOM"
-DOWNLOAD_PAGE_OUTPUT="get-agent-$rand.json"
-
 #download page search params
 _app_agent=""
 _os_platform=""
@@ -36,6 +33,10 @@ _version=""
 
 # Switch to the script's directory.
 cd "${HERE}" || exit
+
+#rand="$RANDOM$RANDOM"
+#DOWNLOAD_PAGE_OUTPUT="get-agent-$rand.json"
+DOWNLOAD_PAGE_OUTPUT=$(mktemp ./tmp.XXXXXX) # "tmp.json"
 
 ###################################################################################################################
 #                                   USAGE AND ERROR HANDLING FUNCTIONS                                            #
