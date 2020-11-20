@@ -6,6 +6,8 @@ Description=AppDynamics Database Agent
 # You may change the user running the process if you so wish, but ensure the user can read and write to the {{ db_agent_dest_folder_linux }} path.
 User={{ appdynamics_user }}
 
+#Environment="JAVA_OPTS={{ java_system_properties }}"
+
 # Killing the service using systemd causes Java to exit with status 143. This is OK.
 SuccessExitStatus=143
 
@@ -13,7 +15,8 @@ SuccessExitStatus=143
 Type=forking
 
 ExecStart=/bin/bash -c "{{ db_agent_dest_folder_linux }}/start-dbagent -Dappdynamics.agent.uniqueHostId={{ host_name }} -Ddbagent.name={{ db_agent_name }} -Xms1536m {{ java_system_properties }} >/dev/null 2>&1 &"
-ExecStop=/bin/kill -2 $MAINPID
+ExecStop=/bin/kill -2 $MAINPID 
+
 
 [Install]
 # Start the AppDynamics DB agent service during the setup for a

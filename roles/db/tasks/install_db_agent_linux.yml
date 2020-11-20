@@ -41,8 +41,8 @@
       when: previous_db_agent.stat.exists
       changed_when: false
 
-    - debug:
-       msg: "{{ running_processes.stdout_lines }}"
+    - debug: 
+        msg: "{{ running_processes.stdout_lines }}"
       when: previous_db_agent.stat.exists
       changed_when: false
 
@@ -99,7 +99,7 @@
       register: result
       failed_when: result.status_code != 200
 
-    - debug:
+    - debug: 
         msg: "{{ result }}"
 
     - name: Unzip DB agent file
