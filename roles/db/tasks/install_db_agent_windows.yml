@@ -3,7 +3,7 @@
 #  when: install_jre == true or install_jre is undefined
 
 - include_tasks: install_java_windows.yml
-  when: install_jre == true or install_jre is undefined
+  when: install_jre or install_jre is undefined
 
 # App owners would either need to chown the entire agent folder to their app's user  OR grant their app's user read/write access to the agent folder
 - name: Ensures application agent {{ db_agent_dest_folder_windows }} dir exists
@@ -20,9 +20,6 @@
 - name: Check if DB agent exists
   win_stat: path="{{ db_agent_dest_folder_windows }}/db-agent.jar"
   register: previous_agent
-
-- debug:
-    msg: "{{ previous_agent.stat }}"
 
 #using Powershell as win_zip module doesn't exist in Ansible - 10/2020
 - name: Backup old DB agent to  C:\Windows\Temp folder
@@ -78,7 +75,7 @@
   changed_when: false
 
 - name: 'Install DB agent service'
-  win_command: cscript.exe "{{ db_agent_dest_folder_windows }}/InstallService.vbs" -Ddbagent.name="{{db_agent_name}}"
+  win_command: cscript.exe "{{ db_agent_dest_folder_windows }}/InstallService.vbs" -Ddbagent.name="{{ db_agent_name }}"
   register: install_win_service_result
   changed_when: not previous_agent.stat.exists
 
