@@ -7,7 +7,7 @@
     - include_role:
         name: appdynamics.agents.db
       vars:
-        install_jre: false # set to false if the target machine already contains a JRE
+        install_jre: true # set to false if the target machine already contains a JRE
         agent_version: 20.9.0
         agent_type: db
         db_agent_name: "ProdDBAgent"
