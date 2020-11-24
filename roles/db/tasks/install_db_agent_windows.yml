@@ -1,0 +1,86 @@
+---
+# - include_tasks: install_java_windows.yml
+#  when: install_jre == true or install_jre is undefined
+
+- include_tasks: install_java_windows.yml
+  when: install_jre == true or install_jre is undefined
+
+# App owners would either need to chown the entire agent folder to their app's user  OR grant their app's user read/write access to the agent folder
+- name: Ensures application agent {{ db_agent_dest_folder_windows }} dir exists
+  win_file:
+    path: "{{ db_agent_dest_folder_windows }}/"
+    state: directory
+
+- name: Remove previous {{ db_agent_dest_file }}
+  win_file:
+    path: "{{ db_agent_dest_folder_windows }}/{{ db_agent_dest_file }}"
+    state: absent
+  changed_when: false # this ensures this task is idempotent
+
+- name: Check if DB agent exists
+  win_stat: path="{{ db_agent_dest_folder_windows }}/db-agent.jar"
+  register: previous_agent
+
+- debug:
+    msg: "{{ previous_agent.stat }}"
+
+#using Powershell as win_zip module doesn't exist in Ansible - 10/2020
+- name: Backup old DB agent to  C:\Windows\Temp folder
+  win_shell: "Compress-Archive -Path {{ db_agent_dest_folder_windows }} -DestinationPath  C:/Windows/Temp/db-agent.{{ ansible_date_time.iso8601 }}.zip -Force"
+  when: previous_agent.stat.exists
+  changed_when: false
+
+- name: Remove the DB agent service
+  win_command: cscript.exe "{{ db_agent_dest_folder_windows }}/UninstallService.vbs"
+  register: uninstall_win_service_result
+  when: previous_agent.stat.exists
+  changed_when: false
+
+- debug:
+    msg: "{{ uninstall_win_service_result }}"
+
+- name: Clean up old agent after backup
+  win_shell: "Remove-Item {{ db_agent_dest_folder_windows }}/* -Recurse"
+  args:
+      warn: false
+  when: previous_agent.stat.exists
+  changed_when: false
+
+- name: Downloading DB Agent
+  win_get_url:
+    url: '{{ agent_download_url.stdout }}'
+    dest: '{{ db_agent_dest_folder_windows }}/{{ db_agent_dest_file }}'
+    force: 'true'
+  changed_when: false
+  register: result
+  failed_when: result.status_code != 200
+
+- debug:
+    msg: "{{ result }}"
+
+- name: Unzip the DB agent
+  win_unzip:
+    src: "{{ db_agent_dest_folder_windows }}/{{ db_agent_dest_file }}"
+    dest: "{{ db_agent_dest_folder_windows }}"
+    remote_src: yes
+  changed_when: false
+
+- name: Configure DB agent's controller-info.xml
+  template:
+    src: templates/db-agent-controller-info.xml.j2
+    dest: "{{ db_agent_dest_folder_windows }}/conf/controller-info.xml"
+  changed_when: false
+
+- name: Clean up - remove {{ db_agent_dest_file }}
+  win_file:
+    path: "{{ db_agent_dest_folder_windows }}/{{ db_agent_dest_file }}"
+    state: absent
+  changed_when: false
+
+- name: 'Install DB agent service'
+  win_command: cscript.exe "{{ db_agent_dest_folder_windows }}/InstallService.vbs" -Ddbagent.name="{{db_agent_name}}"
+  register: install_win_service_result
+  changed_when: not previous_agent.stat.exists
+
+- debug:
+    msg: "{{ install_win_service_result }}"
