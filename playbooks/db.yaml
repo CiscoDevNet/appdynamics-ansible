@@ -1,9 +1,9 @@
 ---
-- hosts: linux
+- hosts: all
   tasks:
     - name: Include variables for the controller settings
       include_vars: vars/controller.yaml
-      
+
     - include_role:
         name: appdynamics.agents.db
       vars:
