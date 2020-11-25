@@ -1,14 +1,14 @@
 ---
-- hosts: linux
+- hosts: all
   tasks:
     - name: Include variables for the controller settings
       include_vars: vars/controller.yaml
-      
+
     - include_role:
         name: appdynamics.agents.java
       vars:
         # Define Agent Type and Version
-        agent_version: 20.9.0
+        agent_version: 20.10.0
         agent_type: sun-java
 
         # The applicationName

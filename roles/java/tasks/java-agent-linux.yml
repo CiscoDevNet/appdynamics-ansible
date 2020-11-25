@@ -21,13 +21,12 @@
       when: previous_agent.stat.exists
       changed_when: false
 
-    - name: Clean up old agent after backup
-      shell: "rm -rf {{ java_agent_dest_folder_linux }}/*"
-      args:
-         warn: false
-      when: previous_agent.stat.exists
+    - name: Clean up old agent after
+      file:
+        path: "{{ java_agent_dest_folder_linux }}"
+        state: absent
       changed_when: false
-
+           
     - name: Ensures application agent dir exists
       file:
         path: "{{ java_agent_dest_folder_linux }}/"
