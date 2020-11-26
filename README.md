@@ -39,7 +39,7 @@ ansible-galaxy collection install appdynamics.agents
 |`dotnet-core*` | Agent to Monitor .NetCore applications on Linux|
 |`dotnet-core-win*` | Agent to Monitor .NetCore applications on Windows |
 
-<i> `*`  Coming soon...</i>
+<i> `*`  Coming soon...</i><br>
 <i> `**` When installing the Machine or DB agents on Windows, the agent type
 selected in the playbook should be 'machine' or 'db' without the '-win'
 suffix, which is added automatically based on the OS family of the host</i>
