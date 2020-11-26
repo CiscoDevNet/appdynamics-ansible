@@ -49,7 +49,7 @@ jobs:
       
       - name: Publish to Galaxy 
         run: |
-          ansible-playbook build/galaxy_deploy.yml
+          ansible-playbook build/galaxy_deploy.yml -vvv
         env: 
            ANSIBLE_GALAXY_TOKEN: ${{ secrets.ANSIBLE_GALAXY_TOKEN }}
            APPD_RELEASE_VERSION: ${{ env.APPD_RELEASE_VERSION }}
