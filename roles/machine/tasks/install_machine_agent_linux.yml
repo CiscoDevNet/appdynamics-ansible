@@ -39,10 +39,18 @@
     when: previous_agent.stat.exists
 
   - name: Clean up old Machine Agent binaries after backup
-    command: "rm -rf {{ machine_agent_dest_folder_linux }}/*"
-    args:
-        warn: false
-    when: previous_agent.stat.exists
+    file:
+      path: "{{ machine_agent_dest_folder_linux }}"
+      state: absent
+    changed_when: false
+
+  - name: Re-create the machine agent {{ machine_agent_dest_folder_linux }} dir
+    file:
+      path: "{{ machine_agent_dest_folder_linux }}/"
+      state: directory
+      mode: 0755
+      owner: "{{ appdynamics_user }}"
+      group: "{{ appdynamics_user }}"
     changed_when: false
 
   - name: Downloading Machine Agent

@@ -1,0 +1,20 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Clear out custon roles directory
+      file:
+        path:  ../playbooks/roles
+        state: absent
+      changed_when: false
+
+    - name: Install roles from requirements.yml
+      delegate_to: localhost
+      command: ansible-galaxy install -r ../requirements.yml --roles-path ../playbooks/roles
+      changed_when: false
+
+    - name: Make sure the gitignore is up to date
+      lineinfile:
+        dest:   ../.gitignore
+        regexp: '^\/roles$'
+        line:   '/playbooks/roles'
+        state:  present

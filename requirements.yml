@@ -1,0 +1,5 @@
+---
+# Reference the Java role from ansible galaxy
+roles:
+  # Install a role from Ansible Galaxy.
+  - name: lean_delivery.java
