@@ -8,3 +8,7 @@
     update_cache: yes
     name:
     - unzip
+
+- name: install lxml for XML file manipulations
+  pip:
+    name: lxml

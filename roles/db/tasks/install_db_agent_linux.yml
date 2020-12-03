@@ -41,7 +41,7 @@
       when: previous_db_agent.stat.exists
       changed_when: false
 
-    - debug: 
+    - debug:
         msg: "{{ running_processes.stdout_lines }}"
       when: previous_db_agent.stat.exists
       changed_when: false
@@ -99,7 +99,7 @@
       register: result
       failed_when: result.status_code != 200
 
-    - debug: 
+    - debug:
         msg: "{{ result }}"
 
     - name: Unzip DB agent file
@@ -121,6 +121,35 @@
         group: "{{ appdynamics_user }}"
         mode: 0755
       changed_when: false
+
+    # --------------------------------------------------------------------------
+    # Update the Log4j setting to apply the desired log level to all the loggers
+    # listed in the {{agent_loggers}} tha need to be matched. The XML module
+    # requires that tags and attributes be present if changes are to be applied
+    # For this reason, we first look for all mataches and then apply them.
+    - debug:
+        msg: "Requested log level = {{ agent_log_level }} - Logger = {{ agent_loggers }}"
+
+    - name: check which xpath entries are found
+      xml:
+        path: '{{ db_agent_dest_folder_linux }}/conf/logging/log4j.xml'
+        xpath: //logger[@name='{{ item }}']/level
+        count: yes
+      register: hits
+      loop: "{{ agent_loggers }}"
+
+    # - debug:
+    #     msg: "{{ hits }}"
+    #
+    - name: Set the log DB level for all relevant loggers
+      xml:
+        path: '{{ db_agent_dest_folder_linux }}/conf/logging/log4j.xml'
+        xpath: "{{ item.actions.xpath }}" # //logger[@name='{{ item }}']/level
+        attribute: value
+        value: "{{ agent_log_level }}"
+      loop: "{{ hits.results }}" # "{{ agent_loggers }}"
+      when: item.count >= 1
+    # --------------------------------------------------------------------------
 
     - name: Add the DB Agent as a Service using Systemd
       template:

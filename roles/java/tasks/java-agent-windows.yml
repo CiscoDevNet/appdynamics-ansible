@@ -54,17 +54,37 @@
   changed_when: false
 
 # requires Powershell 5 due to -Depth
-- name: "Get version folder name"
-  win_shell: "(Get-ChildItem {{ java_agent_dest_folder_win }} -Recurse -Depth 1 | Where{$_.Name -Match 'ver*'}  | Select-Object -ExpandProperty Name).Trim()"
-  register: ver
-  changed_when: false
+# - name: "Get version folder name"
+#   win_shell: "(Get-ChildItem {{ java_agent_dest_folder_win }} -Recurse -Depth 1 | Where{$_.Name -Match 'ver*'}  | Select-Object -ExpandProperty Name).Trim()"
+#   register: ver
+#   changed_when: false
+
+- name: find the version specific directory name
+  win_find:
+    paths: "{{ java_agent_dest_folder_win }}"
+    patterns: "ver{{ agent_version }}*"
+    file_type: directory
+  register: result
+
+- name: Set the version folder fact
+  set_fact:
+    java_agent_ver_folder: "{{ result.files[0].path }}" # "{{ ver.stdout | regex_replace ('\\r\\n', '') }}"
 
 - debug:
-    msg: "{{ ver.stdout | regex_replace ('\\r\\n', '') }}"
+    msg: "{{ java_agent_ver_folder }}"
 
 - name: Copy controller-info.xml to the versioned agent folder
-  win_shell: "Copy-Item  {{ java_agent_dest_folder_win }}/conf/controller-info.xml  {{ java_agent_dest_folder_win }}/{{ ver.stdout | regex_replace ('\\r\\n', '') }}/conf/ -Force"
+  win_shell: "Copy-Item  {{ java_agent_dest_folder_win }}/conf/controller-info.xml  {{ java_agent_ver_folder }}/conf/ -Force"
   changed_when: false
+
+- name: Set the log level for the java agent
+  win_xml:
+    path: "{{ java_agent_ver_folder }}/conf/logging/log4j2.xml"
+    xpath: //AsyncLogger[@name='{{ item }}']
+    attribute: level
+    fragment: "{{ agent_log_level }}"
+    type: attribute
+  loop: "{{ agent_loggers }}"
 
 - name: Clean up - remove {{ java_agent_dest_file }}
   win_file:

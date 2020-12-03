@@ -5,6 +5,10 @@ appdynamics_user: appdynamics
 java_system_properties: ""
 host_name: '{{ ansible_hostname }}' # computername/hostname of the target machine
 
+#Agent Log level
+agent_log_level: "info"
+agent_loggers: ['com', 'com.singularity']
+
 #windows_ma_finder_string
 win_ma_finder_string: machineagent-bundle-64bit-windows
 win_db_finder_string: db-agent-winx64

@@ -74,6 +74,18 @@
   register: remove_read_std_in_result
   changed_when: false
 
+# - debug:
+#    msg: "Requested log level = {{ agent_log_level }} - Logger = {{ agent_loggers }}"
+
+- name: Set the log level for the machine agent
+  win_xml:
+    path: '{{ machine_agent_dest_folder_win }}/conf/logging/log4j.xml'
+    xpath: //Logger[@name='{{ item }}']
+    attribute: level
+    fragment: "{{ agent_log_level }}"
+    type: attribute
+  loop: "{{ agent_loggers }}"
+
 - include_tasks: configure_log_analytics_win.yml
   when: enable_analytics_agent | bool
 

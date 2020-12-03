@@ -68,6 +68,15 @@
     dest: "{{ db_agent_dest_folder_windows }}/conf/controller-info.xml"
   changed_when: false
 
+- name: Set the log level for the DB agent
+  win_xml:
+    path: '{{ db_agent_dest_folder_windows }}/conf/logging/log4j.xml'
+    xpath: //logger[@name='{{ item }}']/level
+    attribute: value
+    fragment: "{{ agent_log_level }}"
+    type: attribute
+  loop: "{{ agent_loggers }}"
+
 - name: Clean up - remove {{ db_agent_dest_file }}
   win_file:
     path: "{{ db_agent_dest_folder_windows }}/{{ db_agent_dest_file }}"
@@ -75,7 +84,7 @@
   changed_when: false
 
 - name: 'Install DB agent service'
-  win_command: cscript.exe "{{ db_agent_dest_folder_windows }}/InstallService.vbs" -Ddbagent.name="{{ db_agent_name }}"
+  win_command: cscript.exe "{{ db_agent_dest_folder_windows }}/InstallService.vbs" -Ddbagent.name={{ db_agent_name }}
   register: install_win_service_result
   changed_when: not previous_agent.stat.exists
 

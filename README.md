@@ -1,3 +1,4 @@
+
 # Ansible AppDynamics Collection
 
 The AppDynamics collection installs and configures AppDynamics agents and configurations. Refer to the
@@ -76,7 +77,7 @@ sample playbooks, or you can include them as shown below from the provided commo
 ```
 
 ### DotNet agent
-In the playbook below, the parameters are initialised directly in the yaml file rather than including them. 
+In the playbook below, the parameters are initialised directly in the yaml file rather than including them.
 ```yml
 ---
 - hosts: windows
@@ -155,7 +156,9 @@ In the playbook below, the parameters are initialised directly in the yaml file 
 |`controller_account_name` |  Account name | All |
 |`controller_port`   | The controller port   | All |
 |`enable_ssl`   | Indicate if SSL is enabled in the controller or not | All |
-|`db_agent_name` | Name assigned to the agent, typically used to allow one Database Agent  to act as a backup to another one | DB 
+|`agent_log_level` | set the log level for the agent. valid options are : **info, trace, debug, warn, error, fatal, all** and **off**. This setting is applied to all the loggers named in the **`agent_loggers`** list| Machine, DB, Java
+|`agent_loggers` | List of loggers to set the log level on. The logger names vary from agent to agent. The default is set to ['com.singularity','com']. Update this variable with loggers specific to the target agent as required (refer to the log4j files in the <get-home>/conf/logging directory for more info). | Machine, DB, Java
+|`db_agent_name` | Name assigned to the agent, typically used to allow one Database Agent  to act as a backup to another one | DB
 |`install_jre`| Set this parameter to false if the JRE should not be installed together with the DB agent. <br><br>**Note:** to install java on windows, you need to run the <i>install-roles.yml</i> playbook first, which adds a galaxy role (lean_delivery.java) to you local playbook folder | DB
 |`services`| List of stand-alone services to be instrumented with the .NET agent| .NET
 |`monitor_all_IIS_apps`| Enable automatic instrumentation of all IIS applications | .NET
