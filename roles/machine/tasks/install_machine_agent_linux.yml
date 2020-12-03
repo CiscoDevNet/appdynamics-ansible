@@ -89,25 +89,66 @@
   # listed in the {{agent_loggers}} tha need to be matched. The XML module
   # requires that tags and attributes be present if changes are to be applied
   # For this reason, we first look for all mataches and then apply them.
-  - debug:
-      msg: "Requested log level = {{ agent_log_level }} - Logger = {{ agent_loggers }}"
+  - name: set the log level on the agent (if != info, which it is by default)
+    become: false
+    block:
+    - debug:
+        msg: "Requested log level = {{ agent_log_level }} - Logger = {{ agent_loggers }}"
 
-  - name: check which xpath entries are found in the log4j file
-    xml:
-      path: '{{ machine_agent_dest_folder_linux }}/conf/logging/log4j.xml'
-      xpath: //Logger[@name='{{ item }}']
-      count: yes
-    register: hits
-    loop: "{{ agent_loggers }}"
+    - name: create a local directory to manipulate the log4j file
+      tempfile:
+        state: directory
+        suffix: build
+      register: tempDir
+      changed_when: false
 
-  - name: Set the log level for the machine agent
-    xml:
-      path: '{{ machine_agent_dest_folder_linux }}/conf/logging/log4j.xml'
-      xpath: "{{ item.actions.xpath }}" # //Logger[@name='{{ item }}']
-      attribute: level
-      value: "{{ agent_log_level }}"
-    loop: "{{ hits.results }}" # "{{ agent_loggers }}"
-    when: item.count >= 1
+    # Rather than modifying the XML files in-situ on the remote server, re copy
+    # tem down and do the XML manipulation locally. This is done so we can
+    # use the xml module without the need to install lxml of pip on the
+    # target server.
+    - name: copy the log4j file down to update it localy
+      fetch:
+        src: '{{ machine_agent_dest_folder_linux }}/conf/logging/log4j.xml'
+        dest: '{{ tempDir.path }}/'
+        mode: 0755
+        flat: yes
+      changed_when: false
+
+    - name: check which xpath entries are found in the log4j file
+      xml:
+        # path: '{{ machine_agent_dest_folder_linux }}/conf/logging/log4j.xml'
+        path: '{{ tempDir.path }}/log4j.xml'
+        xpath: //Logger[@name='{{ item }}']
+        count: yes
+      register: hits
+      delegate_to: localhost
+      loop: "{{ agent_loggers }}"
+
+    - name: Set the log level for the machine agent
+      xml:
+        # path: '{{ machine_agent_dest_folder_linux }}/conf/logging/log4j.xml'
+        path: '{{ tempDir.path }}/log4j.xml'
+        xpath: "{{ item.actions.xpath }}" # //Logger[@name='{{ item }}']
+        attribute: level
+        value: "{{ agent_log_level }}"
+      loop: "{{ hits.results }}" # "{{ agent_loggers }}"
+      delegate_to: localhost
+      when: item.count >= 1
+
+    - name: copy the local file back to the host
+      become: true 
+      copy:
+         src: '{{ tempDir.path }}/log4j.xml'
+         dest: '{{ machine_agent_dest_folder_linux }}/conf/logging/log4j.xml'
+      changed_when: false
+
+    - name: delete the temp directory
+      file:
+         path: "{{ tempDir.path }}"
+         state: absent
+      delegate_to: localhost
+      changed_when: false
+    when: agent_log_level|lower != 'info'
   # --------------------------------------------------------------------------
 
   - name: Ensure machine agent file is executable
