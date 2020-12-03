@@ -1,22 +1,40 @@
-# Ansible AppDynamics Collection
+# AppDynamics Ansible Collection
 
-The AppDynamics collection installs and configures AppDynamics agents and configurations. Refer to the
-[role variables](#Role-Variables) below for a description of available deployment options. It should be noted that
-the implementation as provided does not preserve custom configuration settings applied subsequent
-to the initial agent installation.
+The AppDynamics Ansible Collection installs and configures AppDynamics agents and configurations. All supported agents are downloaded from the download portal unto the Ansible control node automatically –– this makes it easy to acquire and upgrade agents declaratively. 
 
-## Setup
+Refer to the [role variables](#Role-Variables) below for a description of available deployment options. 
 
-### Requirements
+We have built this AppDynamics collection to support (immutable) infrastructure as code deployment methodology; this means that the AppDynamics collection will NOT preserve any manual configurations on the target servers. In other words, the ansible roles will overwrite any local or pre-existing configuration. 
+We strongly recommend that you convert any custom agent configuration (this collection does not support) into an ansible role to ensure consistency of deployments and configurations across your estate. 
+
+
+## Requirements
 
 - Requires Ansible >=2.8.0
 - Supports most Debian and RHEL-based Linux distributions, and Windows.
-- Windows OS requires >= Powershell 5.0 for the `Machine agent`, `DotNet agent` and `Java agent`
-- Network firewall access to download AppDynamics agents from `https://download-files.appdynamics.com` and `https://download.appdynamics.com` to the Ansible controller.  
+- Windows OS requires >= Powershell 5.0
+- Network/firewall access to download AppDynamics agents from `https://download-files.appdynamics.com` and `https://download.appdynamics.com` on the Ansible control node  
 
-Note:  <a href="https://stedolan.github.io/jq/"> `jq` </a> is required on the Ansible controller. The AppDynamics collection installs `jq` if it is not installed on the Ansible controller node.
+<b>Note:</b>  <a href="https://stedolan.github.io/jq/"> `jq` </a> is required on the Ansible control node. The collection automatcially  installs `jq` to the control node if it is not installed. 
 
-### Installation
+## Supported Agents
+
+The agent binaries and the installation process for the Machine and DB agent depend on the OS type –– Windows or Linux. This AppDynamics collection abstracts the OS differences so you should only have to provide `agent_type`, without necessarily specifying your OS type.  
+
+
+|  <img width="200"/> Agent type | Description |
+|--|--|
+|`sun-java`   or     `java`   | Agent to monitor Java applications running on JRE version 1.7 and less |
+|`sun-java8`   or     `java8`   | Agent to monitor Java applications running on JRE version 1.8 and above |
+|`ibm-java` | Agent to monitor Java applications running on IBM JRE |
+|`dotnet` | Agent to monitor Full .Net Framework application on Windows |
+|`machine` | 64 Bit Machine agent ZIP bundle with JRE |
+|`db` | Agent to monitor Databases|
+|`dotnet-core*` | Agent to Monitor .NetCore applications on Linux|
+
+<i> `*`  Coming soon...</i><br>
+
+## Installation
 
 Install the <a href="https://galaxy.ansible.com/appdynamics"> AppDynamics Collection </a> from Ansible Galaxy on your Ansible server:
 
@@ -24,32 +42,13 @@ Install the <a href="https://galaxy.ansible.com/appdynamics"> AppDynamics Collec
 ansible-galaxy collection install appdynamics.agents
 ```
 
-## Supported Agents
-
-|  <img width="200"/> Agent type | Description |
-|--|--|
-|`sun-java`   or     `java`   | Agent to monitor Java applications (All Vendors) running on JRE version 1.7 and less |
-|`sun-java8`   or     `java8`   | Agent to monitor Java applications (All Vendors) running on JRE version 1.8 and above |
-|`ibm-java` | Agent to monitor Java applications (All Vendors) running on IBM JRE |
-|`dotnet` | Agent to monitor Full .Net Framework application on Windows |
-|`machine` | 64 Bit Machine agent ZIP bundle with JRE to monitor your Linux servers |
-|`machine-win`** | 64 Bit Machine agent ZIP bundle with JRE to monitor your windows servers. |
-|`db` | Agent to monitor Databases|
-|`db-win`** | Agent to monitor any combination of DB2, Oracle, SQL Server, Sybase, MySQL, Sybase IQ and PostgreSQL database platforms. Windows Install|
-|`dotnet-core*` | Agent to Monitor .NetCore applications on Linux|
-|`dotnet-core-win*` | Agent to Monitor .NetCore applications on Windows |
-
-<i> `*`  Coming soon...</i><br>
-<i> `**` When installing the Machine or DB agents on Windows, the agent type
-selected in the playbook should be 'machine' or 'db' without the '-win'
-suffix, which is added automatically based on the OS family of the host</i>
-
 ## Playbooks
+Example playbooks for each agent type is provided in the collections's `playbooks` folder.  
+You should either reference the example playbooks in the collection installation folder, or access the examples in the GitHub <a href="https://github.com/Appdynamics/appdynamics-ansible/tree/master/playbooks"> repository </a>. 
 
-### Java agent
+The `var/playbooks/controller.yaml` file is meant to contain constant variables such as `enable_ssl`, `controller_port`, etc. You may either include `var/playbooks/controller.yaml` in the playbook as shown in the java example below, or overwrite the variables in the playbooks - whatever works best for you. 
 
-For testing purposes you can specify the target controller parameters either directly in the
-sample playbooks, or you can include them as shown below from the provided common "controller.yaml" file.
+## Java agent
 
 ```yml
 ---
@@ -57,18 +56,13 @@ sample playbooks, or you can include them as shown below from the provided commo
     tasks:
       - name: Include variables for the controller settings
         include_vars: vars/controller.yaml
-
       - include_role:
           name: appdynamics.agents.java
         vars:
-          # Define Agent Type and Version
           agent_version: 20.10.0
           agent_type: java8
-
-          # The applicationName
           application_name: "IoT_API" # ONLY required if agent type is not machine or db
           tier_name: "java_tier" # ONLY required if agent type is not machine or db
-
           # Directory permissions for agent. These can be set at host level in the invertory as well
           agent_dir_permission:  #defaults to root:root if not specified
             user:  "appdynamics" # This user must pre-exist. It is recommended to use the PID owner of your Java app
@@ -76,7 +70,8 @@ sample playbooks, or you can include them as shown below from the provided commo
 ```
 
 ### DotNet agent
-In the playbook below, the parameters are initialised directly in the yaml file rather than including them. 
+In the playbook below, the parameters are initialised directly in the yaml file rather than including them from `var/playbooks/controller.yaml`
+
 ```yml
 ---
 - hosts: windows
@@ -84,19 +79,16 @@ In the playbook below, the parameters are initialised directly in the yaml file 
     - include_role:
         name: appdynamics.agents.dotnet
       vars:
-        # Define Agent Type and Version
         agent_version: 20.8.0
         agent_type: dotnet
-        # The applicationName
         application_name: 'IoT_API'
-        tier_name: 'login_service2' # ONLY required if agent type is not machine and db agent
         # Your controller details
-        controller_account_access_key: "b0248ceb-c954-4a37-97b5-207e90418cb4" # Please add this to your Vault
-        controller_global_analytics_account_name: "customer1_e2f90621-ab21-4bf4-908c-872d213c7f64" # Please add this to your Vault
-        controller_host_name: "ansible-20100nosshcont-bum4wzwa.appd-cx.com" # Your AppDynamics controller
+        controller_account_access_key: "123456" # Please add this to your Vault
+        controller_global_analytics_account_name: "customer1_GUID" # Please add this to your Vault
+        controller_host_name: "fieldlab.saas.appdynamics.com" 
         controller_account_name: "customer1" # Please add this to your Vault
-        enable_ssl: "false"
-        controller_port: "8090"
+        enable_ssl: "true"
+        controller_port: "443"
         enable_proxy: "true"  #use quotes please
         proxy_host: "10.0.1.3"
         proxy_port: "80"
@@ -123,22 +115,19 @@ In the playbook below, the parameters are initialised directly in the yaml file 
         agent_type: machine
         machine_hierarchy: "AppName|Owners|Environment|" # Make sure it ends with a |
         sim_enabled: "true"
-
-        # config properties docs - https://docs.appdynamics.com/display/latest/Machine+Agent+Configuration+Properties
-        # Can be used to configure the proxy for the agent
-        java_system_properties: "-Dappdynamics.http.proxyHost=10.0.4.2 -Dappdynamics.http.proxyPort=9090" # mind the space between each property
-
         # Analytics settings
-        analytics_event_endpoint: "https://lncontroller20103-2010-o8evv8rp.appd-cx.com:9080"
+        analytics_event_endpoint: "https://fra-ana-api.saas.appdynamics.com:443"
         enable_analytics_agent: "true"
-
         # Your controller details
-        controller_account_access_key: "b0248ceb-c954-4a37-97b5-207e90418cb4" # Please add this to your Vault
-        controller_host_name: "ansible-20100nosshcont-bum4wzwa.appd-cx.com" # Your AppDynamics controller
+        controller_account_access_key: "123key" # Please add this to your Vault
+        controller_host_name: "fieldlab.saas.appdynamics.com" # Your AppDynamics controller
         controller_account_name: "customer1" # Please add this to your Vault
         enable_ssl: "false"
         controller_port: "8090"
         controller_global_analytics_account_name: 'customer1_e52eb4e7-25d2-41c4-a5bc-9685502317f2' # Please add this to your Vault
+        # config properties docs - https://docs.appdynamics.com/display/latest/Machine+Agent+Configuration+Properties
+        # Can be used to configure the proxy for the agent
+        java_system_properties: "-Dappdynamics.http.proxyHost=10.0.4.2 -Dappdynamics.http.proxyPort=9090" # mind the space between each property
 ```
 
 ## Role Variables
@@ -156,7 +145,7 @@ In the playbook below, the parameters are initialised directly in the yaml file 
 |`controller_port`   | The controller port   | All |
 |`enable_ssl`   | Indicate if SSL is enabled in the controller or not | All |
 |`db_agent_name` | Name assigned to the agent, typically used to allow one Database Agent  to act as a backup to another one | DB 
-|`install_jre`| Set this parameter to false if the JRE should not be installed together with the DB agent. <br><br>**Note:** to install java on windows, you need to run the <i>install-roles.yml</i> playbook first, which adds a galaxy role (lean_delivery.java) to you local playbook folder | DB
+|`install_jre`| Set this parameter to false if the JRE should not be installed together with the DB agent. <br><br>**Note:** To install java on windows, we automatically install lean_delivery.java role from galaxy to your control node | DB
 |`services`| List of stand-alone services to be instrumented with the .NET agent| .NET
 |`monitor_all_IIS_apps`| Enable automatic instrumentation of all IIS applications | .NET
 |`runtime_reinstrumentation` | Runtime re-instrumentation works for .NET Framework 4.5.2 and greater. Note: Make sure you test this first in a non-production environment | .NET |
@@ -166,3 +155,12 @@ In the playbook below, the parameters are initialised directly in the yaml file 
 |`enable_analytics_agent`   | Indicate if analytics agent should be enabled in the Machine agent | Machine |
 |`sim_enabled` | Enable server infrastructure monitoring | Machine
 |`controller_global_analytics_account_name`| This is the global account name of the controller | Machine
+
+
+## Contributing 
+
+Here are a few ways you can pitch in:
+- Report bugs or issues
+- Fix bugs and submit pull requests.
+- Write, clarify or fix documentation.
+- Refactor code.
