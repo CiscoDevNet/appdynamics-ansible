@@ -1,3 +1,8 @@
 ---
+- name: Install roles from requirements.yml
+  delegate_to: localhost
+  command: "ansible-galaxy install -r {{ role_path }}/tasks/requirements.yml"
+  changed_when: false
+  
 - include_role:
     name: lean_delivery.java
