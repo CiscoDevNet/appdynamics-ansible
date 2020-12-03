@@ -46,7 +46,7 @@ ansible-galaxy collection install appdynamics.agents
 Example playbooks for each agent type is provided in the collections's `playbooks` folder.  
 You should either reference the example playbooks in the collection installation folder, or access the examples in the GitHub <a href="https://github.com/Appdynamics/appdynamics-ansible/tree/master/playbooks"> repository </a>. 
 
-The `var/playbooks/controller.yaml` file is meant to contain constant variables such as `enable_ssl`, `controller_port`, etc. You may either use this var or overwrite the variables in the playbooks - whatever works best for you. 
+The `var/playbooks/controller.yaml` file is meant to contain constant variables such as `enable_ssl`, `controller_port`, etc. You may either include `var/playbooks/controller.yaml` in the playbook as shown in the java example below, or overwrite the variables in the playbooks - whatever works best for you. 
 
 ## Java agent
 
