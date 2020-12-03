@@ -5,7 +5,7 @@ The AppDynamics Ansible Collection installs and configures AppDynamics agents an
 Refer to the [role variables](#Role-Variables) below for a description of available deployment options. 
 
 We have built this AppDynamics collection to support (immutable) infrastructure as code deployment methodology; this means that the AppDynamics collection will NOT preserve any manual configurations on the target servers. In other words, the ansible roles will overwrite any local or pre-existing configuration. 
-We strongly recommend that you convert any custom agent configuration (this collection does not support that) into an ansible role to ensure consistency of deployments and configurations across your estate. 
+We strongly recommend that you convert any custom agent configuration (this collection does not support) into an ansible role to ensure consistency of deployments and configurations across your estate. 
 
 
 ## Requirements
