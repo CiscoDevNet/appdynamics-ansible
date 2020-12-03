@@ -1,0 +1,23 @@
+{
+  "controller": {
+    "host": "{{ controller_host_name }}",
+    "port": {{ controller_port }},
+    "account": "{{ account_name }}",
+    "password": "{{ account_access_key }}",
+    "ssl": {{ enable_ssl | lower }}
+  },
+  "application": {
+    "name": "{{ application_name }}",
+    "tier": "{{ tier_name }}",
+    "node": "{{ host_name }}-{{ tier_name }}",
+    "reusenodename": "true",
+    "nodenameprefix": "{{ tier_name }}-node-"
+  },
+  "analytics": {
+    "host": "localhost",
+    "port": 9090
+  },
+  "feature": [
+    "FULL_AGENT"
+  ]
+}

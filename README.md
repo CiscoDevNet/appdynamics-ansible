@@ -37,7 +37,7 @@ ansible-galaxy collection install appdynamics.agents
 |`machine-win`** | 64 Bit Machine agent ZIP bundle with JRE to monitor your windows servers. |
 |`db` | Agent to monitor Databases|
 |`db-win`** | Agent to monitor any combination of DB2, Oracle, SQL Server, Sybase, MySQL, Sybase IQ and PostgreSQL database platforms. Windows Install|
-|`dotnet-core*` | Agent to Monitor .NetCore applications on Linux|
+|`dotnet-core` | Agent to Monitor .NetCore applications on Linux|
 |`dotnet-core-win*` | Agent to Monitor .NetCore applications on Windows |
 
 <i> `*`  Coming soon...</i><br>

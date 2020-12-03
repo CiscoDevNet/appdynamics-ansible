@@ -51,6 +51,10 @@ java_agent_dest_folder_win: C:/appdynamics/java-agent
 monitor_all_IIS_apps: "false"
 runtime_reinstrumentation: "false"
 
+# .NET Core agent Linux
+dotnet_core_agent_dest_folder_linux: /opt/appdynamics/dotnet-core-agent
+dotnet_core_agent_dest_file: dotnet-core-agent.zip
+
 #controller defaults
 enable_ssl: "false"
 enable_proxy: "false"
