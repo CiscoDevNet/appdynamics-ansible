@@ -1,22 +1,39 @@
-# Ansible AppDynamics Collection
+# AppDynamics Ansible Collection
 
-The AppDynamics collection installs and configures AppDynamics agents and configurations. Refer to the
-[role variables](#Role-Variables) below for a description of available deployment options. It should be noted that
-the implementation as provided does not preserve custom configuration settings applied subsequent
-to the initial agent installation.
+The AppDynamics Ansible collection installs and configures AppDynamics agents and configurations. All the supported agents are automatically download from the AppDynamics download portal to the Ansible control node –– this makes it easy to acquire and upgrade agents declaratively. 
 
-## Setup
+Refer to the [role variables](#Role-Variables) below for a description of available deployment options. 
 
-### Requirements
+We have built this Ansible collection to support (immutable) infrastructure as code deployment methodology, this means that the collection will NOT preserve any configurations that is altered on the target server. In other words, the ansible roles will overrite any local or pre-existing changes. 
+We strongly recommend that you convert any custom agent configuration (that is not supported by AppDynamics collection) into an ansible role to ensure  consistency of deployments and confgurations across your estate. 
+
+
+## Requirements
 
 - Requires Ansible >=2.8.0
 - Supports most Debian and RHEL-based Linux distributions, and Windows.
 - Windows OS requires >= Powershell 5.0 for the `Machine agent`, `DotNet agent` and `Java agent`
-- Network firewall access to download AppDynamics agents from `https://download-files.appdynamics.com` and `https://download.appdynamics.com` to the Ansible controller.  
+- Network firewall access to download AppDynamics agents from `https://download-files.appdynamics.com` and `https://download.appdynamics.com` to the Ansible control node  
 
-Note:  <a href="https://stedolan.github.io/jq/"> `jq` </a> is required on the Ansible controller. The AppDynamics collection installs `jq` if it is not installed on the Ansible controller node.
+<b>Note:</b>  <a href="https://stedolan.github.io/jq/"> `jq` </a> is required on the Ansible control node. The collection automatcially  installs `jq` to the control node if it is not installed. 
 
-### Installation
+## Supported Agents
+
+|  <img width="200"/> Agent type | Description |
+|--|--|
+|`sun-java`   or     `java`   | Agent to monitor Java applications running on JRE version 1.7 and less |
+|`sun-java8`   or     `java8`   | Agent to monitor Java applications running on JRE version 1.8 and above |
+|`ibm-java` | Agent to monitor Java applications running on IBM JRE |
+|`dotnet` | Agent to monitor Full .Net Framework application on Windows |
+|`machine` | 64 Bit Machine agent ZIP bundle with JRE |
+|`db` | Agent to monitor Databases|
+|`dotnet-core*` | Agent to Monitor .NetCore applications on Linux|
+
+<i> `*`  Coming soon...</i><br>
+
+The agent binaries and the installation process for the Machine agent and DB agent depends on the OS type –– Windows or Linux. The AppDynamics collection abstracts the OS differences so you should only have to provide agent_type, without neccessarily specifying your OS type. 
+
+## Installation
 
 Install the <a href="https://galaxy.ansible.com/appdynamics"> AppDynamics Collection </a> from Ansible Galaxy on your Ansible server:
 
@@ -24,29 +41,10 @@ Install the <a href="https://galaxy.ansible.com/appdynamics"> AppDynamics Collec
 ansible-galaxy collection install appdynamics.agents
 ```
 
-## Supported Agents
-
-|  <img width="200"/> Agent type | Description |
-|--|--|
-|`sun-java`   or     `java`   | Agent to monitor Java applications (All Vendors) running on JRE version 1.7 and less |
-|`sun-java8`   or     `java8`   | Agent to monitor Java applications (All Vendors) running on JRE version 1.8 and above |
-|`ibm-java` | Agent to monitor Java applications (All Vendors) running on IBM JRE |
-|`dotnet` | Agent to monitor Full .Net Framework application on Windows |
-|`machine` | 64 Bit Machine agent ZIP bundle with JRE to monitor your Linux servers |
-|`machine-win`** | 64 Bit Machine agent ZIP bundle with JRE to monitor your windows servers. |
-|`db` | Agent to monitor Databases|
-|`db-win`** | Agent to monitor any combination of DB2, Oracle, SQL Server, Sybase, MySQL, Sybase IQ and PostgreSQL database platforms. Windows Install|
-|`dotnet-core*` | Agent to Monitor .NetCore applications on Linux|
-|`dotnet-core-win*` | Agent to Monitor .NetCore applications on Windows |
-
-<i> `*`  Coming soon...</i><br>
-<i> `**` When installing the Machine or DB agents on Windows, the agent type
-selected in the playbook should be 'machine' or 'db' without the '-win'
-suffix, which is added automatically based on the OS family of the host</i>
-
 ## Playbooks
+Example playbooks for each agent type is provided in the `playbooks` folder in the collection. You can either reference the playbooks in the collection installation folder, or access the examples in the GitHub repository. 
 
-### Java agent
+## Java agent
 
 For testing purposes you can specify the target controller parameters either directly in the
 sample playbooks, or you can include them as shown below from the provided common "controller.yaml" file.
