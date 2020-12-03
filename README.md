@@ -52,21 +52,21 @@ The `var/playbooks/controller.yaml` file is meant to contain constant variables 
 
 ```yml
 ---
-  - hosts: all
-    tasks:
-      - name: Include variables for the controller settings
-        include_vars: vars/controller.yaml
-      - include_role:
-          name: appdynamics.agents.java
-        vars:
-          agent_version: 20.10.0
-          agent_type: java8
-          application_name: "IoT_API" # ONLY required if agent type is not machine or db
-          tier_name: "java_tier" # ONLY required if agent type is not machine or db
-          # Directory permissions for agent. These can be set at host level in the invertory as well
-          agent_dir_permission:  #defaults to root:root if not specified
-            user:  "appdynamics" # This user must pre-exist. It is recommended to use the PID owner of your Java app
-            group: "appdynamics" # This group must pre-exist
+- hosts: all
+  tasks:
+    - name: Include variables for the controller settings
+      include_vars: vars/controller.yaml
+    - include_role:
+        name: appdynamics.agents.java
+      vars:
+        agent_version: 20.10.0
+        agent_type: java8
+        application_name: "IoT_API" # ONLY required if agent type is not machine or db
+        tier_name: "java_tier" # ONLY required if agent type is not machine or db
+        # Directory permissions for agent. These can be set at host level in the invertory as well
+        agent_dir_permission:  #defaults to root:root if not specified
+          user:  "appdynamics" # This user must pre-exist. It is recommended to use the PID owner of your Java app
+          group: "appdynamics" # This group must pre-exist
 ```
 
 ### DotNet agent
