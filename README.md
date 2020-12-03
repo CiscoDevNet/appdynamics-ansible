@@ -20,7 +20,7 @@ We built this AppDynamics Ansible collection to support (immutable) infrastructu
 The agent binaries and the installation process for the Machine and DB agent depend on the OS type –– Windows or Linux. This AppDynamics collection abstracts the OS differences so you should only have to provide `agent_type`, without necessarily specifying your OS type.  
 
 
-|  <img width="200"/> Agent type | Description |
+| Agent type <img width="180"/> | Description |
 |--|--|
 |`sun-java`   or     `java`   | Agent to monitor Java applications running on JRE version 1.7 and less |
 |`sun-java8`   or     `java8`   | Agent to monitor Java applications running on JRE version 1.8 and above |
@@ -34,7 +34,7 @@ The agent binaries and the installation process for the Machine and DB agent dep
 
 ## Installation
 
-Install the <a href="https://galaxy.ansible.com/appdynamics"> AppDynamics Collection </a> from Ansible Galaxy on your Ansible server:
+Install the <a href="https://galaxy.ansible.com/appdynamics"> AppDynamics Collection </a> from Ansible Galaxy on your Ansible control node:
 
 ```shell
 ansible-galaxy collection install appdynamics.agents
@@ -130,7 +130,7 @@ In the playbook below, the parameters are initialised directly in the yaml file 
 
 ## Role Variables
 
-|<img width="200"/>  Variable   | Description | Agent Type |
+|Variable<img width="200"/>     | Description | Agent Type |
 |--|--|--|
 |`agent_type`   | AppDynamics agent type.  java, machine, etc  | All |
 |`agent_version`  | AppDynamics agent version. AppDynamics uses calendar versioning. For example, if a Java agent is released in November of 2020, its version will begin with 20.11.0. When the Java agent team releases again in the month of November, the new agent will be 20.11.1  | All |
