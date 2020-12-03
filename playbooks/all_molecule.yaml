@@ -2,3 +2,4 @@
 - import_playbook: java.yaml
 - import_playbook: db.yaml
 - import_playbook: machine.yaml
+- import_playbook: dotnet_core.yaml
