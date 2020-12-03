@@ -144,7 +144,7 @@ In the playbook below, the parameters are initialised directly in the yaml file 
 |`controller_port`   | The controller port   | All |
 |`enable_ssl`   | Indicate if SSL is enabled in the controller or not | All |
 |`db_agent_name` | Name assigned to the agent, typically used to allow one Database Agent  to act as a backup to another one | DB 
-|`install_jre`| Set this parameter to false if the JRE should not be installed together with the DB agent. <br><br>**Note:** to install java on windows, you need to run the <i>install-roles.yml</i> playbook first, which adds a galaxy role (lean_delivery.java) to you local playbook folder | DB
+|`install_jre`| Set this parameter to false if the JRE should not be installed together with the DB agent. <br><br>**Note:** To install java on windows, we automatically install lean_delivery.java role from galaxy to your control node | DB
 |`services`| List of stand-alone services to be instrumented with the .NET agent| .NET
 |`monitor_all_IIS_apps`| Enable automatic instrumentation of all IIS applications | .NET
 |`runtime_reinstrumentation` | Runtime re-instrumentation works for .NET Framework 4.5.2 and greater. Note: Make sure you test this first in a non-production environment | .NET |
