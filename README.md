@@ -157,7 +157,7 @@ In the playbook below, the parameters are initialised directly in the yaml file 
 |`controller_global_analytics_account_name`| This is the global account name of the controller | Machine
 
 
-# Contributing 
+## Contributing 
 
 Here are a few ways you can pitch in:
 - Report bugs or issues
