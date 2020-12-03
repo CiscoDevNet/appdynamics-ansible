@@ -7,3 +7,4 @@ controller_account_name: "customer1" # Please add this to your Vault
 controller_account_access_key: "2498dd59-d059-48c1-8ec2-8dc2f3efa112" # Please add this to your Vault
 enable_ssl: "FALSE"
 controller_global_analytics_account_name: 'customer1_e52eb4e7-25d2-41c4-a5bc-9685502317f2' # Please add this to your Vault
+agent_log_level: "info" # info | trace | debug | warn | error | fatal | all | off  

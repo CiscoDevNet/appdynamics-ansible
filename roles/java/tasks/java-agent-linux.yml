@@ -26,7 +26,7 @@
         path: "{{ java_agent_dest_folder_linux }}"
         state: absent
       changed_when: false
-           
+
     - name: Ensures application agent dir exists
       file:
         path: "{{ java_agent_dest_folder_linux }}/"
@@ -66,9 +66,46 @@
         mode: 0755
       changed_when: false
 
+    - name: find the version specific directory name
+      find:
+        paths: "{{ java_agent_dest_folder_linux }}"
+        patterns: "ver{{ agent_version }}*"
+        file_type: directory
+      register: result
+
+    - name: Set the version folder fact
+      set_fact:
+        java_agent_ver_folder: "{{ result.files[0].path }}" # "{{ ver.stdout | regex_replace ('\\r\\n', '') }}"
+
     - name: Copy controller-info.xml to the versioned agent folder
-      shell: cp  {{ java_agent_dest_folder_linux }}/conf/controller-info.xml  {{ java_agent_dest_folder_linux }}/ver{{ agent_version }}*/conf/
+      shell: cp  {{ java_agent_dest_folder_linux }}/conf/controller-info.xml  {{ java_agent_ver_folder }}/conf/
       changed_when: false
+
+    # --------------------------------------------------------------------------
+    # Update the Log4j setting to apply the desired log level to all the loggers
+    # listed in the {{agent_loggers}} tha need to be matched. The XML module
+    # requires that tags and attributes be present if changes are to be applied
+    # For this reason, we first look for all mataches and then apply them.
+    - debug:
+        msg: "Requested log level = {{ agent_log_level }} - Logger = {{ agent_loggers }}"
+
+    - name: check which xpath entries are found in the log4j2 file
+      xml:
+        path: '{{ machine_agent_dest_folder_linux }}/conf/logging/log4j.xml'
+        xpath: //AsyncLogger[@name='{{ item }}']
+        count: yes
+      register: hits
+      loop: "{{ agent_loggers }}"
+
+    - name: Set the log level for the java agent
+      xml:
+        path: '{{ java_agent_ver_folder }}/conf/logging/log4j2.xml'
+        xpath: "{{ item.actions.xpath }}" #  //AsyncLogger[@name='{{ item }}']
+        attribute: level
+        value: "{{ agent_log_level }}"
+      loop: "{{ hits.results }}" # "{{ agent_loggers }}"
+      when: item.count >= 1
+    # --------------------------------------------------------------------------
 
     - name: Recursively change ownership of the Java agent directory
       file:
