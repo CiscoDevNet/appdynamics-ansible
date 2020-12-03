@@ -91,7 +91,7 @@
 
     - name: check which xpath entries are found in the log4j2 file
       xml:
-        path: '{{ machine_agent_dest_folder_linux }}/conf/logging/log4j.xml'
+        path: '{{ java_agent_ver_folder }}/conf/logging/log4j2.xml'
         xpath: //AsyncLogger[@name='{{ item }}']
         count: yes
       register: hits
