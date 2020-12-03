@@ -19,6 +19,9 @@ We strongly recommend that you convert any custom agent configuration (this coll
 
 ## Supported Agents
 
+The agent binaries and the installation process for the Machine and DB agent depend on the OS type –– Windows or Linux. This AppDynamics collection abstracts the OS differences so you should only have to provide `agent_type`, without necessarily specifying your OS type.  
+
+
 |  <img width="200"/> Agent type | Description |
 |--|--|
 |`sun-java`   or     `java`   | Agent to monitor Java applications running on JRE version 1.7 and less |
@@ -30,8 +33,6 @@ We strongly recommend that you convert any custom agent configuration (this coll
 |`dotnet-core*` | Agent to Monitor .NetCore applications on Linux|
 
 <i> `*`  Coming soon...</i><br>
-
-The agent binaries and the installation process for the Machine and DB agent depend on the OS type –– Windows or Linux. This AppDynamics collection abstracts the OS differences so you should only have to provide `agent_type`, without necessarily specifying your OS type.  
 
 ## Installation
 
@@ -154,3 +155,12 @@ In the playbook below, the parameters are initialised directly in the yaml file 
 |`enable_analytics_agent`   | Indicate if analytics agent should be enabled in the Machine agent | Machine |
 |`sim_enabled` | Enable server infrastructure monitoring | Machine
 |`controller_global_analytics_account_name`| This is the global account name of the controller | Machine
+
+
+# Contributing 
+
+Here are a few ways you can pitch in:
+- Report bugs or issues
+- Fix bugs and submit pull requests.
+- Write, clarify or fix documentation.
+- Refactor code.
