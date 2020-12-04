@@ -162,3 +162,7 @@ Here are a few ways you can pitch in:
 - Fix bugs and submit pull requests.
 - Write, clarify or fix documentation.
 - Refactor code.
+
+## Demo
+
+<a href="https://terminalizer.com/view/4f260da94446" target="_blank"><img src="https://user-images.githubusercontent.com/2548160/101169482-e7cb6d00-3634-11eb-904b-9236e5a3fda7.png" width="500"/></a>
