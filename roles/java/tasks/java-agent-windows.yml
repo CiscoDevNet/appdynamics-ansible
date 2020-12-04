@@ -60,7 +60,7 @@
 #   register: ver
 #   changed_when: false
 
-- name: find the version specific directory name
+- name: Find the version specific directory name
   win_find:
     paths: "{{ java_agent_dest_folder_win }}"
     patterns: "ver{{ agent_version }}*"

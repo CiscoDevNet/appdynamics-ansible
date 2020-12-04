@@ -128,13 +128,13 @@
     # listed in the {{agent_loggers}} that need to be matched. The XML module
     # requires that tags and attributes be present if changes are to be applied
     # For this reason, we first look for all mataches and then apply the changes
-    - name: set the log level on the agent (if != info, which it is by default)
+    - name: Set the log level on the agent (if != info, which it is by default)
       become: false
       block:
       - debug:
           msg: "Requested log level = {{ agent_log_level }} - Logger = {{ agent_loggers }}"
 
-      - name: create a local directory to manipulate the log4j file
+      - name: Create a local directory to manipulate the log4j file
         tempfile:
           state: directory
           suffix: build
@@ -145,7 +145,7 @@
       # tem down and do the XML manipulation locally. This is done so we can
       # use the xml module without the need to install lxml of pip on the
       # target server.
-      - name: copy the log4j file down to update it localy
+      - name: Copy the log4j file down to update it localy
         fetch:
           src: '{{ db_agent_dest_folder_linux }}/conf/logging/log4j.xml'
           dest: '{{ tempDir.path }}/'
@@ -153,7 +153,7 @@
           flat: yes
         changed_when: false
 
-      - name: check which xpath entries are found
+      - name: Check which xpath entries are found
         xml:
           # path: '{{ db_agent_dest_folder_linux }}/conf/logging/log4j.xml'
           path: '{{ tempDir.path }}/log4j.xml'
@@ -174,14 +174,14 @@
         delegate_to: localhost
         when: item.count >= 1
 
-      - name: copy the local file back to the host
+      - name: Copy the local file back to the host
         become: true
         copy:
            src: '{{ tempDir.path }}/log4j.xml'
            dest: '{{ db_agent_dest_folder_linux }}/conf/logging/log4j.xml'
         changed_when: false
 
-      - name: delete the temp directory
+      - name: Delete the temp directory
         file:
            path: "{{ tempDir.path }}"
            state: absent
