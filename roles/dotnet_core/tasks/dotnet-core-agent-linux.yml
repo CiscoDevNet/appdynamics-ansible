@@ -10,7 +10,8 @@
       changed_when: false # this ensures this task is idempotent
 
     - name: Check if the .NET core agent exists
-      stat: path="{{ dotnet_core_agent_dest_folder_linux }}/AppDynamics.Agent.netstandard.dll"
+      stat: 
+        path: "{{ dotnet_core_agent_dest_folder_linux }}/AppDynamics.Agent.netstandard.dll"
       register: previous_agent
 
     - name: Backup old java agent to /tmp folder

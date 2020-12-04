@@ -19,7 +19,8 @@
       group: "{{ appdynamics_user }}"
 
   - name: Check if Machine Agent is already installed
-    stat: path="{{ machine_agent_dest_folder_linux }}/machineagent.jar"
+    stat: 
+      path: "{{ machine_agent_dest_folder_linux }}/machineagent.jar"
     register: previous_agent
 
   - name: Backup existing Machine Agent

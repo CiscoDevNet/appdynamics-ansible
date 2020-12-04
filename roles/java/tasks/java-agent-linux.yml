@@ -10,7 +10,8 @@
       changed_when: false # this ensures this task is idempotent
 
     - name: Check if java agent exists
-      stat: path="{{ java_agent_dest_folder_linux }}/javaagent.jar"
+      stat: 
+        path: "{{ java_agent_dest_folder_linux }}/javaagent.jar"
       register: previous_agent
 
     - name: Backup old java agent to /tmp folder
