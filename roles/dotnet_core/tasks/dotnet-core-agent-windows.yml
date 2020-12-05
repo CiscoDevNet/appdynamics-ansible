@@ -14,7 +14,8 @@
 #   changed_when: false # this ensures this task is idempotent
 #
 # - name: Check if java agent exists
-#   win_stat: path="{{ java_agent_dest_folder_win }}/javaagent.jar"
+#   win_stat: 
+#      path: "{{ java_agent_dest_folder_win }}/javaagent.jar"
 #   register: previous_agent
 #
 # #using Powershell as win_zip module doesn't exist in Ansible - 10/2020
@@ -61,7 +62,7 @@
 # #   register: ver
 # #   changed_when: false
 #
-# - name: find the version specific directory name
+# - name: Find the version specific directory name
 #   win_find:
 #     paths: "{{ java_agent_dest_folder_win }}"
 #     patterns: "ver{{ agent_version }}*"
