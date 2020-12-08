@@ -18,6 +18,7 @@
     controller_global_analytics_account_name: 'customer1_e52eb4e7-25d2-41c4-a5bc-9685502317f2' # Please add this to your Vault 
     controller_host_name: "lncontroller20103-2010-o8evv8rp.appd-cx.com" # Your AppDynamics controller
     controller_account_name: "customer1" # Please add this to your Vault
+    sim_enabled: true
     enable_ssl: false
     controller_port: "8090"
     analytics_event_endpoint: "http://ansible-20100nosshcont-bum4wzwa.appd-cx.com:7001"
