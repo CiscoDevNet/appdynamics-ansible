@@ -1,0 +1,6 @@
+# Java Agent Linux
+java_agent_dest_folder_linux: /opt/appdynamics/java-agent
+java_agent_dest_file: java-agent.zip
+
+# Java Agent Windows
+java_agent_dest_folder_win: C:/appdynamics/java-agent
