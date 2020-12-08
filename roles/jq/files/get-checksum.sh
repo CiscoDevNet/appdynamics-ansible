@@ -8,7 +8,7 @@ ch()
 {
     PLATFORM="$1"
     SUFFIX="${2:-}"
-    wget -O "$DIR"/jq-"$VER"-"$PLATFORM$SUFFIX" "$MIRROR"/jq-"$PLATFORM"
+    wget -O "$DIR"/jq-"$VER"-"$PLATFORM""$SUFFIX" "$MIRROR"/jq-"$PLATFORM"
 }
 
 ch linux32
