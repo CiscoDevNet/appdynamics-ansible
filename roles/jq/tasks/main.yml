@@ -1,0 +1,22 @@
+---
+- block:
+    - name: make versioned dir for jq
+      become: yes
+      file:
+        path: '{{ jq_target_dir }}'
+        state: directory
+        mode: 0755
+    - name: download jq
+      become: yes
+      get_url:
+        url: '{{ jq_url }}'
+        dest: '{{ jq_target_dir }}/{{ jq_bin }}'
+        mode: 0755
+
+    - name: link jq
+      become: yes
+      file:
+        src: '{{ jq_target_dir }}/{{ jq_bin }}'
+        dest: '{{ jq_install_dir }}/jq'
+        state: link
+  delegate_to: localhost

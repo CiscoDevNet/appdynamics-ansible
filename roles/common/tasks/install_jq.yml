@@ -1,21 +1,25 @@
-- name: Install jq to ansible controller -  Debian variants 
-  become: true
-  apt:
-    update_cache: yes
-    state: present
-    name:
-    - jq
+---
+- name: Check if jq is installed
+  shell: command -v jq >/dev/null 2>&1
+  register: is_jq_exist
+  ignore_errors: yes
   delegate_to: localhost
-  when: "ansible_os_family == 'Debian'"
+  changed_when: false
 
-- name: Install jq to ansible controller -  RedHat variants 
+- debug: var=is_jq_exist 
+
+- name: Install jq if it is not installed 
+  include_role:
+    name: appdynamics.agents.jq
+  when: 
+   - is_jq_exist.rc != 0 
+   - "ansible_os_family == 'RedHat' or  ansible_os_family == 'Debian'"
+
+- name: Install jq to ansible controller -  MacOS
   become: true
-  yum:
-    update_cache: yes
-    state: installed
-    name:
+  community.general.homebrew_tap:
+    state: present
+    name: 
      - jq
   delegate_to: localhost
-  when: "ansible_os_family == 'RedHat'"
-
-  # TODO : Add more unix variants 
+  when: "ansible_os_family == 'Darwin'"
