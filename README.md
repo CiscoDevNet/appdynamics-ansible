@@ -25,16 +25,15 @@ We built this AppDynamics Ansible collection to support (immutable) infrastructu
 
 The agent binaries and the installation process for the Machine and DB agent depend on the OS type –– Windows or Linux. This AppDynamics collection abstracts the OS differences so you should only have to provide `agent_type`, without necessarily specifying your OS type.  
 
-
 | Agent type <img width="180"/> | Description |
 |--|--|
 |`sun-java`   or     `java`   | Agent to monitor Java applications running on JRE version 1.7 and less |
 |`sun-java8`   or     `java8`   | Agent to monitor Java applications running on JRE version 1.8 and above |
 |`ibm-java` | Agent to monitor Java applications running on IBM JRE |
 |`dotnet` | Agent to monitor Full .Net Framework application on Windows |
-|`machine` | 64 Bit Machine agent ZIP bundle with JRE |
-|`db` | Agent to monitor Databases|
-|`dotnet-core*` | Agent to Monitor .NetCore applications on Linux|
+|`machine` | 64 Bit Machine agent ZIP bundle with JRE. Windows and Linux |
+|`db` | Agent to monitor Databases. Windows and Linux|
+|`dotnet-core` | Agent to Monitor .NetCore applications on Linux|
 
 <i> `*`  Coming soon...</i><br>
 
@@ -74,6 +73,7 @@ The `var/playbooks/controller.yaml` file is meant to contain constant variables 
 ```
 
 ### DotNet agent
+
 In the playbook below, the parameters are initialised directly in the yaml file rather than including them from `var/playbooks/controller.yaml`
 
 ```yml
@@ -148,8 +148,10 @@ In the playbook below, the parameters are initialised directly in the yaml file 
 |`controller_account_name` |  Account name | All |
 |`controller_port`   | The controller port   | All |
 |`enable_ssl`   | Indicate if SSL is enabled in the controller or not | All |
-|`db_agent_name` | Name assigned to the agent, typically used to allow one Database Agent  to act as a backup to another one | DB 
-|`install_jre`| Set this parameter to false if the JRE should not be installed together with the DB agent. <br><br>**Note:** To install java on windows, we automatically install lean_delivery.java role from galaxy to your control node | DB
+|`agent_log_level` | set the log level for the agent. valid options are : **info, trace, debug, warn, error, fatal, all** and **off**. This setting is applied to all the loggers named in the **`agent_loggers`** list| Machine, DB, Java
+|`agent_loggers` | List of loggers to set the log level on. The logger names vary from agent to agent. The default is set to ['com.singularity','com']. Update this variable with loggers specific to the target agent as required (refer to the log4j files in the <get-home>/conf/logging directory for more info). | Machine, DB, Java
+|`db_agent_name` | Name assigned to the agent, typically used to allow one Database Agent  to act as a backup to another one | DB
+|`install_jre`| Set this parameter to false if the JRE should not be installed together with the DB agent. <br><br>**Note:** to install java on windows, you need to run the <i>install-roles.yml</i> playbook first, which adds a galaxy role (lean_delivery.java) to you local playbook folder | DB
 |`services`| List of stand-alone services to be instrumented with the .NET agent| .NET
 |`monitor_all_IIS_apps`| Enable automatic instrumentation of all IIS applications | .NET
 |`runtime_reinstrumentation` | Runtime re-instrumentation works for .NET Framework 4.5.2 and greater. Note: Make sure you test this first in a non-production environment | .NET |
@@ -160,11 +162,10 @@ In the playbook below, the parameters are initialised directly in the yaml file 
 |`sim_enabled` | Enable server infrastructure monitoring | Machine
 |`controller_global_analytics_account_name`| This is the global account name of the controller | Machine
 
-
 ## Contributing 
 
 Here are a few ways you can pitch in:
-- Report bugs or issues
-- Fix bugs and submit pull requests.
-- Write, clarify or fix documentation.
-- Refactor code.
+  - Report bugs or issues
+  - Fix bugs and submit pull requests.
+  - Write, clarify or fix documentation.
+  - Refactor code.
