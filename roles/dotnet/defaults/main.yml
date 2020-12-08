@@ -1,0 +1,7 @@
+# DotNet Agent Win
+dotnet_agent_dest_folder_win: C:\\appdynamics\\dotnet-agent # '/' does not work with win_package due to msiexec.
+dotnet_agent_dest_file: dotNetAgentSetup64.msi
+
+# DotNet agent defaults
+monitor_all_IIS_apps: "false"
+runtime_reinstrumentation: "false"
