@@ -6,6 +6,12 @@ Refer to the [role variables](#Role-Variables) below for a description of availa
 
 We built this AppDynamics Ansible collection to support (immutable) infrastructure as code deployment methodology; this means that the collection will NOT preserve any manual configuration changes on the target servers. In other words, the collection will overwrite any local or pre-existing configuration with the variables that are defined in the playbook.  Therefore, we strongly recommend that you convert any custom agent configuration (this collection does not support) into an ansible role to ensure consistency of deployments and configurations across your estate. 
 
+## Demo 
+
+<i> Pro Tip: Right-Click the GIF and "Open in new Tab" or view on <a href="https://terminalizer.com/view/405023a64449">terminalizer</a> </i>
+
+![DEMO](https://github.com/Appdynamics/appdynamics-ansible/blob/develop/docs/ansible.gif)
+
 ## Requirements
 
 - Requires Ansible >=2.8.0
@@ -163,7 +169,3 @@ Here are a few ways you can pitch in:
   - Fix bugs and submit pull requests.
   - Write, clarify or fix documentation.
   - Refactor code.
-
-## Demo
-
-<a href="https://terminalizer.com/view/4f260da94446" target="_blank"><img src="https://user-images.githubusercontent.com/2548160/101169482-e7cb6d00-3634-11eb-904b-9236e5a3fda7.png" width="500"/></a>
