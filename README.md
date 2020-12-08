@@ -77,7 +77,9 @@ sample playbooks, or you can include them as shown below from the provided commo
 ```
 
 ### DotNet agent
+
 In the playbook below, the parameters are initialised directly in the yaml file rather than including them.
+
 ```yml
 ---
 - hosts: windows

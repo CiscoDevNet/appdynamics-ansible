@@ -50,7 +50,7 @@
          msg: "{{ result }}"
 
     # Keeping downloading and unziping seperate tasks
-    # as not all customers are allowd to download on the remote servers.
+    # as not all customers are allowed to download on the remote servers.
     - name: Unzip the Java agent file
       unarchive:
         #src: "{{ agent_download_url.stdout }}"
