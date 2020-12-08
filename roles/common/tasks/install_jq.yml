@@ -1,14 +1,25 @@
 ---
-- name: Install jq
-  package:
-    name: jq
-    state: present
+- name: Check if jq is installed
+  shell: command -v jq >/dev/null 2>&1
+  register: is_jq_exist
+  ignore_errors: yes
   delegate_to: localhost
+  changed_when: false
 
-- name: Install jq to ansible controller -  macOS
+- debug: var=is_jq_exist 
+
+- name: Install jq if it is not installed 
+  include_role:
+    name: appdynamics.agents.jq
+  when: 
+   - is_jq_exist.rc != 0 
+   - "ansible_os_family == 'RedHat' or  ansible_os_family == 'Debian'"
+
+- name: Install jq to ansible controller -  MacOS
+  become: true
   community.general.homebrew_tap:
     state: present
     name: 
-      - jq
+     - jq
   delegate_to: localhost
   when: "ansible_os_family == 'Darwin'"
