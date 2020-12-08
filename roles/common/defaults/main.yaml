@@ -22,4 +22,3 @@ machine_hierarchy: ""
 #controller defaults
 enable_ssl: "false"
 enable_proxy: "false"
-sim_enabled: "false"

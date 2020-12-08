@@ -7,3 +7,5 @@ temp_dir: /tmp
 machine_agent_dest_folder_linux: /opt/appdynamics/machine-agent
 machine_agent_monitor_folder_linux: "{{ machine_agent_dest_folder_linux }}/monitor/"
 
+# Server visibility
+sim_enabled: "false"
