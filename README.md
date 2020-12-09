@@ -1,12 +1,13 @@
+
 # AppDynamics Ansible Collection
 
-The AppDynamics Ansible Collection installs and configures AppDynamics agents and configurations. All supported agents are downloaded from the download portal unto the Ansible control node automatically –– this makes it easy to acquire and upgrade agents declaratively. 
+The AppDynamics Ansible Collection installs and configures AppDynamics agents and configurations. All supported agents are downloaded from the download portal unto the Ansible control node automatically –– this makes it easy to acquire and upgrade agents declaratively.
 
-Refer to the [role variables](#Role-Variables) below for a description of available deployment options. 
+Refer to the [role variables](#Role-Variables) below for a description of available deployment options.
 
-We built this AppDynamics Ansible collection to support (immutable) infrastructure as code deployment methodology; this means that the collection will NOT preserve any manual configuration changes on the target servers. In other words, the collection will overwrite any local or pre-existing configuration with the variables that are defined in the playbook.  Therefore, we strongly recommend that you convert any custom agent configuration (this collection does not support) into an ansible role to ensure consistency of deployments and configurations across your estate. 
+We built this AppDynamics Ansible collection to support (immutable) infrastructure as code deployment methodology; this means that the collection will NOT preserve any manual configuration changes on the target servers. In other words, the collection will overwrite any local or pre-existing configuration with the variables that are defined in the playbook.  Therefore, we strongly recommend that you convert any custom agent configuration (this collection does not support) into an ansible role to ensure consistency of deployments and configurations across your estate.
 
-## Demo 
+## Demo
 
 <i> Pro Tip: Right-Click the GIF and "Open in new Tab" or view on <a href="https://terminalizer.com/view/405023a64449">terminalizer</a> </i>
 
@@ -19,7 +20,7 @@ We built this AppDynamics Ansible collection to support (immutable) infrastructu
 - Windows OS requires >= Powershell 5.0
 - Network/firewall access to download AppDynamics agents from `https://download-files.appdynamics.com` and `https://download.appdynamics.com` on the Ansible control node  
 
-<b>Note:</b>  <a href="https://stedolan.github.io/jq/"> `jq` </a> is required on the Ansible control node. The collection automatcially  installs `jq` to the control node if it is not installed. 
+<b>Note:</b>  <a href="https://stedolan.github.io/jq/"> `jq` </a> is required on the Ansible control node. The collection automatcially  installs `jq` to the control node if it is not installed.
 
 ## Supported Agents
 
@@ -47,9 +48,9 @@ ansible-galaxy collection install appdynamics.agents
 
 ## Playbooks
 Example playbooks for each agent type is provided in the collections's `playbooks` folder.  
-You should either reference the example playbooks in the collection installation folder, or access the examples in the GitHub <a href="https://github.com/Appdynamics/appdynamics-ansible/tree/master/playbooks"> repository </a>. 
+You should either reference the example playbooks in the collection installation folder, or access the examples in the GitHub <a href="https://github.com/Appdynamics/appdynamics-ansible/tree/master/playbooks"> repository </a>.
 
-The `var/playbooks/controller.yaml` file is meant to contain constant variables such as `enable_ssl`, `controller_port`, etc. You may either include `var/playbooks/controller.yaml` in the playbook as shown in the java example below, or overwrite the variables in the playbooks - whatever works best for you. 
+The `var/playbooks/controller.yaml` file is meant to contain constant variables such as `enable_ssl`, `controller_port`, etc. You may either include `var/playbooks/controller.yaml` in the playbook as shown in the java example below, or overwrite the variables in the playbooks - whatever works best for you.
 
 ## Java agent
 
@@ -89,7 +90,7 @@ In the playbook below, the parameters are initialised directly in the yaml file 
         # Your controller details
         controller_account_access_key: "123456" # Please add this to your Vault
         controller_global_analytics_account_name: "customer1_GUID" # Please add this to your Vault
-        controller_host_name: "fieldlab.saas.appdynamics.com" 
+        controller_host_name: "fieldlab.saas.appdynamics.com"
         controller_account_name: "customer1" # Please add this to your Vault
         enable_ssl: "true"
         controller_port: "443"
@@ -161,8 +162,9 @@ In the playbook below, the parameters are initialised directly in the yaml file 
 |`enable_analytics_agent`   | Indicate if analytics agent should be enabled in the Machine agent | Machine |
 |`sim_enabled` | Enable server infrastructure monitoring | Machine
 |`controller_global_analytics_account_name`| This is the global account name of the controller | Machine
+| `analytics_agent_host` `analytics_agent_port` | Defines where the application agents sends its analytics events. The default is **localhost:9090** | Dotnet-Core
 
-## Contributing 
+## Contributing
 
 Here are a few ways you can pitch in:
   - Report bugs or issues
