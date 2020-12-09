@@ -9,7 +9,7 @@
   </logFileFolderAccessPermissions>
 <appdynamics-agent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <!-- Controller configuration -->
-  <controller host="{{ controller_host_name }}" port="{{ controller_port }}" ssl="{{ enable_ssl | lower }}">
+  <controller host="{{ controller_host_name }}" port="{{ controller_port }}" ssl="{{ appd_ssl_flag }}" enable_tls12="{{ appd_tls12_flag }}">
   <account name="{{ account_name }}" password="{{ account_access_key }}"/>
   <proxy enabled="{{ enable_proxy | lower }}" host="{{ proxy_host }}" port="{{ proxy_port }}"  />
     <!-- The application is required -->

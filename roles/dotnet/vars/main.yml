@@ -1,0 +1,2 @@
+appd_ssl_flag: "{{ 'true' if (enable_ssl | string | lower) in ('on', 'true', 'yes') else 'false' }}"
+appd_tls12_flag: "{{ 'true' if (enable_ssl | string | lower) in ('on', 'true', 'yes') else 'false' }}"
