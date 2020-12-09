@@ -26,8 +26,12 @@
         monitor_all_IIS_apps: "false"  # Enable automatic instrumentation of all IIS applications 
         runtime_reinstrumentation: "true" # Runtime reinstrumentation works for .NET Framework 4.5.2 and greater.
         # Define standalone executive applications to monitor
-        services:
-          - login.exe
-          - tmw.exe
-          - mso.exe
+        standalone_applications:
+          - tier: login
+            executable: login.exe
+          - tier: tmw
+            executable: tmw.exe
+            command-line: "-x"
+          - tier: mso
+            executable: mso.exe
 ```

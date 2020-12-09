@@ -62,7 +62,14 @@
       <standalone-application executable="{{ service }}">
         <tier name="{{ service }}"/>
       </standalone-application>
-     {% endfor %} 
+    {% endfor %}
+    {% if standalone_applications is defined and standalone_applications | length > 0 %}
+      {% for app in standalone_applications %}
+      <standalone-application executable="{{ app['executable'] }}"{% if 'command-line' in app %} command-line="{{ app['command-line'] }}"{% endif %}>
+        <tier name="{{ app['tier'] }}" />
+      </standalone-application>
+      {% endfor %}
+    {% endif %}
     </standalone-applications>
   </app-agents>
 </appdynamics-agent>

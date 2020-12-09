@@ -32,4 +32,13 @@ machine_agent:
   #   - cat: "Network Interface"
   #     name: "Bytes Received" 
   #     instance: "Local Area Connection"
-  
+
+# Define this list to monitor standalone .NET applications
+# Configuration mirrors properties described in the documentation:
+# See https://docs.appdynamics.com/display/PRO45/.NET+Agent+Configuration+Properties
+# standalone_applications:
+#   - executable: "MyWindowsService.exe"
+#     command-line: "-x"
+#     tier: "Windows Service Tier2"
+#   - executable: "MyStandaloneApp.exe"
+#     tier: "Standalone Tier2"

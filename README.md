@@ -100,10 +100,14 @@ In the playbook below, the parameters are initialised directly in the yaml file 
         monitor_all_IIS_apps: "false"  # Enable automatic instrumentation of all IIS applications
         runtime_reinstrumentation: "true" # Runtime reinstrumentation works for .NET Framework 4.5.2 and greater.
         # Define standalone executive applications to monitor
-        services:
-          - login.exe
-          - tmw.exe
-          - mso.exe
+        standalone_applications:
+          - tier: login
+            executable: login.exe
+          - tier: tmw
+            executable: tmw.exe
+            command-line: "-x"
+          - tier: mso
+            executable: mso.exe
 ```
 
 ### Machine agent
@@ -154,10 +158,10 @@ In the playbook below, the parameters are initialised directly in the yaml file 
 |`agent_loggers` | List of loggers to set the log level on. The logger names vary from agent to agent. The default is set to ['com.singularity','com']. Update this variable with loggers specific to the target agent as required (refer to the log4j files in the <get-home>/conf/logging directory for more info). | Machine, DB, Java
 |`db_agent_name` | Name assigned to the agent, typically used to allow one Database Agent  to act as a backup to another one | DB
 |`install_jre`| Set this parameter to false if the JRE should not be installed together with the DB agent. <br><br>**Note:** to install java on windows, you need to run the <i>install-roles.yml</i> playbook first, which adds a galaxy role (lean_delivery.java) to you local playbook folder | DB
-|`services`| List of stand-alone services to be instrumented with the .NET agent| .NET
 |`monitor_all_IIS_apps`| Enable automatic instrumentation of all IIS applications | .NET
 |`runtime_reinstrumentation` | Runtime re-instrumentation works for .NET Framework 4.5.2 and greater. Note: Make sure you test this first in a non-production environment | .NET |
 |`machine_agent` | YAML map that describes dotnet machine_agent settings. See roles/dotnet/defaults/main.yml for the example | .NET |
+|`standalone_applications` | List of standalone services to be instrumented with the .NET agent. See roles/dotnet/defaults/main.yml for the example | .NET |
 |`agent_dir_permission.user` `agent_dir_permission.group` | user and group file permissions to assign to the java-agent on linux. The user and group selected must already exist on the host. If the parameters are omitted the permissions will default to root | Java
 |`java_system_properties`| can be used to configure proxy setting for agents | DB, Machine
 |`analytics_event_endpoint`   | Your Events Service URL   | Machine |
