@@ -3,7 +3,7 @@
     path: "{{ dotnet_agent_dest_folder_win }}\\"
     state: directory
 
-- name: Download .NET agent MSI 
+- name: Download .NET agent MSI
   win_get_url:
      url: '{{ agent_download_url.stdout }}'
      dest: '{{ dotnet_agent_dest_folder_win }}\\{{ dotnet_agent_dest_file }}'
@@ -20,26 +20,26 @@
   register: is_agent_installed
 
 - name: Print .NET agent installation id
-  debug: 
+  debug:
    msg: "{{ is_agent_installed.stdout | regex_replace ('\\r\\n', '') }}"
 
 - name: Uninstall the .NET agent if it exists
-  win_package: 
+  win_package:
     product_id: "{{ is_agent_installed.stdout | regex_replace ('\\r\\n', '') }}"
     log_path: "{{ dotnet_agent_dest_folder_win }}/UninstallLogs.txt"
     state: absent
   when: is_agent_installed.stdout | length != 0
-  
-- name: Remove the conf file # Since it does not update during installation 
+
+- name: Remove the conf file # Since it does not update during installation
   win_file:
     path: "C:\\ProgramData\\AppDynamics\\DotNetAgent\\Config\\config.xml"
     state: absent
     force: true
   when: is_agent_installed.stdout | length != 0
-    
+
 - block:
   - name: Install .NET agent service
-    win_package: 
+    win_package:
       arguments: "AD_SetupFile={{ dotnet_agent_dest_folder_win }}\\controller-info.xml"
       path: "{{ dotnet_agent_dest_folder_win }}\\{{ dotnet_agent_dest_file }}"
       log_path: "{{ dotnet_agent_dest_folder_win }}/InstallLogs.txt"
@@ -61,8 +61,8 @@
 - name: Install .NET agent result
   debug:
     var: install_app_agent_result
-    
-- name: Clean up - remove {{ dotnet_agent_dest_file }} 
+
+- name: Clean up - remove {{ dotnet_agent_dest_file }}
   win_file:
     path: "{{ dotnet_agent_dest_folder_win }}\\{{ dotnet_agent_dest_file }}"
     state: absent
