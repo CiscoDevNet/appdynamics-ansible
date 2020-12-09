@@ -1,4 +1,0 @@
-- name: Restart .NET agent
-  win_service:
-    name: AppDynamics.Agent.Coordinator
-    state: restarted
