@@ -6,5 +6,5 @@
 - name: Set the unique host id
   include_tasks: set_hostid.yml
 
-- name: Install dotnet agent
+- name: Install .NET agent
   include_tasks: dotnet-agent.yml

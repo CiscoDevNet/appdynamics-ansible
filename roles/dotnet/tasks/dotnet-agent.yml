@@ -1,9 +1,9 @@
-- name: Ensures application agent dir exists
+- name: Ensure .NET agent temp dir exists
   win_file:
     path: "{{ dotnet_agent_dest_folder_win }}\\"
     state: directory
 
-- name: Download DotNet Agent MSI 
+- name: Download .NET agent MSI 
   win_get_url:
      url: '{{ agent_download_url.stdout }}'
      dest: '{{ dotnet_agent_dest_folder_win }}\\{{ dotnet_agent_dest_file }}'
@@ -15,14 +15,14 @@
     dest: "{{ dotnet_agent_dest_folder_win }}\\controller-info.xml"
     force: yes
 
-- name: "Check if DotNet agent is installed"
+- name: "Check if .NET agent is installed"
   win_shell: "get-wmiobject Win32_Product | Select-Object IdentifyingNumber, Name | Where{$_.Name -Match 'AppDynamics*'} | Select-Object -ExpandProperty IdentifyingNumber"
   register: is_agent_installed
 
 - debug: 
    msg: "{{ is_agent_installed.stdout | regex_replace ('\\r\\n', '') }}"
 
-- name: Unistall the agent if it exists
+- name: Uninstall the .NET agent if it exists
   win_package: 
     product_id: "{{ is_agent_installed.stdout | regex_replace ('\\r\\n', '') }}"
     log_path: "{{ dotnet_agent_dest_folder_win }}/UninstallLogs.txt"
@@ -36,15 +36,28 @@
     force: true
   when: is_agent_installed.stdout | length != 0
     
-- name: Install application agent service
+- name: Install .NET agent service
   win_package: 
     arguments: "AD_SetupFile={{ dotnet_agent_dest_folder_win }}\\controller-info.xml"
     path: "{{ dotnet_agent_dest_folder_win }}\\{{ dotnet_agent_dest_file }}"
     log_path: "{{ dotnet_agent_dest_folder_win }}/InstallLogs.txt"
     state: present
   register: install_app_agent_result
+  notify:
+     - Verify .NET agent restart
+     - Restart app listener
+  rescue:
+  - name: Get log Winston.txt
+    win_shell: 'Get-Content {{ DOTNETAGENTFOLDER }}\Logs\Winston.txt -Tail 30'
+    register: winston
+  - name: Fail
+    fail:
+      msg: |
+        Failed to install .NET Agent
+        {{ winston.stdout }}
 
-- name: Install service result
+
+- name: Install .NET agent result
   debug:
     var: install_app_agent_result
     
