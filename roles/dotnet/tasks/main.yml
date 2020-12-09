@@ -1,4 +1,7 @@
 ---
+- name: Check IIS is present
+  include_tasks: check_iis.yml
+  when: monitor_all_IIS_apps | bool
 
 - name: Set the unique host id
   include_tasks: set_hostid.yml
