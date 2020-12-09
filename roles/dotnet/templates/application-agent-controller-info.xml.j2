@@ -58,11 +58,6 @@
     <!-- For a standalone application or Windows service the executable name should be provided -->
     <!-- as the standalone-application executable attribute -->
     <standalone-applications>
-    {% for service in services %}
-      <standalone-application executable="{{ service }}">
-        <tier name="{{ service }}"/>
-      </standalone-application>
-    {% endfor %}
     {% if standalone_applications is defined and standalone_applications | length > 0 %}
       {% for app in standalone_applications %}
       <standalone-application executable="{{ app['executable'] }}"{% if 'command-line' in app %} command-line="{{ app['command-line'] }}"{% endif %}>
