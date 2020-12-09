@@ -1,4 +1,4 @@
-- name: Check if IIS exists
+- name: Check IIS is present
   ansible.windows.win_service_info:
     name: w3svc
   register: iis_service
