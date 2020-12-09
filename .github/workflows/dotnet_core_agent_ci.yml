@@ -1,15 +1,15 @@
-name: "appdynamics.agents.dotnet_core"
+name: "appdynamics.agents.dotnetcore"
 on:
   push:
     paths:
-      - 'roles/dotnet_core/**'
-      - 'molecule/dotnet_core/**'
+      - 'roles/dotnetcore/**'
+      - 'molecule/dotnetcore/**'
       - '.github/workflows/dotnet_core_agent_ci.yml'
       - 'roles/common/**'
   pull_request:
     paths:
-      - 'roles/dotnet_core/**'
-      - 'molecule/dotnet_core/**'
+      - 'roles/dotnetcore/**'
+      - 'molecule/dotnetcore/**'
       - '.github/workflows/dotnet_core_agent_ci.yml'
       - 'roles/common/**'
 jobs:
@@ -25,7 +25,7 @@ jobs:
           - centos8
           - debian10
         collection_role:
-          - dotnet_core
+          - dotnetcore
     steps:
       - name: Check out code
         uses: actions/checkout@v2
