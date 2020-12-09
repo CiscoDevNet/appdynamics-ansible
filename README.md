@@ -149,6 +149,7 @@ In the playbook below, the parameters are initialised directly in the yaml file 
 |`controller_account_name` |  Account name | All |
 |`controller_port`   | The controller port   | All |
 |`enable_ssl`   | Indicate if SSL is enabled in the controller or not | All |
+|`restart_app`| Set this flag `true` to restart services we are instrumenting (i.e. IIS or tomcat) | All
 |`agent_log_level` | set the log level for the agent. valid options are : **info, trace, debug, warn, error, fatal, all** and **off**. This setting is applied to all the loggers named in the **`agent_loggers`** list| Machine, DB, Java
 |`agent_loggers` | List of loggers to set the log level on. The logger names vary from agent to agent. The default is set to ['com.singularity','com']. Update this variable with loggers specific to the target agent as required (refer to the log4j files in the <get-home>/conf/logging directory for more info). | Machine, DB, Java
 |`db_agent_name` | Name assigned to the agent, typically used to allow one Database Agent  to act as a backup to another one | DB
