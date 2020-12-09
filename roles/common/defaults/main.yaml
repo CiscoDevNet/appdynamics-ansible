@@ -9,6 +9,10 @@ host_name: '{{ ansible_hostname }}' # computername/hostname of the target machin
 agent_log_level: "info"
 agent_loggers: ['com', 'com.singularity']
 
+# Analytics agnent location
+analytics_agent_host: localhost
+analytics_agent_port: 9090
+
 #windows_ma_finder_string
 win_ma_finder_string: machineagent-bundle-64bit-windows
 win_db_finder_string: db-agent-winx64

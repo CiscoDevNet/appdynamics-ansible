@@ -14,8 +14,8 @@
     "nodenameprefix": "{{ tier_name }}-node-"
   },
   "analytics": {
-    "host": "localhost",
-    "port": 9090
+    "host": "{{ analytics_agent_host }}",
+    "port": {{ analytics_agent_port }}
   },
   "feature": [
     "FULL_AGENT"

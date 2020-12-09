@@ -1,10 +1,10 @@
 ---
 # Controller parameters can be included into each playbook for test purposes
 # Your AppDynamics controller host, port account and access key
-controller_host_name: "lncontroller20103-2010-o8evv8rp.appd-cx.com"
+controller_host_name: "lncontroller20113-2011-bj3r9l8f.appd-cx.com"
 controller_port: "8090"
 controller_account_name: "customer1" # Please add this to your Vault
-controller_account_access_key: "2498dd59-d059-48c1-8ec2-8dc2f3efa112" # Please add this to your Vault
+controller_account_access_key: "c5c7e458-bd5d-4046-85ba-099868f11869" # Please add this to your Vault
 enable_ssl: "FALSE"
-controller_global_analytics_account_name: 'customer1_e52eb4e7-25d2-41c4-a5bc-9685502317f2' # Please add this to your Vault
-agent_log_level: "info" # info | trace | debug | warn | error | fatal | all | off  
+controller_global_analytics_account_name: 'customer1_3cd654eb-ecbd-4ff1-b879-b1ad53a2f2ab' # Please add this to your Vault
+agent_log_level: "info" # info | trace | debug | warn | error | fatal | all | off
