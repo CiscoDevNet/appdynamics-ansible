@@ -19,7 +19,7 @@
       group: "{{ appdynamics_user }}"
 
   - name: Check if Machine Agent is already installed
-    stat: 
+    stat:
       path: "{{ machine_agent_dest_folder_linux }}/machineagent.jar"
     register: previous_agent
 
@@ -137,7 +137,7 @@
       when: item.count >= 1
 
     - name: Copy the local file back to the host
-      become: true 
+      become: true
       copy:
          src: '{{ tempDir.path }}/log4j.xml'
          dest: '{{ machine_agent_dest_folder_linux }}/conf/logging/log4j.xml'

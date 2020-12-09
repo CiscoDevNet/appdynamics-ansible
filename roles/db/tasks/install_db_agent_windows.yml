@@ -18,7 +18,7 @@
   changed_when: false # this ensures this task is idempotent
 
 - name: Check if DB agent exists
-  win_stat: 
+  win_stat:
     path: "{{ db_agent_dest_folder_windows }}/db-agent.jar"
   register: previous_agent
 

@@ -12,7 +12,7 @@
   changed_when: false # this ensures this task is idempotent
 
 - name: Check if java agent exists
-  win_stat: 
+  win_stat:
     path: "{{ java_agent_dest_folder_win }}/javaagent.jar"
   register: previous_agent
 
