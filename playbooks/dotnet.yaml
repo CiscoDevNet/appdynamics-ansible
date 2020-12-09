@@ -38,4 +38,3 @@
           - tier: tmw
             executable: tmw.exe
             command-line: "-x"
-
