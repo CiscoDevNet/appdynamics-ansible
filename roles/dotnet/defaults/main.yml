@@ -41,6 +41,14 @@ machine_agent:
   #   - cat: "Network Interface"
   #     name: "Bytes Received" 
   #     instance: "Local Area Connection"
+  #instrumentation:
+  # - name: ThreadCorrelationThreadPoolCLR2Instrumentor
+  #   enabled: true
+  # - name: ThreadStartCLR2Instrumentor
+  #   enabled: true
+  # - name: ThreadStartCLR4Instrumentor
+  #   enabled: true
+
 
 # Define this list to monitor standalone .NET applications
 # Configuration mirrors properties described in the documentation:

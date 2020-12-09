@@ -38,6 +38,14 @@
       {% endfor %}
       </perf-counters>
   {% endif %}
+  {% if 'instrumentation' in machine_agent %}
+   <!--Enable thread correlation-->
+   <instrumentation>
+   {% for instrumentor in machine_agent['instrumentation'] %}
+     <instrumentor name="{{ instrumentor.name }}" enabled="{{ instrumentor.enabled | lower }}"/>
+   {% endfor %}
+   </instrumentation>
+  {% endif %}
   </machine-agent>
   {% else %}
   <machine-agent/>
