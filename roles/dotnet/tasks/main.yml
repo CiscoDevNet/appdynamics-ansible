@@ -1,9 +1,7 @@
 ---
-- name: Set the unique host id so that machines appear correctly for APM
-  win_environment:
-    state: present
-    level: machine
-    name: "APPDYNAMICS_AGENT_UNIQUE_HOST_ID"
-    value: "{{ ansible_hostname }}"
 
-- include_tasks: dotnet-agent.yml
+- name: Set the unique host id
+  include_tasks: set_hostid.yml
+
+- name: Install dotnet agent
+  include_tasks: dotnet-agent.yml
