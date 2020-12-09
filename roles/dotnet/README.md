@@ -12,7 +12,6 @@
         agent_type: dotnet
         # The applicationName
         application_name: 'IoT_API'
-        tier_name: 'login_service2' # ONLY required if agent type is not machine and db agent
         # Your controller details 
         controller_account_access_key: "b0248ceb-c954-4a37-97b5-207e90418cb4" # Please add this to your Vault
         controller_global_analytics_account_name: "customer1_e2f90621-ab21-4bf4-908c-872d213c7f64" # Please add this to your Vault
