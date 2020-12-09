@@ -5,7 +5,7 @@
       include_vars: vars/controller.yaml
 
     - include_role:
-        name: appdynamics.agents.dotnet_core
+        name: appdynamics.agents.dotnetcore
       vars:
         # Define Agent Type and Version
         agent_version: 20.9.0

@@ -8,7 +8,7 @@
       cache_valid_time: 3600
     when: ansible_os_family == 'Debian'
   roles:
-    - role: appdynamics.agents.dotnet_core
+    - role: appdynamics.agents.dotnetcore
   vars:
     # Define Agent Type and Version
     agent_version: 20.9.0

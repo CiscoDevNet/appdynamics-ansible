@@ -10,11 +10,11 @@
       changed_when: false # this ensures this task is idempotent
 
     - name: Check if the .NET core agent exists
-      stat: 
+      stat:
         path: "{{ dotnet_core_agent_dest_folder_linux }}/AppDynamics.Agent.netstandard.dll"
       register: previous_agent
 
-    - name: Backup old java agent to /tmp folder
+    - name: Backup old .NET core agent to /tmp folder
       archive:
         path: "{{ dotnet_core_agent_dest_folder_linux }}"
         dest: "/tmp/dotnet_core_agent.{{ ansible_date_time.iso8601 }}.zip"
@@ -41,7 +41,7 @@
       get_url:
         url: "{{ agent_download_url.stdout }}"
         dest: "{{ dotnet_core_agent_dest_folder_linux }}/{{ dotnet_core_agent_dest_file }}"
-        force: true # download a new file even if javaagent.zip exists.
+        force: true # download a new file even if agent.zip exists.
       changed_when: false
       register: result
       failed_when: result.status_code != 200
@@ -68,7 +68,7 @@
         mode: 0755
       changed_when: false
 
-    - name: Recursively change ownership of the Java agent directory
+    - name: Recursively change ownership of the .NET Core agent directory
       file:
         path: "{{ dotnet_core_agent_dest_folder_linux }}"
         recurse: yes
