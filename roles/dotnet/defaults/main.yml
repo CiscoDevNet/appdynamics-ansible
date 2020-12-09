@@ -5,3 +5,31 @@ dotnet_agent_dest_file: dotNetAgentSetup64.msi
 # DotNet agent defaults
 monitor_all_IIS_apps: "false"
 runtime_reinstrumentation: "false"
+
+# Machine agent settings. Elements supported metrics(perf-metrics,perf-counters)
+# TODO: add instrumentation(instrumentor)
+# Configuration mirrors properties described in the documentation:
+# See https://docs.appdynamics.com/display/PRO45/.NET+Agent+Configuration+Properties
+machine_agent:
+  machine-snapshot:
+    enabled: "true"
+    window-size: 600
+    samples-per-window: 60
+    violations-per-window: 6
+    max-percent-cpu: 80
+    max-queue-item-age: 100
+    periodic-collection: 60
+  # metrics:
+    # perf-metrics:
+    #   priority-level: 3
+    #   metrics:
+    #     - name: "Hardware Resources|CPU|%Busy"
+    #     - name: "ASP.NET Applications|Errors Unhandled During Execution"
+  # perf-counters:
+  #   - cat: "Network Interface"
+  #     name: "Bytes Sent" 
+  #     instance: "Local Area Connection"
+  #   - cat: "Network Interface"
+  #     name: "Bytes Received" 
+  #     instance: "Local Area Connection"
+  

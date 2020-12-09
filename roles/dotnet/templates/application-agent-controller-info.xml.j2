@@ -18,7 +18,31 @@
   </controller>
 
   <!-- Machine agent configuration -->
+  {% if machine_agent is defined %}
+  <machine-agent>
+  {% if 'machine-snapshot' in machine_agent %}
+      <machine-snapshot{% for key, value in machine_agent['machine-snapshot'].items() %} {{ key }}="{{ value }}"{% endfor %}/>
+  {% endif %}
+  {% if 'metrics' in machine_agent %}
+      <metrics>
+        <perf-metrics priority-level="{{ machine_agent['metrics']['perf-metrics']['priority-level'] }}">
+      {% for pm in machine_agent['metrics']['perf-metrics']['metrics'] %}
+          <perf-metric name="{{ pm.name }}" />
+      {% endfor %}
+        </perf-metrics>
+      </metrics>
+  {% endif %}
+  {% if 'perf-counters' in machine_agent %}
+      <perf-counters>
+      {% for pc in machine_agent['perf-counters'] %}
+          <perf-counter{% for key, value in pc.items() %} {{ key }}="{{ value }}"{% endfor %}/>
+      {% endfor %}
+      </perf-counters>
+  {% endif %}
+  </machine-agent>
+  {% else %}
   <machine-agent/>
+  {% endif %}
 
   <!-- App agents configuration -->
   <app-agents>
