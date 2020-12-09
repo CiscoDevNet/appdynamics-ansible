@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <winston>
-  <logFileDirectory directory="C:\ProgramData\AppDynamics\DotNetAgent\Logs" />
+  <logFileDirectory directory="{{ DOTNETAGENTFOLDER }}\Logs" />
   <logFileFolderAccessPermissions defaultAccountsEnabled="false">
-    <account name="NT AUTHORITY\LOCAL SERVICE" displayName="LOCAL SERVICE" />
-    <account name="NT AUTHORITY\SYSTEM" displayName="SYSTEM" />
-    <account name="NT AUTHORITY\NETWORK SERVICE" displayName="NETWORK SERVICE" />
-    <account name="IIS_IUSRS" displayName="ApplicationPool Identity" />
+  {% for account in logFileFolderAccessPermissions %}
+    <account name="{{ account.name }}" displayName="{{ account.displayName }}" />
+  {% endfor %}
   </logFileFolderAccessPermissions>
 <appdynamics-agent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <!-- Controller configuration -->

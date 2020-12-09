@@ -6,6 +6,15 @@ dotnet_agent_dest_file: dotNetAgentSetup64.msi
 monitor_all_IIS_apps: "false"
 runtime_reinstrumentation: "false"
 
+
+# The list of users who require write access to log directory of the agent (i.e. user who runs IIS)
+logFileFolderAccessPermissions:
+  - { name: 'NT AUTHORITY\LOCAL SERVICE', displayName: 'LOCAL SERVICE' }
+  - { name: 'NT AUTHORITY\SYSTEM', displayName: 'SYSTEM' }
+  - { name: 'NT AUTHORITY\NETWORK SERVICE', displayName: 'NETWORK SERVICE' }
+  - { name: 'BUILTIN\IIS_IUSRS', displayName: 'ApplicationPool Identity' }
+  # - { name: 'APNET\SYS_DSINEAL1', displayName: 'APNET\SYS_DSINEAL1' }
+
 # Machine agent settings. Elements supported metrics(perf-metrics,perf-counters)
 # TODO: add instrumentation(instrumentor)
 # Configuration mirrors properties described in the documentation:

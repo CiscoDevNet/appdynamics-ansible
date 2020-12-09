@@ -162,6 +162,7 @@ In the playbook below, the parameters are initialised directly in the yaml file 
 |`runtime_reinstrumentation` | Runtime re-instrumentation works for .NET Framework 4.5.2 and greater. Note: Make sure you test this first in a non-production environment | .NET |
 |`machine_agent` | YAML map that describes dotnet machine_agent settings. See roles/dotnet/defaults/main.yml for the example | .NET |
 |`standalone_applications` | List of standalone services to be instrumented with the .NET agent. See roles/dotnet/defaults/main.yml for the example | .NET |
+|`logFileFolderAccessPermissions` | The list of users who require write access to log directory of the agent (i.e. user who runs IIS). See roles/dotnet/defaults/main.yml for the example | .NET |
 |`agent_dir_permission.user` `agent_dir_permission.group` | user and group file permissions to assign to the java-agent on linux. The user and group selected must already exist on the host. If the parameters are omitted the permissions will default to root | Java
 |`java_system_properties`| can be used to configure proxy setting for agents | DB, Machine
 |`analytics_event_endpoint`   | Your Events Service URL   | Machine |
