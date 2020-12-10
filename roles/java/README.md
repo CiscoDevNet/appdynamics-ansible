@@ -21,5 +21,4 @@ Use `sun-java8` instead of `sun-java` as `agent_type` if the instrumented applic
         controller_account_name: "customer1" # Please add this to your Vault 
         enable_ssl: "false"
         controller_port: "8090"
-
 ```
