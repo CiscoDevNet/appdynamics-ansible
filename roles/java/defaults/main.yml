@@ -2,5 +2,18 @@
 java_agent_dest_folder_linux: /opt/appdynamics/java-agent
 java_agent_dest_file: java-agent.zip
 
+# User owner of the java agent directoies and
+# Group owner of the java agent directoies. Assign user running your application to this group
+# to give application write permissions to logs and conf directories
+# auto_create: 
+# Set to 'user' to create both functional user {{ agent_dir_permission.user }} and group {{ agent_dir_permission.group }} that will own java agent directories.
+# Set to 'group' to create only the group.
+# Set to 'none' if you already precreated the user or using root for user and group owner.
+# It is recommended to have at least 'group' for easy instrumentation.
+agent_dir_permission:
+  user: root
+  group: appdynamics
+  auto_create: group
+
 # Java Agent Windows
 java_agent_dest_folder_win: C:/appdynamics/java-agent

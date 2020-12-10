@@ -1,0 +1,45 @@
+- name: "Create functional user"
+  user:
+    name: "{{ agent_dir_permission.user }}"
+    group: "{{ agent_dir_permission.group }}"
+    state: present
+    system: yes
+    create_home: no
+    comment: AppDynamics functional user
+  when: 
+    - agent_dir_permission.auto_create is defined
+    - agent_dir_permission.auto_create == 'user'
+    - agent_dir_permission.user != 'root'
+
+- name: "Create functional user group"
+  group:
+    name: "{{ agent_dir_permission.group }}"
+    state: present
+    system: yes
+  when: 
+    - agent_dir_permission.auto_create is defined
+    - agent_dir_permission.auto_create == 'group'
+    - agent_dir_permission.group != 'root'
+
+- name: Recursively change ownership of the Java agent directory
+  file:
+    state: directory
+    path: "{{ java_agent_dest_folder_linux }}"
+    recurse: yes
+    owner: "{{ agent_dir_permission.user }}"
+    group: "{{ agent_dir_permission.group }}"
+  ignore_errors: yes
+  changed_when: false
+
+- name: "Ensure java agent log and conf dirs writable to {{ agent_dir_permission.group }} group"
+  file:
+    path: "{{ item }}"
+    recurse: yes
+    group: "{{ agent_dir_permission.group }}"
+    mode: '0775'
+  loop:
+    - "{{ java_agent_ver_folder }}/logs"
+    - "{{ java_agent_ver_folder }}/conf"
+    - "{{ java_agent_dest_folder_linux }}/conf"
+  changed_when: false
+  when: agent_dir_permission.group != 'root'

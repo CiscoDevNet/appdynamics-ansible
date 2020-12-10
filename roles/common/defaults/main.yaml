@@ -9,6 +9,13 @@ host_name: '{{ ansible_hostname }}' # computername/hostname of the target machin
 agent_log_level: "info"
 agent_loggers: ['com', 'com.singularity']
 
+#Linux Agent Commons
+agent_dir_permission:
+  user: root
+  group: root
+  auto_create: 'none'
+
+
 # Analytics agnent location
 analytics_agent_host: localhost
 analytics_agent_port: 9090

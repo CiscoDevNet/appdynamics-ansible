@@ -149,19 +149,8 @@
       when: agent_log_level|lower != 'info'
     # --------------------------------------------------------------------------
 
-    - name: Recursively change ownership of the Java agent directory
-      file:
-        path: "{{ java_agent_dest_folder_linux }}"
-        recurse: yes
-        owner: "{{ agent_dir_permission.user | default('root') }}"
-        group: "{{ agent_dir_permission.group | default('root') }}"
-      when:
-        - agent_dir_permission.user is defined
-        - agent_dir_permission.group is defined
-        - agent_dir_permission.user | length != 0
-        - agent_dir_permission.group | length != 0
-      ignore_errors: yes
-      changed_when: false
+    - name: Ensure java agent directory permissions
+      include_tasks: dir-permissions-linux.yml
 
     - name: Clean up - remove {{ java_agent_dest_file }}
       file:

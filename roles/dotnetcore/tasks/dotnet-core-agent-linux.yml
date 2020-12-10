@@ -72,13 +72,8 @@
       file:
         path: "{{ dotnet_core_agent_dest_folder_linux }}"
         recurse: yes
-        owner: "{{ agent_dir_permission.user | default('root') }}"
-        group: "{{ agent_dir_permission.group | default('root') }}"
-      when:
-        - agent_dir_permission.user is defined
-        - agent_dir_permission.group is defined
-        - agent_dir_permission.user | length != 0
-        - agent_dir_permission.group | length != 0
+        owner: "{{ agent_dir_permission.user }}"
+        group: "{{ agent_dir_permission.group }}"
       ignore_errors: yes
       changed_when: false
 

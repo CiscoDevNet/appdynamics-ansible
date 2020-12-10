@@ -160,10 +160,11 @@ In the playbook below, the parameters are initialised directly in the yaml file 
 |`install_jre`| Set this parameter to false if the JRE should not be installed together with the DB agent. <br><br>**Note:** to install java on windows, you need to run the <i>install-roles.yml</i> playbook first, which adds a galaxy role (lean_delivery.java) to you local playbook folder | DB
 |`monitor_all_IIS_apps`| Enable automatic instrumentation of all IIS applications | .NET
 |`runtime_reinstrumentation` | Runtime re-instrumentation works for .NET Framework 4.5.2 and greater. Note: Make sure you test this first in a non-production environment | .NET |
+|`agent_dir_permission.user` `agent_dir_permission.group` | user and group owners of agent directories on linux. The user and group must already exist on the host unless `agent_dir_permission.auto_create` is set. For java, default user is root with group appdynamics | Java, .NET-Core
+|`agent_dir_permission.auto_create` | Set to 'user' to create functional user required for `agent_dir_permission.user` or set to 'group' to create only group defined in `agent_dir_permission.group`. Default is 'group' for java role. It recommended to keep it to 'group' | Java
 |`dotnet_machine_agent` | YAML map that describes dotnet machine agent settings. See [roles/dotnet/defaults/main.yml](roles/dotnet/defaults/main.yml) for the example | .NET |
 |`standalone_applications` | List of standalone services to be instrumented with the .NET agent. See [roles/dotnet/defaults/main.yml](roles/dotnet/defaults/main.yml) for the example | .NET |
 |`logFileFolderAccessPermissions` | The list of users who require write access to log directory of the agent (i.e. user who runs IIS). See [roles/dotnet/defaults/main.yml](roles/dotnet/defaults/main.yml) for the example | .NET |
-|`agent_dir_permission.user` `agent_dir_permission.group` | user and group file permissions to assign to the java-agent on linux. The user and group selected must already exist on the host. If the parameters are omitted the permissions will default to root | Java
 |`java_system_properties`| can be used to configure proxy setting for agents | DB, Machine
 |`analytics_event_endpoint`   | Your Events Service URL   | Machine |
 |`enable_analytics_agent`   | Indicate if analytics agent should be enabled in the Machine agent | Machine |
@@ -173,6 +174,14 @@ In the playbook below, the parameters are initialised directly in the yaml file 
 | `enable_proxy` | Set to "true" to apply agent proxy settings to the agent config. When set, the `proxy_host` and `proxy_port` variables also need to be assigned | .NET and .NET-Core
 |`proxy_host`<br/> `proxy_port`| Host name/IP address and port number of the proxy to route agent data through. |.NET and .NET-Core
 | `enable_proxy_authentication` | Set to "true" to apply proxy authentication details using `proxy_user` and `proxy_password` parameters. | .NET&#8209;Core
+
+
+## agent_dir_permission.group convention usage
+
+In order to work properly, an instrumented application requires write permissions to agent's logs and conf directories.
+To allow multiple apps using the same java agent without overwriting the permissions - java agent ansible role automatically creates group `agent_dir_permission.group` which is `appdynamics` by default. This group is provided with write permissions to logs and conf sub-directories.
+
+Once this group is set, it would be sufficient to just add the user running an instrumented app to `agent_dir_permission.group`.
 
 ## Contributing
 
