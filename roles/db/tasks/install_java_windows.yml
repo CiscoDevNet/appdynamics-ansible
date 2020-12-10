@@ -3,6 +3,6 @@
   delegate_to: localhost
   command: "ansible-galaxy install lean_delivery.java"
   changed_when: false
-  
+
 - include_role:
     name: lean_delivery.java

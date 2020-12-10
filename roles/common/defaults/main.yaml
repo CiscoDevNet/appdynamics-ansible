@@ -24,8 +24,9 @@ ma_agent_dest_file: machine-agent.zip
 machine_hierarchy: ""
 
 #controller defaults
-enable_ssl: "false"
-enable_proxy: "false"
+enable_ssl: false
+enable_proxy: false
+enable_proxy_authentication: false
 
 #restart_app flag - Set this flag true to automatically restart service
 restart_app: false

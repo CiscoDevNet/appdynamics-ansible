@@ -11,7 +11,7 @@
     state: directory
 
 - name: Check if Machine Agent is already installed
-  win_stat: 
+  win_stat:
     path: "{{ machine_agent_dest_folder_win }}/InstallService.vbs"
   register: previous_agent
 

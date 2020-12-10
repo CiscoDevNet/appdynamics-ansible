@@ -170,6 +170,9 @@ In the playbook below, the parameters are initialised directly in the yaml file 
 |`sim_enabled` | Enable server infrastructure monitoring | Machine
 |`controller_global_analytics_account_name`| This is the global account name of the controller | Machine
 | `analytics_agent_host` `analytics_agent_port` | Defines where the application agents sends its analytics events. The default is **localhost:9090** | Dotnet-Core
+| `enable_proxy` | Set to "true" to apply agent proxy settings to the agent config. When set, the `proxy_host` and `proxy_port` variables also need to be assigned | .NET and .NET-Core
+|`proxy_host`<br/> `proxy_port`| Host name/IP address and port number of the proxy to route agent data through. |.NET and .NET-Core
+| `enable_proxy_authentication` | Set to "true" to apply proxy authentication details using `proxy_user` and `proxy_password` parameters. | .NET&#8209;Core
 
 ## Contributing
 

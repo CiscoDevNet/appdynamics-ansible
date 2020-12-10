@@ -18,7 +18,7 @@
     msg: 'An application_name must be provided'
   when:  agent_type is not search("machine|db") # Do not enforce application_name if agent_type is machine or db
 
-- name: Validate tier_name 
+- name: Validate tier_name
   assert:
     that:  tier_name is defined
     msg: 'A tier name must be provided'
@@ -57,13 +57,25 @@
   when: enable_analytics_agent | bool
 
 - name: Validate Proxy Host configurations
-  assert: 
+  assert:
     that:  proxy_host is defined
     msg:  'A proxy_host is required if enable_proxy is true'
   when:  enable_proxy | bool
 
-- name: Validate Proxy Port configurations 
-  assert: 
+- name: Validate Proxy Port configurations
+  assert:
     that:  proxy_port is defined
     msg:  'A proxy_port is required if enable_proxy is true'
   when:  enable_proxy | bool
+
+- name: Validate Proxy Authentication user configuration
+  assert:
+    that: proxy_user is defined
+    msg: 'A proxy_user is required if enable_proxy_authentication is true'
+  when: enable_proxy_authentication | bool
+
+- name: Validate Proxy Authentication password configuration
+  assert:
+    that: proxy_user is defined
+    msg: 'A proxy_password is required if enable_proxy_authentication is true'
+  when: enable_proxy_authentication | bool
