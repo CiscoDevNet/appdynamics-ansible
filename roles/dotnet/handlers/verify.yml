@@ -2,7 +2,7 @@
   win_wait_for_process:
     process_name_pattern: 'AppDynamics.Coordinator'
     state: present
-    timeout: 60
+    timeout: "{{ dotnet_agent_wait_timeout }}"
 
 - name: Tail .NET agent logs
   win_shell: 'Get-Content {{ DOTNETAGENTFOLDER }}\Logs\AgentLog.txt -Tail 30'
