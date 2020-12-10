@@ -19,31 +19,31 @@
   </controller>
 
   <!-- Machine agent configuration -->
-  {% if machine_agent is defined %}
+  {% if dotnet_machine_agent is defined %}
   <machine-agent>
-  {% if 'machine-snapshot' in machine_agent %}
-      <machine-snapshot{% for key, value in machine_agent['machine-snapshot'].items() %} {{ key }}="{{ value }}"{% endfor %}/>
+  {% if 'machine-snapshot' in dotnet_machine_agent %}
+      <machine-snapshot{% for key, value in dotnet_machine_agent['machine-snapshot'].items() %} {{ key }}="{{ value }}"{% endfor %}/>
   {% endif %}
-  {% if 'metrics' in machine_agent %}
+  {% if 'metrics' in dotnet_machine_agent %}
       <metrics>
-        <perf-metrics priority-level="{{ machine_agent['metrics']['perf-metrics']['priority-level'] }}">
-      {% for pm in machine_agent['metrics']['perf-metrics']['metrics'] %}
+        <perf-metrics priority-level="{{ dotnet_machine_agent['metrics']['perf-metrics']['priority-level'] }}">
+      {% for pm in dotnet_machine_agent['metrics']['perf-metrics']['metrics'] %}
           <perf-metric name="{{ pm.name }}" />
       {% endfor %}
         </perf-metrics>
       </metrics>
   {% endif %}
-  {% if 'perf-counters' in machine_agent %}
+  {% if 'perf-counters' in dotnet_machine_agent %}
       <perf-counters>
-      {% for pc in machine_agent['perf-counters'] %}
+      {% for pc in dotnet_machine_agent['perf-counters'] %}
           <perf-counter{% for key, value in pc.items() %} {{ key }}="{{ value }}"{% endfor %}/>
       {% endfor %}
       </perf-counters>
   {% endif %}
-  {% if 'instrumentation' in machine_agent %}
+  {% if 'instrumentation' in dotnet_machine_agent %}
    <!--Enable thread correlation-->
    <instrumentation>
-   {% for instrumentor in machine_agent['instrumentation'] %}
+   {% for instrumentor in dotnet_machine_agent['instrumentation'] %}
      <instrumentor name="{{ instrumentor.name }}" enabled="{{ instrumentor.enabled | lower }}"/>
    {% endfor %}
    </instrumentation>
