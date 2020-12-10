@@ -1,0 +1,3 @@
+- include: verify_handler.yml
+- include: restart_iis.yml
+- include: restart_standalone.yml

@@ -1,9 +1,10 @@
 ---
-- name: Set the unique host id so that machines appear correctly for APM
-  win_environment:
-    state: present
-    level: machine
-    name: "APPDYNAMICS_AGENT_UNIQUE_HOST_ID"
-    value: "{{ ansible_hostname }}"
+- name: Check IIS is present
+  include_tasks: check_iis.yml
+  when: monitor_all_IIS_apps | bool
 
-- include_tasks: dotnet-agent.yml
+- name: Set the unique host id
+  include_tasks: set_hostid.yml
+
+- name: Install .NET agent
+  include_tasks: dotnet-agent.yml

@@ -1,0 +1,6 @@
+- name: Restart standalone applications notice
+  debug:
+    msg: "Please restart {{ item.executable }}"
+  listen: Restart app listener
+  loop: "{{ standalone_applications }}"
+  when: standalone_applications is defined and standalone_applications |length > 0
