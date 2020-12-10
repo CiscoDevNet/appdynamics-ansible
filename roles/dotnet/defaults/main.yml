@@ -19,7 +19,7 @@ logFileFolderAccessPermissions:
 # TODO: add instrumentation(instrumentor)
 # Configuration mirrors properties described in the documentation:
 # See https://docs.appdynamics.com/display/PRO45/.NET+Agent+Configuration+Properties
-machine_agent:
+dotnet_machine_agent:
   machine-snapshot:
     enabled: "true"
     window-size: 600
