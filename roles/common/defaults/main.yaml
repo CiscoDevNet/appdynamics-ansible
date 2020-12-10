@@ -24,5 +24,6 @@ ma_agent_dest_file: machine-agent.zip
 machine_hierarchy: ""
 
 #controller defaults
-enable_ssl: "false"
-enable_proxy: "false"
+enable_ssl: false
+enable_proxy: false
+enable_proxy_authentication: false
