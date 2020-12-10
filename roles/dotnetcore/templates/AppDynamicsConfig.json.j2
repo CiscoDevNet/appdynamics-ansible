@@ -4,7 +4,17 @@
     "port": {{ controller_port }},
     "account": "{{ account_name }}",
     "password": "{{ account_access_key }}",
-    "ssl": {{ enable_ssl | lower }}
+    "ssl": {{ enable_ssl | lower }}{% if enable_proxy | bool %},
+    "proxy" : {
+        "host": "{{ proxy_host }}",
+        "port": {{ proxy_port }}{% if enable_proxy_authentication | bool %},
+        "authentication": {
+              "username": "{{ proxy_user }}",
+              "password": "{{ proxy_password }}"
+         }
+{% endif %}
+    }
+{% endif %}
   },
   "application": {
     "name": "{{ application_name }}",

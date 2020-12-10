@@ -67,3 +67,15 @@
     that:  proxy_port is defined
     msg:  'A proxy_port is required if enable_proxy is true'
   when:  enable_proxy | bool
+
+- name: Validate Proxy Authentication user configuration
+  assert:
+    that: proxy_user is defined
+    msg: 'A proxy_user is required if enable_proxy_authentication is true'
+  when: enable_proxy_authentication | bool
+
+- name: Validate Proxy Authentication password configuration
+  assert:
+    that: proxy_user is defined
+    msg: 'A proxy_password is required if enable_proxy_authentication is true'
+  when: enable_proxy_authentication | bool
