@@ -47,7 +47,7 @@ _usage() {
   echo "Usage: $ME [OPTIONS...]"
   echo "  -h, --help, help                     Print this help"
   echo
-  echo "  download AGENT                       Agent to download (choices: sun-java | java | sun-java8 | java8 | ibm-java | machine | machine-win | dotnet | dotnet-core | db | db-win)"
+  echo "  download AGENT                       Agent to download (choices: sun-java | java | sun-java8 | java8 | ibm-java | machine | machine-win | dotnet | dotnet-core | dotnetcore | db | db-win)"
   echo "    -v, --version  version             Version number for the supplied agent"
   echo "    -d, --dryrun                       Rturns only the download URL if specificed, it is recommended to use this arg for provisioning tools such as ansible, chef, etc "
   echo
@@ -161,7 +161,7 @@ download_options() {
     _finder="dotNetAgentSetup64"
     _os_platform="windows"
     
-  elif [ "$1" = "dotnet-core" ]; then
+  elif [ "$1" = "dotnet-core" ] || [ "$1" = "dotnetcore" ]; then
     _app_agent="dotnet,dotnet-core"
     _finder="AppDynamics-DotNetCore-linux-x64"
     _os_platform="linux"
@@ -294,7 +294,7 @@ download() {
       shift
       dryrun="true"
       ;;
-    sun-java | java | sun-java8 | java8 | ibm-java | machine | machine-win | dotnet | dotnet-core | db | db-win)
+    sun-java | java | sun-java8 | java8 | ibm-java | machine | machine-win | dotnet | dotnet-core | dotnetcore | db | db-win)
       [ -n "${agent:-}" ] && exit_bad_args "multiple agents must be downloaded in separate command invocations"
       readonly agent="${1:-}"
       ;;
