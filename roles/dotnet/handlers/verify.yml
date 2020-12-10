@@ -5,7 +5,7 @@
     timeout: 60
 
 - name: Tail .NET agent logs
-  win_shell: 'powershell "Get-Content {{ DOTNETAGENTFOLDER }}\Logs\AgentLog.txt -Tail 30"'
+  win_shell: 'Get-Content {{ DOTNETAGENTFOLDER }}\Logs\AgentLog.txt -Tail 30'
   register: agent_log
   failed_when: ( agent_log.stdout | regex_search('Failed to initialize coordinator service|There is an error in XML document')) or agent_log.rc != 0
   #Consider as Smoke test, since it only checks last 30 lines
