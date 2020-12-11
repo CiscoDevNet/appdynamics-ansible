@@ -28,26 +28,26 @@ dotnet_machine_agent:
     max-percent-cpu: 80
     max-queue-item-age: 100
     periodic-collection: 60
-  # metrics:
-    # perf-metrics:
-    #   priority-level: 3
-    #   metrics:
-    #     - name: "Hardware Resources|CPU|%Busy"
-    #     - name: "ASP.NET Applications|Errors Unhandled During Execution"
-  # perf-counters:
-  #   - cat: "Network Interface"
-  #     name: "Bytes Sent" 
-  #     instance: "Local Area Connection"
-  #   - cat: "Network Interface"
-  #     name: "Bytes Received" 
-  #     instance: "Local Area Connection"
-  #instrumentation:
-  # - name: ThreadCorrelationThreadPoolCLR2Instrumentor
-  #   enabled: true
-  # - name: ThreadStartCLR2Instrumentor
-  #   enabled: true
-  # - name: ThreadStartCLR4Instrumentor
-  #   enabled: true
+# metrics:
+#   perf-metrics:
+#     priority-level: 3
+#     metrics:
+#       - name: "Hardware Resources|CPU|%Busy"
+#       - name: "ASP.NET Applications|Errors Unhandled During Execution"
+# perf-counters:
+#   - cat: "Network Interface"
+#     name: "Bytes Sent" 
+#     instance: "Local Area Connection"
+#   - cat: "Network Interface"
+#     name: "Bytes Received" 
+#     instance: "Local Area Connection"
+# instrumentation:
+# - name: ThreadCorrelationThreadPoolCLR2Instrumentor
+#   enabled: true
+# - name: ThreadStartCLR2Instrumentor
+#   enabled: true
+# - name: ThreadStartCLR4Instrumentor
+#   enabled: true
 
 
 # Define this list to monitor standalone .NET applications
