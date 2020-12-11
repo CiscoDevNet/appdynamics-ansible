@@ -18,7 +18,7 @@ logFileFolderAccessPermissions:
 # Machine agent settings. Elements supported metrics(perf-metrics,perf-counters)
 # TODO: add instrumentation(instrumentor)
 # Configuration mirrors properties described in the documentation:
-# See https://docs.appdynamics.com/display/PRO45/.NET+Agent+Configuration+Properties
+# See https://docs.appdynamics.com/display/latest/.NET+Agent+Configuration+Properties
 dotnet_machine_agent:
   machine-snapshot:
     enabled: "true"
@@ -52,7 +52,7 @@ dotnet_machine_agent:
 
 # Define this list to monitor standalone .NET applications
 # Configuration mirrors properties described in the documentation:
-# See https://docs.appdynamics.com/display/PRO45/.NET+Agent+Configuration+Properties
+# See https://docs.appdynamics.com/display/latest/.NET+Agent+Configuration+Properties
 # standalone_applications:
 #   - executable: "MyWindowsService.exe"
 #     command-line: "-x"
