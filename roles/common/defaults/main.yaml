@@ -5,7 +5,11 @@ appdynamics_user: appdynamics
 java_system_properties: ""
 host_name: '{{ ansible_hostname }}' # computername/hostname of the target machine
 
-#Agent Log level
+# Indicate that we need to initialize the agent variables. Some roles (like logger)
+# don't require all agent vars to be initialized
+init_and_validate_agent_variables: true 
+
+# Agent Log level
 agent_log_level: "info"
 agent_loggers: ['com', 'com.singularity']
 

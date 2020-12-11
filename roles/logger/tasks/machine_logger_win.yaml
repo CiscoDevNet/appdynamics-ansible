@@ -1,0 +1,17 @@
+---
+# Check if we need to apply the logger settings. The check role
+# updates the {{ apply_logger_settings }} variable
+- include_tasks: check.yaml
+  vars:
+    logger_agent_dest_folder_linux: "{{ machine_agent_dest_folder_win }}"
+
+# Apply log setting to Windows hosts
+- name: Set the log level for the machine agent on Windows
+  win_xml:
+    path: '{{ machine_agent_dest_folder_win }}/conf/logging/log4j.xml'
+    xpath: //Logger[@name='{{ item }}']
+    attribute: level
+    fragment: "{{ agent_log_level }}"
+    type: attribute
+  loop: "{{ agent_loggers }}"
+  when: apply_logger_settings

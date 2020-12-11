@@ -1,4 +1,5 @@
 
+
 # AppDynamics Ansible Collection
 
 The AppDynamics Ansible Collection installs and configures AppDynamics agents and configurations. All supported agents are downloaded from the download portal unto the Ansible control node automatically –– this makes it easy to acquire and upgrade agents declaratively.
@@ -134,10 +135,32 @@ In the playbook below, the parameters are initialised directly in the yaml file 
         # Can be used to configure the proxy for the agent
         java_system_properties: "-Dappdynamics.http.proxyHost=10.0.4.2 -Dappdynamics.http.proxyPort=9090" # mind the space between each property
 ```
+### Logger
+The logger role allows you to change the agent log level for already deployed agents (either one agent type at a time or multiple types, depending on the value of the `agents_to_set_loggers_for` list.
 
+The `init_and_validate_agent_variables` should be  **false** when using the logger role after the agents are already deployed, to skip unnecessary common role processing.
+
+```yaml
+- hosts: all
+  tasks:
+      - include_role:
+          name: appdynamics.agents.logger
+        vars:
+          init_and_validate_agent_variables: false # skip agent type variable init and validation
+          agents_to_set_loggers_for: ['db', 'java', 'machine']
+          agent_log_level: "info"
+          agent_loggers: ['com.appdynamics', 'com', 'com.singularity', 'com.singularity.BusinessTransactions', 'com.singularity.ee.agent.dbagent.collector.server.connection.wmi.NativeClient']
+
+          db_agent_dest_folder_linux: /opt/appdynamics/db-agent
+          db_agent_dest_folder_windows: C:/appdynamics/db-agent
+          java_agent_dest_folder_linux: /opt/appdynamics/java-agent
+          java_agent_dest_folder_win: C:/appdynamics/java-agent
+          machine_agent_dest_folder_win: C:/appdynamics/machine-agent
+          machine_agent_dest_folder_linux: /opt/appdynamics/machine-agent
+```
 ## Role Variables
 
-|Variable<img width="200"/>     | Description | Agent Type |
+|Variable<img width="200"/>     | Description | Agent Type/Roles |
 |--|--|--|
 |`agent_type`   | AppDynamics agent type.  java, machine, etc  | All |
 |`agent_version`  | AppDynamics agent version. AppDynamics uses calendar versioning. For example, if a Java agent is released in November of 2020, its version will begin with 20.11.0. When the Java agent team releases again in the month of November, the new agent will be 20.11.1  | All |
@@ -149,8 +172,10 @@ In the playbook below, the parameters are initialised directly in the yaml file 
 |`controller_account_name` |  Account name | All |
 |`controller_port`   | The controller port   | All |
 |`enable_ssl`   | Indicate if SSL is enabled in the controller or not | All |
-|`agent_log_level` | set the log level for the agent. valid options are : **info, trace, debug, warn, error, fatal, all** and **off**. This setting is applied to all the loggers named in the **`agent_loggers`** list| Machine, DB, Java
-|`agent_loggers` | List of loggers to set the log level on. The logger names vary from agent to agent. The default is set to ['com.singularity','com']. Update this variable with loggers specific to the target agent as required (refer to the log4j files in the <get-home>/conf/logging directory for more info). | Machine, DB, Java
+|`agent_log_level` | set the log level for the agent. valid options are : **info, trace, debug, warn, error, fatal, all** and **off**. This setting is applied to all the loggers named in the **`agent_loggers`** list| Machine, DB, Java. Logger
+|`agent_loggers` | List of loggers to set the log level on. The logger names vary from agent to agent. The default is set to ['com.singularity','com']. Update this variable with loggers specific to the target agent as required (refer to the log4j files in the <agent-home>/conf/logging directory for more info). | Machine, DB, Java, Logger
+|`init_and_validate`<br/>`_agent_variables`| This variable controls whether the Common role initialisation (which sets download urls and controller parameters) needs to be run. When using the logger role in isolations (that is not as part of agent installation) the value should be **false**|Machine, DB, Java, Logger
+|`agents_to_set_loggers_for`| List of agents to apply the log-level changes to. for example to set the log level of all deployed agents to say "info". initialise the variable to **['db', 'java', 'machine']**. In contrast, to affect only the java agent, remove the unwanted entries from the list. **Note**: This variable should not be set when using the logger role as part of agent deployments. The `agent_type` variable will be used to determine how the log-level needs to be adjusted during the installation |Machine, DB, Java, Logger
 |`db_agent_name` | Name assigned to the agent, typically used to allow one Database Agent  to act as a backup to another one | DB
 |`install_jre`| Set this parameter to false if the JRE should not be installed together with the DB agent. <br><br>**Note:** to install java on windows, you need to run the <i>install-roles.yml</i> playbook first, which adds a galaxy role (lean_delivery.java) to you local playbook folder | DB
 |`services`| List of stand-alone services to be instrumented with the .NET agent| .NET
@@ -161,8 +186,8 @@ In the playbook below, the parameters are initialised directly in the yaml file 
 |`analytics_event_endpoint`   | Your Events Service URL   | Machine |
 |`enable_analytics_agent`   | Indicate if analytics agent should be enabled in the Machine agent | Machine |
 |`sim_enabled` | Enable server infrastructure monitoring | Machine
-|`controller_global_analytics_account_name`| This is the global account name of the controller | Machine
-| `analytics_agent_host` `analytics_agent_port` | Defines where the application agents sends its analytics events. The default is **localhost:9090** | Dotnet-Core
+|`controller_global_analytics`<br/>`_account_name`| This is the global account name of the controller | Machine
+| `analytics_agent_host` `analytics_agent_port` | Defines where the application agents sends its analytics events. The default is **localhost:9090** | .NET-Core
 | `enable_proxy` | Set to "true" to apply agent proxy settings to the agent config. When set, the `proxy_host` and `proxy_port` variables also need to be assigned | .NET and .NET-Core
 |`proxy_host`<br/> `proxy_port`| Host name/IP address and port number of the proxy to route agent data through. |.NET and .NET-Core
 | `enable_proxy_authentication` | Set to "true" to apply proxy authentication details using `proxy_user` and `proxy_password` parameters. | .NET&#8209;Core

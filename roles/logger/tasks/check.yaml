@@ -1,0 +1,32 @@
+---
+  # Check to see if the agent directory is present. If not, check is the
+  # ignore flag is set, and update the {{apply_logger_settings}}
+  # variable to indicate how to proceed.
+  - debug:
+      msg: Check if logger settings need to be applied when the agent in not installed
+
+  - name: Check if the Agent is present on the host.
+    stat:
+      path: "{{ logger_agent_dest_folder_linux }}"
+    register: agent_folder
+
+  # Let the user know if we are skipping this host
+  - debug:
+      msg: "Agent folder {{ logger_agent_dest_folder_linux }} was not found! Skipping this change"
+    when: >
+      (agent_folder.stat.exists == false) and
+      (logger_ignore_missing is defined) and
+      (logger_ignore_missing == true)
+
+  # Set the flag to indicate how the role processing should proceed
+  - name:
+    set_fact:
+      apply_logger_settings: false
+
+  - name:
+    set_fact:
+      apply_logger_settings: true
+    when: >
+        (agent_folder.stat.exists == true) or
+        (logger_ignore_missing is not defined) or
+        (logger_ignore_missing is defined and logger_ignore_missing == false)
