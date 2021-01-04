@@ -8,8 +8,7 @@
       become: true
       yum:
         update_cache: yes
-        name:
-        - jq
+        name: jq
         state: present
       when: "ansible_os_family == 'RedHat' or  ansible_os_family == 'Debian'"
 
@@ -17,11 +16,12 @@
       become: true
       apt:
         update_cache: yes
-        name:
-        - jq
+        name: jq
         state: present
       when: "ansible_os_family == 'RedHat' or  ansible_os_family == 'Debian'"
 
     - name: Install jq to ansible controller -  MacOS
-      command: "brew install jq"
+      homebrew: 
+        name: jq
+        state: present
       when: "ansible_os_family == 'Darwin'"
