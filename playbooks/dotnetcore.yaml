@@ -9,7 +9,7 @@
       vars:
         # Define Agent Type and Version
         agent_version: 20.9.0
-        agent_type: dotnet-core
+        agent_type: dotnetcore
 
         # The applicationName
         application_name: "IoT_API" # ONLY required if agent type is not machine or db
