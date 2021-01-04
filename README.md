@@ -177,11 +177,11 @@ In the playbook below, the parameters are initialised directly in the yaml file 
 |`proxy_host`<br/> `proxy_port`| Host name/IP address and port number of the proxy to route agent data through. |.NET and .NET-Core
 | `enable_proxy_authentication` | Set to "true" to apply proxy authentication details using `proxy_user` and `proxy_password` parameters. | .NET&#8209;Core
 
-
-## Contributing 
+## Contributing
 
 Here are a few ways you can pitch in:
-  - Report bugs or issues
-  - Fix bugs and submit pull requests.
-  - Write, clarify or fix documentation.
-  - Refactor code.
+
+- Report bugs or issues.
+- Fix bugs and submit pull requests. 
+- Write, clarify or fix documentation.
+- Refactor code.
