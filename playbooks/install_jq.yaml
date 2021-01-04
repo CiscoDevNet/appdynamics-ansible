@@ -1,0 +1,27 @@
+---
+# This requires needs sudo access, please run it with the  '--ask-become-pass' flag as shown below: 
+# ansible-playbook install_jq.yaml --ask-become-pass
+
+- hosts: localhost
+  tasks:
+    - name: Install jq to ansible controller  -  RedHat variants
+      become: true
+      yum:
+        update_cache: yes
+        name:
+        - jq
+        state: present
+      when: "ansible_os_family == 'RedHat' or  ansible_os_family == 'Debian'"
+
+    - name: Install jq to ansible controller  -  Debian variants
+      become: true
+      apt:
+        update_cache: yes
+        name:
+        - jq
+        state: present
+      when: "ansible_os_family == 'RedHat' or  ansible_os_family == 'Debian'"
+
+    - name: Install jq to ansible controller -  MacOS
+      command: "brew install jq"
+      when: "ansible_os_family == 'Darwin'"

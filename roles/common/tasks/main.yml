@@ -1,6 +1,6 @@
 - include_tasks: validate_parameters.yml
 
-- include_tasks: install_jq.yml
+- include_tasks: verify_jq.yml
 
 - debug:
      msg:  "Role Agent variables: type=> {{ agent_type }} version=> {{ agent_version }}"
