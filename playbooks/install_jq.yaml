@@ -2,23 +2,19 @@
 # This requires needs sudo access, please run it with the  '--ask-become-pass' flag as shown below: 
 # ansible-playbook install_jq.yaml --ask-become-pass
 
+# Troubleshooting: If yo get an error similar to:  "The Python 2 bindings for rpm are needed for this module. If you require Python 3 support use the `dnf` Ansible module instead" 
+# use Python 2 instead.. by adding -e 'ansible_python_interpreter=/usr/bin/python'. i.e 
+# ansible-playbook install_jq.yaml --ask-become-pass -e 'ansible_python_interpreter=/usr/bin/python'
+
 - hosts: localhost
   tasks:
-    - name: Install jq to ansible controller  -  RedHat variants
-      become: true
-      yum:
-        update_cache: yes
-        name: jq
-        state: present
-      when: "ansible_os_family == 'RedHat' or  ansible_os_family == 'Debian'"
+    - debug:
+        msg:  "It is recommended that you install jq from https://stedolan.github.io/jq/download/ since it is one-time task"
 
-    - name: Install jq to ansible controller  -  Debian variants
-      become: true
-      apt:
-        update_cache: yes
+    - name: Install jq to ansible controller - Linux
+      package:
         name: jq
         state: present
-      when: "ansible_os_family == 'RedHat' or  ansible_os_family == 'Debian'"
 
     - name: Install jq to ansible controller -  MacOS
       homebrew: 
