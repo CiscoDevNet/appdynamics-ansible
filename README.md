@@ -13,6 +13,12 @@ We built this AppDynamics Ansible collection to support (immutable) infrastructu
 
 ![DEMO](https://github.com/Appdynamics/appdynamics-ansible/blob/develop/docs/ansible.gif)
 
+## Demo 
+
+<i> Pro Tip: Right-Click the GIF and "Open in new Tab" or view on <a href="https://terminalizer.com/view/405023a64449">terminalizer</a> </i>
+
+![DEMO](https://github.com/Appdynamics/appdynamics-ansible/blob/develop/docs/ansible.gif)
+
 ## Requirements
 
 - Requires Ansible >=2.8.0
@@ -158,6 +164,7 @@ In the playbook below, the parameters are initialised directly in the yaml file 
 |`agent_loggers` | List of loggers to set the log level on. The logger names vary from agent to agent. The default is set to ['com.singularity','com']. Update this variable with loggers specific to the target agent as required (refer to the log4j files in the <get-home>/conf/logging directory for more info). | Machine, DB, Java
 |`db_agent_name` | Name assigned to the agent, typically used to allow one Database Agent  to act as a backup to another one | DB
 |`install_jre`| Set this parameter to false if the JRE should not be installed together with the DB agent. <br><br>**Note:** to install java on windows, you need to run the <i>install-roles.yml</i> playbook first, which adds a galaxy role (lean_delivery.java) to you local playbook folder | DB
+|`services`| List of stand-alone services to be instrumented with the .NET agent| .NET
 |`monitor_all_IIS_apps`| Enable automatic instrumentation of all IIS applications | .NET
 |`runtime_reinstrumentation` | Runtime re-instrumentation works for .NET Framework 4.5.2 and greater. Note: Make sure you test this first in a non-production environment | .NET |
 |`dotnet_machine_agent` | YAML map that describes dotnet machine agent settings. See [roles/dotnet/defaults/main.yml](roles/dotnet/defaults/main.yml) for the example | .NET |
@@ -174,7 +181,8 @@ In the playbook below, the parameters are initialised directly in the yaml file 
 |`proxy_host`<br/> `proxy_port`| Host name/IP address and port number of the proxy to route agent data through. |.NET and .NET-Core
 | `enable_proxy_authentication` | Set to "true" to apply proxy authentication details using `proxy_user` and `proxy_password` parameters. | .NET&#8209;Core
 
-## Contributing
+
+## Contributing 
 
 Here are a few ways you can pitch in:
   - Report bugs or issues
