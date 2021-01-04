@@ -1,5 +1,0 @@
----
-jq_bin: jq-{{ jq_platform }}
-jq_checksum: '{{ jq_checksums[jq_ver][jq_platform] }}'
-jq_url: '{{ jq_mirror }}/jq-{{ jq_ver }}/{{ jq_bin }}'
-jq_target_dir: '{{ jq_install_dir }}/jq-{{ jq_ver }}'
