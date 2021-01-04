@@ -9,7 +9,7 @@
 - hosts: localhost
   tasks:
     - debug:
-        msg:  "It is recommended that you install jq from https://stedolan.github.io/jq/download/ since it is one-time task"
+        msg:  "It is recommended that you install jq from https://stedolan.github.io/jq/download/ since it is one-time task and the jq package manager is not very reliable"
 
     - name: Install jq to ansible controller - Linux
       package:
