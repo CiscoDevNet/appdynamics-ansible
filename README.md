@@ -19,7 +19,7 @@ We built this AppDynamics Ansible collection to support (immutable) infrastructu
 - Supports most Debian and RHEL-based Linux distributions, and Windows.
 - Windows OS requires >= Powershell 5.0
 - Network/firewall access to download AppDynamics agents from `https://download-files.appdynamics.com` and `https://download.appdynamics.com` on the Ansible control node  
- -  <a href="https://stedolan.github.io/jq/"> `jq` </a> is required on the Ansible control node. It is recommended that you install it manually (since it requires `sudo` access and it is a one time task), or use `install_jq.yaml` in the `playbook` folder. 
+ -  <a href="https://stedolan.github.io/jq/"> `jq` </a> is required on the Ansible control node. It is recommended that you install it manually (since it requires `sudo` access and it is a one time task), or use `install_jq.yaml` in the `playbook` folder.  For example: `ansible-playbook install_jq.yaml --ask-become-pass -e 'ansible_python_interpreter=/usr/bin/python'`
 
 ## Supported Agents
 
@@ -33,10 +33,7 @@ The agent binaries and the installation process for the Machine and DB agent dep
 |`dotnet` | Agent to monitor Full .Net Framework application on Windows |
 |`machine` | 64 Bit Machine agent ZIP bundle with JRE. Windows and Linux |
 |`db` | Agent to monitor Databases. Windows and Linux|
-|`dotnet-core` | Agent to Monitor .NetCore applications on Linux|
-
-<i> `*`  Coming soon...</i><br>
-
+|`dotnetcore` | Agent to Monitor .NetCore applications on Linux|
 ## Installation
 
 Install the <a href="https://galaxy.ansible.com/appdynamics"> AppDynamics Collection </a> from Ansible Galaxy on your Ansible control node:
