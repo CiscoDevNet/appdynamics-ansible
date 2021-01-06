@@ -1,0 +1,8 @@
+appd_ssl_flag: "{{ 'true' if (enable_ssl | string | lower) in ('on', 'true', 'yes') else 'false' }}"
+appd_tls12_flag: "{{ 'true' if (enable_ssl | string | lower) in ('on', 'true', 'yes') else 'false' }}"
+
+INSTALLDIR: '{{ ansible_env.ProgramFiles }}\AppDynamics\AppDynamics .NET Agent'
+DOTNETAGENTFOLDER: '{{ ansible_env.SystemDrive }}\ProgramData\AppDynamics\DotNetAgent'
+
+# How long to wait for Agent coordinator to start
+dotnet_agent_wait_timeout: 120

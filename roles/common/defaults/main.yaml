@@ -47,3 +47,6 @@ machine_hierarchy: ""
 enable_ssl: false
 enable_proxy: false
 enable_proxy_authentication: false
+
+#restart_app flag - Set this flag true to automatically restart service
+restart_app: false

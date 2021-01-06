@@ -1,0 +1,9 @@
+- name: Check IIS is present
+  ansible.windows.win_service_info:
+    name: w3svc
+  register: iis_service
+
+- name: Print warning
+  debug:
+    msg: "World Wide Web Publishing Service (IIS) service is not found. Consider setting monitor_all_IIS_apps=False"
+  when: not iis_service.exists

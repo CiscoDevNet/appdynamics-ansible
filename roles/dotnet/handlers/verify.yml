@@ -1,0 +1,11 @@
+- name: Wait for AppDynamics.Agent.Coordiantor to start
+  win_wait_for_process:
+    process_name_pattern: 'AppDynamics.Coordinator'
+    state: present
+    timeout: "{{ dotnet_agent_wait_timeout }}"
+
+- name: Tail .NET agent logs
+  win_shell: 'Get-Content {{ DOTNETAGENTFOLDER }}\Logs\AgentLog.txt -Tail 30'
+  register: agent_log
+  failed_when: ( agent_log.stdout | regex_search('Failed to initialize coordinator service|There is an error in XML document')) or agent_log.rc != 0
+  #Consider as Smoke test, since it only checks last 30 lines
