@@ -23,7 +23,7 @@
     assert:
       that:  tier_name is defined
       msg: 'A tier name must be provided'
-    when:  agent_type is not search("machine|db") # Do not enforce tier_name if agent_type is machine or db
+    when:  agent_type is not search("machine|db|dotnet") # Do not enforce tier_name if agent_type is machine, dotnet or db
 
   - name: Validate controller_account_access_key
     assert:

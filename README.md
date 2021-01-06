@@ -14,14 +14,19 @@ We built this AppDynamics Ansible collection to support (immutable) infrastructu
 
 ![DEMO](https://github.com/Appdynamics/appdynamics-ansible/blob/develop/docs/ansible.gif)
 
+## Demo 
+
+<i> Pro Tip: Right-Click the GIF and "Open in new Tab" or view on <a href="https://terminalizer.com/view/405023a64449">terminalizer</a> </i>
+
+![DEMO](https://github.com/Appdynamics/appdynamics-ansible/blob/develop/docs/ansible.gif)
+
 ## Requirements
 
 - Requires Ansible >=2.8.0
 - Supports most Debian and RHEL-based Linux distributions, and Windows.
 - Windows OS requires >= Powershell 5.0
 - Network/firewall access to download AppDynamics agents from `https://download-files.appdynamics.com` and `https://download.appdynamics.com` on the Ansible control node  
-
-<b>Note:</b>  <a href="https://stedolan.github.io/jq/"> `jq` </a> is required on the Ansible control node. The collection automatcially  installs `jq` to the control node if it is not installed.
+ -  <a href="https://stedolan.github.io/jq/"> `jq` </a> is required on the Ansible control node. It is recommended that you install it manually (since it requires `sudo` access and it is a one time task), or use `install_jq.yaml` in the `playbook` folder.  For example: `ansible-playbook install_jq.yaml --ask-become-pass -e 'ansible_python_interpreter=/usr/bin/python'`
 
 ## Supported Agents
 
@@ -35,10 +40,7 @@ The agent binaries and the installation process for the Machine and DB agent dep
 |`dotnet` | Agent to monitor Full .Net Framework application on Windows |
 |`machine` | 64 Bit Machine agent ZIP bundle with JRE. Windows and Linux |
 |`db` | Agent to monitor Databases. Windows and Linux|
-|`dotnet-core` | Agent to Monitor .NetCore applications on Linux|
-
-<i> `*`  Coming soon...</i><br>
-
+|`dotnetcore` | Agent to Monitor .NetCore applications on Linux|
 ## Installation
 
 Install the <a href="https://galaxy.ansible.com/appdynamics"> AppDynamics Collection </a> from Ansible Galaxy on your Ansible control node:
@@ -101,10 +103,14 @@ In the playbook below, the parameters are initialised directly in the yaml file 
         monitor_all_IIS_apps: "false"  # Enable automatic instrumentation of all IIS applications
         runtime_reinstrumentation: "true" # Runtime reinstrumentation works for .NET Framework 4.5.2 and greater.
         # Define standalone executive applications to monitor
-        services:
-          - login.exe
-          - tmw.exe
-          - mso.exe
+        standalone_applications:
+          - tier: login
+            executable: login.exe
+          - tier: tmw
+            executable: tmw.exe
+            command-line: "-x"
+          - tier: mso
+            executable: mso.exe
 ```
 
 ### Machine agent
@@ -181,6 +187,9 @@ The `init_and_validate_agent_variables` should be  **false** when using the logg
 |`services`| List of stand-alone services to be instrumented with the .NET agent| .NET
 |`monitor_all_IIS_apps`| Enable automatic instrumentation of all IIS applications | .NET
 |`runtime_reinstrumentation` | Runtime re-instrumentation works for .NET Framework 4.5.2 and greater. Note: Make sure you test this first in a non-production environment | .NET |
+|`dotnet_machine_agent` | YAML map that describes dotnet machine agent settings. See [roles/dotnet/defaults/main.yml](roles/dotnet/defaults/main.yml) for the example | .NET |
+|`standalone_applications` | List of standalone services to be instrumented with the .NET agent. See [roles/dotnet/defaults/main.yml](roles/dotnet/defaults/main.yml) for the example | .NET |
+|`logFileFolderAccessPermissions` | The list of users who require write access to log directory of the agent (i.e. user who runs IIS). See [roles/dotnet/defaults/main.yml](roles/dotnet/defaults/main.yml) for the example | .NET |
 |`agent_dir_permission.user` `agent_dir_permission.group` | user and group file permissions to assign to the java-agent on linux. The user and group selected must already exist on the host. If the parameters are omitted the permissions will default to root | Java
 |`java_system_properties`| can be used to configure proxy setting for agents | DB, Machine
 |`analytics_event_endpoint`   | Your Events Service URL   | Machine |
@@ -195,7 +204,8 @@ The `init_and_validate_agent_variables` should be  **false** when using the logg
 ## Contributing
 
 Here are a few ways you can pitch in:
-  - Report bugs or issues
-  - Fix bugs and submit pull requests.
-  - Write, clarify or fix documentation.
-  - Refactor code.
+
+- Report bugs or issues.
+- Fix bugs and submit pull requests. 
+- Write, clarify or fix documentation.
+- Refactor code.

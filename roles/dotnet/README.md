@@ -12,7 +12,6 @@
         agent_type: dotnet
         # The applicationName
         application_name: 'IoT_API'
-        tier_name: 'login_service2' # ONLY required if agent type is not machine and db agent
         # Your controller details 
         controller_account_access_key: "b0248ceb-c954-4a37-97b5-207e90418cb4" # Please add this to your Vault
         controller_global_analytics_account_name: "customer1_e2f90621-ab21-4bf4-908c-872d213c7f64" # Please add this to your Vault
@@ -26,8 +25,12 @@
         monitor_all_IIS_apps: "false"  # Enable automatic instrumentation of all IIS applications 
         runtime_reinstrumentation: "true" # Runtime reinstrumentation works for .NET Framework 4.5.2 and greater.
         # Define standalone executive applications to monitor
-        services:
-          - login.exe
-          - tmw.exe
-          - mso.exe
+        standalone_applications:
+          - tier: login
+            executable: login.exe
+          - tier: tmw
+            executable: tmw.exe
+            command-line: "-x"
+          - tier: mso
+            executable: mso.exe
 ```

@@ -1,0 +1,16 @@
+---
+- name: Get jq install status
+  shell: command -v jq >/dev/null 2>&1
+  register: is_jq_exist
+  ignore_errors: yes
+  delegate_to: localhost
+  changed_when: false
+
+- debug: var=is_jq_exist
+
+- name: Assert that jq is installed on control node
+  assert:
+    that: is_jq_exist.rc == 0
+    fail_msg: "jq must be installed on Ansible control node. We recommend that you install manually if you can or use the install_jq.yaml playbook in the playbook folder"
+    success_msg: "jq is installed"
+  delegate_to: localhost

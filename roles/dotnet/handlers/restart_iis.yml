@@ -1,0 +1,13 @@
+# https://support.microsoft.com/en-ca/help/969864/using-iisreset-exe-to-restart-internet-information-services-iis-result
+- name: Restart IIS
+  win_service:
+    name: "{{ item.service }}"
+    state: "{{ item.state }}"
+    force_dependent_services: yes
+  loop:
+    - { service: w3svc, state: stopped }
+    - { service: was, state: restarted }
+    - { service: w3svc, state: started }
+  listen: Restart app listener
+  ignore_errors: yes
+  when: monitor_all_IIS_apps | bool and restart_app | bool and iis_service.exists
