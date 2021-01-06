@@ -1,8 +1,7 @@
 - include_tasks: validate_parameters.yml
 
-- include_tasks: install_jq.yml
-
 - name: Make sure lxml is installed on the Ansible Master
+  become: false 
   pip:
     name: lxml
   delegate_to: localhost
@@ -11,6 +10,7 @@
   - debug:
        msg:  "Role Agent variables: type=> {{ agent_type }} version=> {{ agent_version }}"
 
+  - include_tasks: install_jq.yml
   - include_tasks: get_agent.yml
 
   - name: Set AppDynamics access key facts

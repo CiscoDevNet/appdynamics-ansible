@@ -1,9 +1,12 @@
 ---
+- debug:
+    msg: "Apply logger setting to Machine agent on Windows"
+    
 # Check if we need to apply the logger settings. The check role
 # updates the {{ apply_logger_settings }} variable
 - include_tasks: check.yaml
   vars:
-    logger_agent_dest_folder_linux: "{{ machine_agent_dest_folder_win }}"
+    logger_agent_dest_folder: "{{ machine_agent_dest_folder_win }}"
 
 # Apply log setting to Windows hosts
 - name: Set the log level for the machine agent on Windows

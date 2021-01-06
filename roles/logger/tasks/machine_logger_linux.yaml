@@ -1,9 +1,12 @@
 ---
+- debug: 
+    msg: "Apply logger setting to Machine agent on Linux"
+
 # Check if we need to apply the logger settings. The check role
 # updates the {{ apply_logger_settings }} variable
 - include_tasks: check.yaml
   vars:
-    logger_agent_dest_folder_linux: "{{ machine_agent_dest_folder_linux }}"
+    logger_agent_dest_folder: "{{ machine_agent_dest_folder_linux }}"
 
 # Apply log setting to Linux hosts
 - name: Set the log level for the Machine agent on Linux

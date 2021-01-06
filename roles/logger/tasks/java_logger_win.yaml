@@ -1,12 +1,12 @@
 ---
 - debug:
-    msg: Applying Java Logging settings
+    msg: "Apply logger setting to Java agent on Windows"
 
 # Check if we need to apply the logger settings. The check role
 # updates the {{ apply_logger_settings }} variable
 - include_tasks: check.yaml
   vars:
-    logger_agent_dest_folder_linux: "{{ java_agent_dest_folder_win }}"
+    logger_agent_dest_folder: "{{ java_agent_dest_folder_win }}"
 
 # Apply log settings to Windows hosts
 - name: Set the log level for the Java agent on Windows

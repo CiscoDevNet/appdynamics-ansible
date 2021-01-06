@@ -69,14 +69,14 @@
     dest: "{{ db_agent_dest_folder_windows }}/conf/controller-info.xml"
   changed_when: false
 
+  # Update the Log4j setting to apply the desired log level to all the loggers
+  # listed in the {{agent_loggers}} list.
 - name: Set the log level for the DB agent
-  win_xml:
-    path: '{{ db_agent_dest_folder_windows }}/conf/logging/log4j.xml'
-    xpath: //logger[@name='{{ item }}']/level
-    attribute: value
-    fragment: "{{ agent_log_level }}"
-    type: attribute
-  loop: "{{ agent_loggers }}"
+  include_role:
+    name: logger
+  vars:
+    logger_must_check_if_agent_dir_exists: false # no need to check if the dir exists
+  when: agent_log_level|lower != 'info'
 
 - name: Clean up - remove {{ db_agent_dest_file }}
   win_file:

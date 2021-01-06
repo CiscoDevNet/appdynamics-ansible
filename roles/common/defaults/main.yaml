@@ -1,4 +1,20 @@
 ---
+# default agent directories. These are used by the logger role as well,
+# which is why they are defoined here rather than in the individul
+# agent directories
+appd_linux_root: /opt/appdynamics
+appd_windows_root: C:/appdynamics
+
+db_agent_dest_folder_linux: "{{ appd_linux_root }}/db-agent"
+db_agent_dest_folder_windows: "{{ appd_windows_root }}/db-agent"
+
+java_agent_dest_folder_linux: "{{ appd_linux_root }}/java-agent"
+java_agent_dest_folder_win: "{{ appd_windows_root }}/java-agent"
+
+machine_agent_dest_folder_linux: "{{ appd_linux_root }}/machine-agent"
+machine_agent_dest_folder_win: "{{ appd_windows_root }}/machine-agent"
+
+
 #wheel user for Machine agent
 appdynamics_user: appdynamics
 ############ DO NOT CHANGE ANY OF THESE DEFAULTS - Except you know what you're doing#######################
@@ -7,7 +23,7 @@ host_name: '{{ ansible_hostname }}' # computername/hostname of the target machin
 
 # Indicate that we need to initialize the agent variables. Some roles (like logger)
 # don't require all agent vars to be initialized
-init_and_validate_agent_variables: true 
+init_and_validate_agent_variables: true
 
 # Agent Log level
 agent_log_level: "info"
