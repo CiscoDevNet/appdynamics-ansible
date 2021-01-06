@@ -1,0 +1,39 @@
+---
+- debug:
+    msg: "Apply logger setting to Java agent on Windows"
+
+# Check if we need to apply the logger settings. The check role
+# updates the {{ apply_logger_settings }} variable
+- include_tasks: check.yaml
+  vars:
+    logger_agent_dest_folder: "{{ java_agent_dest_folder_win }}"
+
+# Apply log settings to Windows hosts
+- name: Set the log level for the Java agent on Windows
+  block:
+  - name: Find the version specific directory name if it has not been set yet
+    block:
+    - name: Find the version specific directory name
+      win_find:
+        paths: "{{ java_agent_dest_folder_win }}"
+        patterns: "ver*"
+        file_type: directory
+      register: result
+
+    - name: Set the version folder fact
+      set_fact:
+        java_agent_ver_folder: "{{ result.files[0].path }}" # "{{ ver.stdout | regex_replace ('\\r\\n', '') }}"
+
+    - debug:
+        msg: "{{ java_agent_ver_folder }}"
+    when: java_agent_ver_folder is not defined
+
+  - name: Set the log level for the java agent
+    win_xml:
+      path: "{{ java_agent_ver_folder }}/conf/logging/log4j2.xml"
+      xpath: //AsyncLogger[@name='{{ item }}']
+      attribute: level
+      fragment: "{{ agent_log_level }}"
+      type: attribute
+    loop: "{{ agent_loggers }}"
+  when: apply_logger_settings

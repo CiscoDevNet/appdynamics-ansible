@@ -78,14 +78,14 @@
   win_shell: "Copy-Item  {{ java_agent_dest_folder_win }}/conf/controller-info.xml  {{ java_agent_ver_folder }}/conf/ -Force"
   changed_when: false
 
-- name: Set the log level for the java agent
-  win_xml:
-    path: "{{ java_agent_ver_folder }}/conf/logging/log4j2.xml"
-    xpath: //AsyncLogger[@name='{{ item }}']
-    attribute: level
-    fragment: "{{ agent_log_level }}"
-    type: attribute
-  loop: "{{ agent_loggers }}"
+# Update the Log4j setting to apply the desired log level to all the loggers
+# listed in the {{agent_loggers}} list.
+- name: Set the log level on the agent (if != info, which it is by default)
+  include_role:
+    name: logger
+  vars:
+    logger_must_check_if_agent_dir_exists: false # no need to check if the dir exists
+  when: agent_log_level|lower != 'info'
 
 - name: Clean up - remove {{ java_agent_dest_file }}
   win_file:

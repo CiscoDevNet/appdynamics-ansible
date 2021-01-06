@@ -3,3 +3,4 @@
 - import_playbook: db.yaml
 - import_playbook: machine.yaml
 - import_playbook: dotnetcore.yaml
+- import_playbook: logger.yaml
