@@ -151,12 +151,6 @@ The `init_and_validate_agent_variables` should be  **false** when using the logg
           agent_log_level: "info"
           agent_loggers: ['com.appdynamics', 'com', 'com.singularity', 'com.singularity.BusinessTransactions', 'com.singularity.ee.agent.dbagent.collector.server.connection.wmi.NativeClient']
 
-          db_agent_dest_folder_linux: /opt/appdynamics/db-agent
-          db_agent_dest_folder_windows: C:/appdynamics/db-agent
-          java_agent_dest_folder_linux: /opt/appdynamics/java-agent
-          java_agent_dest_folder_win: C:/appdynamics/java-agent
-          machine_agent_dest_folder_win: C:/appdynamics/machine-agent
-          machine_agent_dest_folder_linux: /opt/appdynamics/machine-agent
 ```
 ## Role Variables
 
