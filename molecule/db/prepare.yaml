@@ -1,0 +1,24 @@
+---
+- hosts: localhost
+  tasks:
+    # Install lxml
+    - name: Make sure lxml is installed on the Ansible Master (linux)
+      become: true
+      pip:
+        name: lxml
+      delegate_to: localhost
+      register: result
+      # when: ansible_os_family in ['Redhat', 'Debian']
+      
+    - debug: var=result
+    
+    - name: Get lxml install status
+      pip:
+        name: lxml
+      check_mode: yes
+      ignore_errors: yes
+      register: lxmlStatus
+      delegate_to: localhost
+      changed_when: false
+
+    - debug: var=lxmlStatus

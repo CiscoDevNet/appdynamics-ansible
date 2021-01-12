@@ -1,0 +1,23 @@
+---
+- name: Get lxml install status
+  pip:
+    name: lxml
+  check_mode: yes
+  ignore_errors: yes
+  register: lxmlStatus
+  delegate_to: localhost
+  changed_when: false
+
+- debug: var=lxmlStatus
+
+- name: check lxml
+  set_fact:
+    lxml_found: True
+  when: lxmlStatus.stdout | regex_search('lxml==.*')
+
+- name: Assert that lxml is installed on control node
+  assert:
+    that: lxml_found is defined and lxml_found
+    fail_msg: "The 'lxml' Python module must be installed on the Ansible control node. We recommend that you install manually if you can or use the install_lxml.yaml playbook in the playbook folder"
+    success_msg: "lxml is installed"
+  delegate_to: localhost

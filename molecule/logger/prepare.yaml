@@ -1,4 +1,14 @@
 ---
+- hosts: localhost
+  tasks:
+    # Install lxml
+    - name: Make sure lxml is installed on the Ansible Master (linux)
+      become: true
+      pip:
+        name: lxml
+      delegate_to: localhost
+      when: ansible_os_family in ['Redhat', 'Debian']
+
 - hosts: all
   tasks:
     - include_role:

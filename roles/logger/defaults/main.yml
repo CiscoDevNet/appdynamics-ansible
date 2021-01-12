@@ -1,5 +1,6 @@
 ---
 agents_to_set_loggers_for: [] # Initialize to an empty list
+agent_loggers: ['com', 'com.singularity']
 agent_log_level: "info"
 
 #Internal variables.

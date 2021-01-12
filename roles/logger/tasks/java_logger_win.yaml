@@ -36,4 +36,9 @@
       fragment: "{{ agent_log_level }}"
       type: attribute
     loop: "{{ agent_loggers }}"
+    register: result
+    changed_when: # only report changes if they are not part of installing the agent
+      - logger_must_check_if_agent_dir_exists
+      - result.changed
+
   when: apply_logger_settings
