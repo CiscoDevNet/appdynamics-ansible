@@ -12,10 +12,10 @@
     - name: Get lxml install status
       pip:
         name: lxml
-     check_mode: yes
-     ignore_errors: yes
-     register: lxmlStatus
-     delegate_to: localhost
-     changed_when: false
+      check_mode: yes
+      ignore_errors: yes
+      register: lxmlStatus
+      delegate_to: localhost
+      changed_when: false
 
-   - debug: var=lxmlStatus
+    - debug: var=lxmlStatus
