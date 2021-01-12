@@ -8,3 +8,14 @@
         name: lxml
       delegate_to: localhost
       when: ansible_os_family in ['Redhat', 'Debian']
+      
+    - name: Get lxml install status
+      pip:
+        name: lxml
+     check_mode: yes
+     ignore_errors: yes
+     register: lxmlStatus
+     delegate_to: localhost
+     changed_when: false
+
+   - debug: var=lxmlStatus
