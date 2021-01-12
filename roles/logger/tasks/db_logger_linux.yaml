@@ -1,7 +1,7 @@
 ---
   - debug:
       msg: "Apply logger setting to DB agent on Linux"
-      
+
   # Check if we need to apply the logger settings. The check role
   # updates the {{ apply_logger_settings }} variable
   - include_tasks: check.yaml
@@ -68,8 +68,12 @@
         attribute: value
         value: "{{ agent_log_level }}"
       loop: "{{ hits.results }}" # "{{ agent_loggers }}"
+      register: result
       delegate_to: localhost
       when: item.count >= 1
+      changed_when:
+        - logger_must_check_if_agent_dir_exists
+        - result.changed
 
     - name: Copy the local file back to the host
       become: true

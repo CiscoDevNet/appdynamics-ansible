@@ -34,3 +34,7 @@
       type: attribute
     loop: "{{ agent_loggers }}"
     when: apply_logger_settings
+    register: result
+    changed_when:
+      - logger_must_check_if_agent_dir_exists
+      - result.changed

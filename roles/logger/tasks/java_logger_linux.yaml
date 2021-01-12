@@ -1,5 +1,5 @@
 ---
-- debug: 
+- debug:
     msg: "Apply logger setting to Java agent on Linux"
 
 # Check if we need to apply the logger settings. The check role
@@ -68,6 +68,10 @@
     loop: "{{ hits.results }}" # "{{ agent_loggers }}"
     delegate_to: localhost
     when: item.count >= 1
+    register: result
+    changed_when: # only report changes if they are not part of installing the agent
+      - logger_must_check_if_agent_dir_exists
+      - result.changed
 
   - name: Copy the local file back to the host
     become: true

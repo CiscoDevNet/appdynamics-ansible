@@ -12,9 +12,10 @@
   vars:
     agent_version: 20.9.0
     agent_type: db
-    controller_account_access_key: "2498dd59-d059-48c1-8ec2-8dc2f3efa112" # Please add this to your Vault 
+    controller_account_access_key: "2498dd59-d059-48c1-8ec2-8dc2f3efa112" # Please add this to your Vault
     controller_host_name: "lncontroller20103-2010-o8evv8rp.appd-cx.com" # Your AppDynamics controller
     controller_account_name: "customer1" # Please add this to your Vault
     enable_ssl: false
     controller_port: "8090"
     db_agent_name: "ProdDBAgent"
+    agent_log_level: "debug"

@@ -1,7 +1,7 @@
 ---
 - debug:
     msg: "Apply logger setting to Machine agent on Windows"
-    
+
 # Check if we need to apply the logger settings. The check role
 # updates the {{ apply_logger_settings }} variable
 - include_tasks: check.yaml
@@ -18,3 +18,7 @@
     type: attribute
   loop: "{{ agent_loggers }}"
   when: apply_logger_settings
+  register: result
+  changed_when: # only report changes if they are not part of installing the agent
+    - logger_must_check_if_agent_dir_exists
+    - result.changed
