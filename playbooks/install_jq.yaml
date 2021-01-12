@@ -1,9 +1,9 @@
 ---
-# This requires needs sudo access, please run it with the  '--ask-become-pass' flag as shown below: 
+# This requires sudo access, please run it with the  '--ask-become-pass' flag as shown below:
 # ansible-playbook install_jq.yaml --ask-become-pass
 
-# Troubleshooting: If you get an error similar to:  "The Python 2 bindings for rpm are needed for this module. If you require Python 3 support use the `dnf` Ansible module instead" 
-# use Python 2 instead.. by adding -e 'ansible_python_interpreter=/usr/bin/python'. i.e 
+# Troubleshooting: If you get an error similar to:  "The Python 2 bindings for rpm are needed for this module. If you require Python 3 support use the `dnf` Ansible module instead"
+# use Python 2 instead.. by adding -e 'ansible_python_interpreter=/usr/bin/python'. i.e
 # ansible-playbook install_jq.yaml --ask-become-pass -e 'ansible_python_interpreter=/usr/bin/python'
 
 - hosts: localhost
@@ -17,7 +17,7 @@
         state: present
 
     - name: Install jq to ansible controller -  MacOS
-      homebrew: 
+      homebrew:
         name: jq
         state: present
       when: "ansible_os_family == 'Darwin'"

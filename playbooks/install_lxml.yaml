@@ -1,0 +1,19 @@
+---
+# This requires sudo access. if a password needs to be supplied, please run it with the
+# '--ask-become-pass' flag as shown below:
+#    ansible-playbook install_lxml.yaml --ask-become-pass
+- hosts: localhost
+  tasks:
+    - name: Make sure lxml is installed on the Ansible Master (linux)
+      become: true
+      pip:
+        name: lxml
+      delegate_to: localhost
+      when: ansible_os_family in ['Redhat', 'Debian']
+
+    - name: Make sure lxml is installed on the Ansible Master (mac)
+      become: false
+      pip:
+        name: lxml
+      delegate_to: localhost
+      when: ansible_os_family == 'Darwin'
