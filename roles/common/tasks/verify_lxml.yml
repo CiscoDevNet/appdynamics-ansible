@@ -8,6 +8,8 @@
   delegate_to: localhost
   changed_when: false
 
+- debug: var=lxmlStatus
+
 - name: check lxml
   set_fact:
     lxml_found: True
