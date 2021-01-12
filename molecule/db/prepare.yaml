@@ -7,8 +7,11 @@
       pip:
         name: lxml
       delegate_to: localhost
-      when: ansible_os_family in ['Redhat', 'Debian']
+      register: result
+      # when: ansible_os_family in ['Redhat', 'Debian']
       
+    - debug: var=result
+    
     - name: Get lxml install status
       pip:
         name: lxml
