@@ -1,23 +1,32 @@
 ---
-- name: Get lxml install status
-  pip:
-    name: lxml
-  check_mode: yes
-  ignore_errors: yes
-  register: lxmlStatus
-  delegate_to: localhost
-  changed_when: false
+- name: If required, check that lxml is installed
+  block:
+  - name: Get lxml install status
+    pip:
+      name: lxml
+    check_mode: yes
+    ignore_errors: yes
+    register: lxmlStatus
+    delegate_to: localhost
+    changed_when: false
 
-- debug: var=lxmlStatus
+  - debug: var=lxmlStatus
 
-- name: check lxml
-  set_fact:
-    lxml_found: True
-  when: lxmlStatus.stdout | regex_search('lxml==.*')
+  - name: check lxml
+    set_fact:
+      lxml_found: True
+    when: lxmlStatus.stdout | regex_search('lxml==.*')
 
-- name: Assert that lxml is installed on control node
-  assert:
-    that: lxml_found is defined and lxml_found
-    fail_msg: "The 'lxml' Python module must be installed on the Ansible control node. We recommend that you install manually if you can or use the install_lxml.yaml playbook in the playbook folder"
-    success_msg: "lxml is installed"
-  delegate_to: localhost
+  - name: Assert that lxml is installed on control node
+    assert:
+      that: lxml_found is defined and lxml_found
+      fail_msg: "The 'lxml' Python module must be installed on the Ansible control node. We recommend that you install manually if you can or use the install_lxml.yaml playbook in the playbook folder"
+      success_msg: "lxml is installed"
+    delegate_to: localhost
+  # - when logger_must_check_if_agent_dir_exists == true, then we are using the logger role stand-alone and
+  #   lxml definitly needs to be there.
+  # - If it is not set, but the agent_log_level is anything other than "info"
+  #   we are also going to use the logger role while deploying other agents.
+  when: >
+    ( logger_must_check_if_agent_dir_exists is defined and logger_must_check_if_agent_dir_exists) or
+    ( agent_log_level is defined and agent_log_level != 'info')
