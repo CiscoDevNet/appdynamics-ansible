@@ -20,7 +20,8 @@ We built this AppDynamics Ansible collection to support (immutable) infrastructu
 - Supports most Debian and RHEL-based Linux distributions, and Windows.
 - Windows OS requires >= Powershell 5.0
 - Network/firewall access to download AppDynamics agents from `https://download-files.appdynamics.com` and `https://download.appdynamics.com` on the Ansible control node  
- -  <a href="https://stedolan.github.io/jq/"> `jq` </a> is required on the Ansible control node. It is recommended that you install it manually (since it requires `sudo` access and it is a one time task), or use `install_jq.yaml` in the `playbook` folder.  For example: `ansible-playbook install_jq.yaml --ask-become-pass -e 'ansible_python_interpreter=/usr/bin/python'`
+ -  <a href="https://stedolan.github.io/jq/"> `jq` </a> is required on the Ansible control node. It is recommended that you install it manually (since it requires `sudo` access and it is a one time task), or run the `install_jq.yaml` playbook in the `playbook` folder. For example: `ansible-playbook install_jq.yaml --ask-become-pass -e 'ansible_python_interpreter=/usr/bin/python'`
+ - `lxml` is required if you need to enable enhanced agent logging (e.g DEBUG, TRACE, etc). We recommend that you install it manaually on the Ansible control node using `pip3 install lxml`, or run the `install_lxml.yaml` playbook in the `playbook` folder.
 
 ## Supported Agents
 
