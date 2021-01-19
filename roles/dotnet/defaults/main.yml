@@ -1,0 +1,61 @@
+# DotNet Agent Win
+dotnet_agent_dest_folder_win: C:\\appdynamics\\dotnet-agent # '/' does not work with win_package due to msiexec.
+dotnet_agent_dest_file: dotNetAgentSetup64.msi
+
+# DotNet agent defaults
+monitor_all_IIS_apps: "false"
+runtime_reinstrumentation: "false"
+
+
+# The list of users who require write access to log directory of the agent (i.e. user who runs IIS)
+logFileFolderAccessPermissions:
+  - { name: 'NT AUTHORITY\LOCAL SERVICE', displayName: 'LOCAL SERVICE' }
+  - { name: 'NT AUTHORITY\SYSTEM', displayName: 'SYSTEM' }
+  - { name: 'NT AUTHORITY\NETWORK SERVICE', displayName: 'NETWORK SERVICE' }
+  - { name: 'BUILTIN\IIS_IUSRS', displayName: 'ApplicationPool Identity' }
+  # - { name: 'APNET\SYS_DSINEAL1', displayName: 'APNET\SYS_DSINEAL1' }
+
+# Machine agent settings. Elements supported metrics(perf-metrics,perf-counters)
+# TODO: add instrumentation(instrumentor)
+# Configuration mirrors properties described in the documentation:
+# See https://docs.appdynamics.com/display/latest/.NET+Agent+Configuration+Properties
+dotnet_machine_agent:
+  machine-snapshot:
+    enabled: "true"
+    window-size: 600
+    samples-per-window: 60
+    violations-per-window: 6
+    max-percent-cpu: 80
+    max-queue-item-age: 100
+    periodic-collection: 60
+# metrics:
+#   perf-metrics:
+#     priority-level: 3
+#     metrics:
+#       - name: "Hardware Resources|CPU|%Busy"
+#       - name: "ASP.NET Applications|Errors Unhandled During Execution"
+# perf-counters:
+#   - cat: "Network Interface"
+#     name: "Bytes Sent" 
+#     instance: "Local Area Connection"
+#   - cat: "Network Interface"
+#     name: "Bytes Received" 
+#     instance: "Local Area Connection"
+# instrumentation:
+# - name: ThreadCorrelationThreadPoolCLR2Instrumentor
+#   enabled: true
+# - name: ThreadStartCLR2Instrumentor
+#   enabled: true
+# - name: ThreadStartCLR4Instrumentor
+#   enabled: true
+
+
+# Define this list to monitor standalone .NET applications
+# Configuration mirrors properties described in the documentation:
+# See https://docs.appdynamics.com/display/latest/.NET+Agent+Configuration+Properties
+# standalone_applications:
+#   - executable: "MyWindowsService.exe"
+#     command-line: "-x"
+#     tier: "Windows Service Tier2"
+#   - executable: "MyStandaloneApp.exe"
+#     tier: "Standalone Tier2"

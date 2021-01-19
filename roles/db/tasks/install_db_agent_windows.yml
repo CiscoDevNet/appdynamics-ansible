@@ -18,7 +18,8 @@
   changed_when: false # this ensures this task is idempotent
 
 - name: Check if DB agent exists
-  win_stat: path="{{ db_agent_dest_folder_windows }}/db-agent.jar"
+  win_stat:
+    path: "{{ db_agent_dest_folder_windows }}/db-agent.jar"
   register: previous_agent
 
 #using Powershell as win_zip module doesn't exist in Ansible - 10/2020
@@ -68,6 +69,15 @@
     dest: "{{ db_agent_dest_folder_windows }}/conf/controller-info.xml"
   changed_when: false
 
+  # Update the Log4j setting to apply the desired log level to all the loggers
+  # listed in the {{agent_loggers}} list.
+- name: Set the log level for the DB agent
+  include_role:
+    name: logger
+  vars:
+    logger_must_check_if_agent_dir_exists: false # no need to check if the dir exists
+  when: agent_log_level|lower != 'info'
+
 - name: Clean up - remove {{ db_agent_dest_file }}
   win_file:
     path: "{{ db_agent_dest_folder_windows }}/{{ db_agent_dest_file }}"
@@ -75,7 +85,7 @@
   changed_when: false
 
 - name: 'Install DB agent service'
-  win_command: cscript.exe "{{ db_agent_dest_folder_windows }}/InstallService.vbs" -Ddbagent.name="{{ db_agent_name }}"
+  win_command: cscript.exe "{{ db_agent_dest_folder_windows }}/InstallService.vbs" -Ddbagent.name={{ db_agent_name }}
   register: install_win_service_result
   changed_when: not previous_agent.stat.exists
 

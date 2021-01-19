@@ -14,8 +14,8 @@
 
 - name: "Add {{ appdynamics_user }} user to wheel group"
   user:
-    name="{{ appdynamics_user }}"
-    groups=wheel
-    append=yes
-    state=present
-    createhome=yes 
+    name: "{{ appdynamics_user }}"
+    groups: wheel
+    append: yes
+    state: present
+    createhome: yes

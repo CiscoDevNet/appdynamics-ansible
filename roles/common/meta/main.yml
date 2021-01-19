@@ -3,7 +3,7 @@ galaxy_info:
   author: Israel Ogbole (https://galaxy.ansible.com/iogbole)
   role_name: common
   company: AppDynamics
-  description: This is an AppDynamics helper role, all other agent roles depends on the common role. 
+  description: This is an AppDynamics helper role, all other agent roles depends on the common role.
   license: Apache2
   min_ansible_version: 2.8
   platforms:
@@ -37,6 +37,6 @@ galaxy_info:
         - 2016
         - 2019
   galaxy_tags:
-    - apm 
+    - apm
     - monitoring
 dependencies: []

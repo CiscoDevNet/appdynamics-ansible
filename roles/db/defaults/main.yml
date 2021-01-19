@@ -1,0 +1,7 @@
+# DB Agent Linux
+# db_agent_dest_folder_linux: /opt/appdynamics/db-agent
+db_agent_dest_file: db-agent.zip
+db_agent_name: "AppDynamics"
+
+# DB Agent Windows
+# db_agent_dest_folder_windows: C:/appdynamics/db-agent

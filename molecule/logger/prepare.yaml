@@ -1,0 +1,30 @@
+---
+- hosts: localhost
+  tasks:
+    # Install lxml
+    - name: Make sure lxml is installed on the Ansible Master (linux)
+      become: true
+      pip:
+        name: lxml
+      delegate_to: localhost
+      when: ansible_os_family in ['Redhat', 'Debian']
+
+- hosts: all
+  tasks:
+    - include_role:
+        name: appdynamics.agents.machine
+      vars:
+        # Define Agent Type and Version
+        agent_version: 20.9.0
+        agent_type: machine
+        machine_hierarchy: "AppName|Owners|Environment|" # Make sure it ends with a |
+        sim_enabled: "false"
+        analytics_event_endpoint: "http://lncontroller20103-2010-o8evv8rp.appd-cx.com:9080"
+        enable_analytics_agent: "false"
+        # Your controller details
+        controller_account_access_key: "b0248ceb-c954-4a37-97b5-207e90418cb4" # Please add this to your Vault
+        controller_host_name: "ansible-20100nosshcont-bum4wzwa.appd-cx.com" # Your AppDynamics controller
+        controller_account_name: "customer1" # Please add this to your Vault
+        enable_ssl: "false"
+        controller_port: "8090"
+        controller_global_analytics_account_name: 'customer1_e52eb4e7-25d2-41c4-a5bc-9685502317f2' # Please add this to your Vault

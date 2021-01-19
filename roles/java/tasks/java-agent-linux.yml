@@ -10,7 +10,8 @@
       changed_when: false # this ensures this task is idempotent
 
     - name: Check if java agent exists
-      stat: path="{{ java_agent_dest_folder_linux }}/javaagent.jar"
+      stat:
+        path: "{{ java_agent_dest_folder_linux }}/javaagent.jar"
       register: previous_agent
 
     - name: Backup old java agent to /tmp folder
@@ -26,7 +27,7 @@
         path: "{{ java_agent_dest_folder_linux }}"
         state: absent
       changed_when: false
-           
+
     - name: Ensures application agent dir exists
       file:
         path: "{{ java_agent_dest_folder_linux }}/"
@@ -49,7 +50,7 @@
          msg: "{{ result }}"
 
     # Keeping downloading and unziping seperate tasks
-    # as not all customers are allowd to download on the remote servers.
+    # as not all customers are allowed to download on the remote servers.
     - name: Unzip the Java agent file
       unarchive:
         #src: "{{ agent_download_url.stdout }}"
@@ -66,9 +67,29 @@
         mode: 0755
       changed_when: false
 
+    - name: Find the version specific directory name
+      find:
+        paths: "{{ java_agent_dest_folder_linux }}"
+        patterns: "ver{{ agent_version }}*"
+        file_type: directory
+      register: result
+
+    - name: Set the version folder fact
+      set_fact:
+        java_agent_ver_folder: "{{ result.files[0].path }}" # "{{ ver.stdout | regex_replace ('\\r\\n', '') }}"
+
     - name: Copy controller-info.xml to the versioned agent folder
-      shell: cp  {{ java_agent_dest_folder_linux }}/conf/controller-info.xml  {{ java_agent_dest_folder_linux }}/ver{{ agent_version }}*/conf/
+      shell: cp  {{ java_agent_dest_folder_linux }}/conf/controller-info.xml  {{ java_agent_ver_folder }}/conf/
       changed_when: false
+
+    # Update the Log4j setting to apply the desired log level to all the loggers
+    # listed in the {{agent_loggers}} list.
+    - name: Set the log level on the agent (if != info, which it is by default)
+      include_role:
+        name: logger
+      vars:
+        logger_must_check_if_agent_dir_exists: false # no need to check if the dir exists
+      when: agent_log_level|lower != 'info'
 
     - name: Recursively change ownership of the Java agent directory
       file:

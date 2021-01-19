@@ -1,0 +1,40 @@
+---
+  - debug:
+      msg: "Apply logger setting to DB agent on Windows"
+
+  # Check if we need to apply the logger settings. The check role
+  # updates the {{ apply_logger_settings }} variable
+  - include_tasks: check.yaml
+    vars:
+      logger_agent_dest_folder: "{{ db_agent_dest_folder_windows }}"
+
+  # - debug:
+  #     msg: Applying DB Logging settings
+  #
+  # - name: Check if the Agent is present on the host.
+  #   stat:
+  #     path: "{{ db_agent_dest_folder_windows }}"
+  #   register: agent_folder
+  #
+  # # Let the user know if we are skipping this host
+  # - debug:
+  #     msg: "Agent folder {{ db_agent_dest_folder_windows }} was not found! Skipping this change"
+  #   when: >
+  #     (agent_folder.stat.exists == false) and
+  #     (logger_ignore_missing is defined) and
+  #     (logger_ignore_missing == true)
+
+  # Apply log setting to Windows hosts
+  - name: Set the log level for the DB agent
+    win_xml:
+      path: '{{ db_agent_dest_folder_windows }}/conf/logging/log4j.xml'
+      xpath: //logger[@name='{{ item }}']/level
+      attribute: value
+      fragment: "{{ agent_log_level }}"
+      type: attribute
+    loop: "{{ agent_loggers }}"
+    when: apply_logger_settings
+    register: result
+    changed_when:
+      - logger_must_check_if_agent_dir_exists
+      - result.changed

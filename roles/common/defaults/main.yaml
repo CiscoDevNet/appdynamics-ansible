@@ -1,9 +1,37 @@
 ---
+# default agent directories. These are used by the logger role as well,
+# which is why they are defoined here rather than in the individul
+# agent directories
+appd_linux_root: /opt/appdynamics
+appd_windows_root: C:/appdynamics
+
+db_agent_dest_folder_linux: "{{ appd_linux_root }}/db-agent"
+db_agent_dest_folder_windows: "{{ appd_windows_root }}/db-agent"
+
+java_agent_dest_folder_linux: "{{ appd_linux_root }}/java-agent"
+java_agent_dest_folder_win: "{{ appd_windows_root }}/java-agent"
+
+machine_agent_dest_folder_linux: "{{ appd_linux_root }}/machine-agent"
+machine_agent_dest_folder_win: "{{ appd_windows_root }}/machine-agent"
+
+
 #wheel user for Machine agent
 appdynamics_user: appdynamics
 ############ DO NOT CHANGE ANY OF THESE DEFAULTS - Except you know what you're doing#######################
 java_system_properties: ""
 host_name: '{{ ansible_hostname }}' # computername/hostname of the target machine
+
+# Indicate that we need to initialize the agent variables. Some roles (like logger)
+# don't require all agent vars to be initialized
+init_and_validate_agent_variables: true
+
+# Agent Log level
+agent_log_level: "info"
+agent_loggers: ['com', 'com.singularity']
+
+# Analytics agnent location
+analytics_agent_host: localhost
+analytics_agent_port: 9090
 
 #windows_ma_finder_string
 win_ma_finder_string: machineagent-bundle-64bit-windows
@@ -11,43 +39,14 @@ win_db_finder_string: db-agent-winx64
 linux_ma_finder_string: machineagent-bundle-64bit-linux
 linux_db_finder_string: db-agent
 
-# DB Agent Linux
-db_agent_dest_folder_linux: /opt/appdynamics/db-agent
-db_agent_dest_file: db-agent.zip
-db_agent_name: "AppDynamics"
-
-# DB Agent Windows
-db_agent_dest_folder_windows: C:/appdynamics/db-agent
-
-# Machine Agent Win
-machine_agent_dest_folder_win: C:/appdynamics/machine-agent
-machine_agent_monitor_folder_win: "{{ machine_agent_dest_folder_win }}/monitor"
-temp_dir: /tmp
-
-# Machine Agent Linux
-machine_agent_dest_folder_linux: /opt/appdynamics/machine-agent
-machine_agent_monitor_folder_linux: "{{ machine_agent_dest_folder_linux }}/monitor/"
-
 # Machine Common
 ma_agent_dest_file: machine-agent.zip
 machine_hierarchy: ""
 
-# DotNet Agent Win
-dotnet_agent_dest_folder_win: C:\\appdynamics\\dotnet-agent # '/' does not work with win_package due to msiexec.
-dotnet_agent_dest_file: dotNetAgentSetup64.msi
-
-# Java Agent Linux
-java_agent_dest_folder_linux: /opt/appdynamics/java-agent
-java_agent_dest_file: java-agent.zip
-
-# Java Agent Windows
-java_agent_dest_folder_win: C:/appdynamics/java-agent
-
-# DotNet agent defaults
-monitor_all_IIS_apps: "false"
-runtime_reinstrumentation: "false"
-
 #controller defaults
-enable_ssl: "false"
-enable_proxy: "false"
-sim_enabled: "false"
+enable_ssl: false
+enable_proxy: false
+enable_proxy_authentication: false
+
+#restart_app flag - Set this flag true to automatically restart service
+restart_app: false

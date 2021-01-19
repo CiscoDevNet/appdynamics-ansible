@@ -1,0 +1,6 @@
+- name: Verify .NET agent restart
+  include_tasks: handlers/verify.yml
+  listen: "Verify .NET agent restart"
+
+# After you edit the config.xml file, you must restart the AppDynamics.Agent.Coordinator service.
+# Then restart your IIS services, Windows services or standalone applications for your instrumentation changes to take effect.

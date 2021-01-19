@@ -1,0 +1,91 @@
+---
+  - debug:
+      msg: "Apply logger setting to DB agent on Linux"
+
+  # Check if we need to apply the logger settings. The check role
+  # updates the {{ apply_logger_settings }} variable
+  - include_tasks: check.yaml
+    vars:
+      logger_agent_dest_folder: "{{ db_agent_dest_folder_linux }}"
+
+  # - debug:
+  #     msg: Applying DB Logging settings
+  #
+  # - name: Check if the Agent is present on the host.
+  #   stat:
+  #     path: "{{ db_agent_dest_folder_linux }}"
+  #   register: agent_folder
+  #
+  # # Let the user know if we are skipping this host
+  # - debug:
+  #     msg: "Agent folder {{ db_agent_dest_folder_linux }} was not found! Skipping this change"
+  #   when: >
+  #     (agent_folder.stat.exists == false) and
+  #     (logger_ignore_missing is defined) and
+  #     (logger_ignore_missing == true)
+
+  # Apply log setting to Linux hosts
+  - name: Set the log level on the DB agent hosted in Linux
+    become: false
+    block:
+    - debug:
+        msg: "Requested log level = {{ agent_log_level }} - Logger = {{ agent_loggers }}"
+
+    - name: Create a local directory to manipulate the log4j file
+      tempfile:
+        state: directory
+        suffix: build
+      register: tempDir
+      changed_when: false
+
+    # Rather than modifying the XML files in-situ on the remote server, re copy
+    # tem down and do the XML manipulation locally. This is done so we can
+    # use the xml module without the need to install lxml of pip on the
+    # target server.
+    - name: Copy the log4j file down to update it localy
+      fetch:
+        src: '{{ db_agent_dest_folder_linux }}/conf/logging/log4j.xml'
+        dest: '{{ tempDir.path }}/'
+        mode: 0755
+        flat: yes
+      changed_when: false
+
+    - name: Check which xpath entries are found
+      xml:
+        # path: '{{ db_agent_dest_folder_linux }}/conf/logging/log4j.xml'
+        path: '{{ tempDir.path }}/log4j.xml'
+        xpath: //logger[@name='{{ item }}']/level
+        count: yes
+      register: hits
+      delegate_to: localhost
+      loop: "{{ agent_loggers }}"
+
+    - name: Set the log DB level for all relevant loggers
+      xml:
+        # path: '{{ db_agent_dest_folder_linux }}/conf/logging/log4j.xml'
+        path: '{{ tempDir.path }}/log4j.xml'
+        xpath: "{{ item.actions.xpath }}" # //logger[@name='{{ item }}']/level
+        attribute: value
+        value: "{{ agent_log_level }}"
+      loop: "{{ hits.results }}" # "{{ agent_loggers }}"
+      register: result
+      delegate_to: localhost
+      when: item.count >= 1
+      changed_when:
+        - logger_must_check_if_agent_dir_exists
+        - result.changed
+
+    - name: Copy the local file back to the host
+      become: true
+      copy:
+         src: '{{ tempDir.path }}/log4j.xml'
+         dest: '{{ db_agent_dest_folder_linux }}/conf/logging/log4j.xml'
+      changed_when: false
+
+    - name: Delete the temp directory
+      file:
+         path: "{{ tempDir.path }}"
+         state: absent
+      delegate_to: localhost
+      changed_when: false
+    when: apply_logger_settings

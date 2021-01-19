@@ -38,7 +38,7 @@ galaxy_info:
         - 2019
 
   galaxy_tags:
-    - apm 
+    - apm
     - monitoring
     - appdynamics
 

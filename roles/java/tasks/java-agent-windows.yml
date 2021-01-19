@@ -12,7 +12,8 @@
   changed_when: false # this ensures this task is idempotent
 
 - name: Check if java agent exists
-  win_stat: path="{{ java_agent_dest_folder_win }}/javaagent.jar"
+  win_stat:
+    path: "{{ java_agent_dest_folder_win }}/javaagent.jar"
   register: previous_agent
 
 #using Powershell as win_zip module doesn't exist in Ansible - 10/2020
@@ -54,17 +55,37 @@
   changed_when: false
 
 # requires Powershell 5 due to -Depth
-- name: "Get version folder name"
-  win_shell: "(Get-ChildItem {{ java_agent_dest_folder_win }} -Recurse -Depth 1 | Where{$_.Name -Match 'ver*'}  | Select-Object -ExpandProperty Name).Trim()"
-  register: ver
-  changed_when: false
+# - name: "Get version folder name"
+#   win_shell: "(Get-ChildItem {{ java_agent_dest_folder_win }} -Recurse -Depth 1 | Where{$_.Name -Match 'ver*'}  | Select-Object -ExpandProperty Name).Trim()"
+#   register: ver
+#   changed_when: false
+
+- name: Find the version specific directory name
+  win_find:
+    paths: "{{ java_agent_dest_folder_win }}"
+    patterns: "ver{{ agent_version }}*"
+    file_type: directory
+  register: result
+
+- name: Set the version folder fact
+  set_fact:
+    java_agent_ver_folder: "{{ result.files[0].path }}" # "{{ ver.stdout | regex_replace ('\\r\\n', '') }}"
 
 - debug:
-    msg: "{{ ver.stdout | regex_replace ('\\r\\n', '') }}"
+    msg: "{{ java_agent_ver_folder }}"
 
 - name: Copy controller-info.xml to the versioned agent folder
-  win_shell: "Copy-Item  {{ java_agent_dest_folder_win }}/conf/controller-info.xml  {{ java_agent_dest_folder_win }}/{{ ver.stdout | regex_replace ('\\r\\n', '') }}/conf/ -Force"
+  win_shell: "Copy-Item  {{ java_agent_dest_folder_win }}/conf/controller-info.xml  {{ java_agent_ver_folder }}/conf/ -Force"
   changed_when: false
+
+# Update the Log4j setting to apply the desired log level to all the loggers
+# listed in the {{agent_loggers}} list.
+- name: Set the log level on the agent (if != info, which it is by default)
+  include_role:
+    name: logger
+  vars:
+    logger_must_check_if_agent_dir_exists: false # no need to check if the dir exists
+  when: agent_log_level|lower != 'info'
 
 - name: Clean up - remove {{ java_agent_dest_file }}
   win_file:

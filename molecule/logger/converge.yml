@@ -1,0 +1,23 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+  - name: Update apt cache (on Debian).
+    apt:
+      update_cache: true
+      cache_valid_time: 3600
+    when: ansible_os_family == 'Debian'
+  roles:
+    - role: appdynamics.agents.logger
+  vars:
+    agent_loggers: ['com.appdynamics', 'com', 'com.singularity', 'com.singularity.BusinessTransactions', 'com.singularity.ee.agent.dbagent.collector.server.connection.wmi.NativeClient']
+    logger_ignore_missing: true # Ignore missing agents
+    init_and_validate_agent_variables: false # skip agent type variable init and validation
+    agents_to_set_loggers_for: ['db', 'java', 'machine']
+    agent_log_level: "debug"
+    db_agent_dest_folder_linux: /opt/appdynamics/db-agent
+    db_agent_dest_folder_windows: C:/appdynamics/db-agent
+    java_agent_dest_folder_linux: /opt/appdynamics/java-agent
+    java_agent_dest_folder_win: C:/appdynamics/java-agent
+    machine_agent_dest_folder_win: C:/appdynamics/machine-agent
+    machine_agent_dest_folder_linux: /opt/appdynamics/machine-agent

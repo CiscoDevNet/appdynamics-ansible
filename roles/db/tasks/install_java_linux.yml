@@ -1,6 +1,6 @@
 ---
 - name: Install OpenJDK on Redhat
-  yum: 
+  yum:
     update_cache: yes
     name: java-1.8.0-openjdk
     state: installed

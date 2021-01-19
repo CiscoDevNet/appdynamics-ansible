@@ -29,7 +29,7 @@ galaxy_info:
         - 7
         - 6
   galaxy_tags:
-    - apm 
+    - apm
     - monitoring
     - appdynamics
 

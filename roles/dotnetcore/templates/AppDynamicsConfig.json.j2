@@ -1,0 +1,33 @@
+{
+  "controller": {
+    "host": "{{ controller_host_name }}",
+    "port": {{ controller_port }},
+    "account": "{{ account_name }}",
+    "password": "{{ account_access_key }}",
+    "ssl": {{ enable_ssl | lower }}{% if enable_proxy | bool %},
+    "proxy" : {
+        "host": "{{ proxy_host }}",
+        "port": {{ proxy_port }}{% if enable_proxy_authentication | bool %},
+        "authentication": {
+              "username": "{{ proxy_user }}",
+              "password": "{{ proxy_password }}"
+         }
+{% endif %}
+    }
+{% endif %}
+  },
+  "application": {
+    "name": "{{ application_name }}",
+    "tier": "{{ tier_name }}",
+    "node": "{{ host_name }}-{{ tier_name }}",
+    "reusenodename": "true",
+    "nodenameprefix": "{{ tier_name }}-node-"
+  },
+  "analytics": {
+    "host": "{{ analytics_agent_host }}",
+    "port": {{ analytics_agent_port }}
+  },
+  "feature": [
+    "FULL_AGENT"
+  ]
+}

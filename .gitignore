@@ -1,0 +1,4 @@
+# MAC
+.DS_Store
+playbooks/my*
+playbooks/vars/my*

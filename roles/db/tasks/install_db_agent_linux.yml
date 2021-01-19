@@ -24,7 +24,8 @@
       changed_when: false # this ensures this task is idempotent
 
     - name: Check if DB agent exists
-      stat: path="{{ db_agent_dest_folder_linux }}/db-agent.jar"
+      stat:
+        path: "{{ db_agent_dest_folder_linux }}/db-agent.jar"
       register: previous_db_agent
 
     - name: Backup old DB agent to /tmp folder
@@ -41,7 +42,7 @@
       when: previous_db_agent.stat.exists
       changed_when: false
 
-    - debug: 
+    - debug:
         msg: "{{ running_processes.stdout_lines }}"
       when: previous_db_agent.stat.exists
       changed_when: false
@@ -99,7 +100,7 @@
       register: result
       failed_when: result.status_code != 200
 
-    - debug: 
+    - debug:
         msg: "{{ result }}"
 
     - name: Unzip DB agent file
@@ -121,6 +122,15 @@
         group: "{{ appdynamics_user }}"
         mode: 0755
       changed_when: false
+
+    # Update the Log4j setting to apply the desired log level to all the loggers
+    # listed in the {{agent_loggers}} list.
+    - name: Set the log level on the agent (if != info, which it is by default)
+      include_role:
+        name: logger
+      vars:
+        logger_must_check_if_agent_dir_exists: false # no need to check if the dir exists
+      when: agent_log_level|lower != 'info'
 
     - name: Add the DB Agent as a Service using Systemd
       template:

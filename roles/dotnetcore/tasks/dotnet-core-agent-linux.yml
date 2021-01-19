@@ -1,0 +1,95 @@
+---
+- name: .NET Core Linux Block
+  become: true
+  block:
+    - name: Clean out orphanned {{ dotnet_core_agent_dest_folder_linux }}
+      file:
+        path: "{{ dotnet_core_agent_dest_folder_linux }}/{{ dotnet_core_agent_dest_file }}"
+        state: absent
+      changed_when: false # this ensures this task is idempotent
+
+    - name: Check if the .NET core agent exists
+      stat:
+        path: "{{ dotnet_core_agent_dest_folder_linux }}/AppDynamics.Agent.netstandard.dll"
+      register: previous_agent
+
+    - name: Backup old .NET core agent to /tmp folder
+      archive:
+        path: "{{ dotnet_core_agent_dest_folder_linux }}"
+        dest: "/tmp/dotnet_core_agent.{{ ansible_date_time.iso8601 }}.zip"
+        mode: 0755
+      when: previous_agent.stat.exists
+      changed_when: false
+
+    - name: Clean up old agent after
+      file:
+        path: "{{ dotnet_core_agent_dest_folder_linux }}"
+        state: absent
+      changed_when: false
+
+    - name: Ensures application agent dir exists
+      file:
+        path: "{{ dotnet_core_agent_dest_folder_linux }}/"
+        state: directory
+        mode: 0755
+        recurse: yes
+      changed_when: false # this ensures this task is idempotent
+
+     # add delegate_to: localhost for customers who are unable to download on the remote server
+    - name: Download .NET Core Agent
+      get_url:
+        url: "{{ agent_download_url.stdout }}"
+        dest: "{{ dotnet_core_agent_dest_folder_linux }}/{{ dotnet_core_agent_dest_file }}"
+        force: true # download a new file even if agent.zip exists.
+      changed_when: false
+      register: result
+      failed_when: result.status_code != 200
+
+    - debug:
+         msg: "{{ result }}"
+
+    # Keeping downloading and unziping seperate tasks
+    # as not all customers are allowd to download on the remote servers.
+    - name: Unzip the .NET Core agent file
+      unarchive:
+        #src: "{{ agent_download_url.stdout }}"
+        src: "{{ dotnet_core_agent_dest_folder_linux }}/{{ dotnet_core_agent_dest_file }}"
+        dest: "{{ dotnet_core_agent_dest_folder_linux }}"
+        mode: 0755
+        remote_src: yes
+      changed_when: false
+
+    # TODO : Add proxy settings
+    - name: Configure controller settings
+      template:
+        src: templates/AppDynamicsConfig.json.j2
+        dest: '{{ dotnet_core_agent_dest_folder_linux }}/AppDynamicsConfig.json'
+        mode: 0755
+      changed_when: false
+
+    - name: Recursively change ownership of the .NET Core agent directory
+      file:
+        path: "{{ dotnet_core_agent_dest_folder_linux }}"
+        recurse: yes
+        owner: "{{ agent_dir_permission.user | default('root') }}"
+        group: "{{ agent_dir_permission.group | default('root') }}"
+      when:
+        - agent_dir_permission.user is defined
+        - agent_dir_permission.group is defined
+        - agent_dir_permission.user | length != 0
+        - agent_dir_permission.group | length != 0
+      ignore_errors: yes
+      changed_when: false
+
+    - name: Copy the environment variables shell script file to /etc/profile.d Directory
+      template:
+        src: templates/appd-dotnet-core-env.sh.j2
+        dest: /etc/profile.d/appd-dotnet-core-env.sh
+        mode: 0644
+      changed_when: false
+
+    - name: Clean up - remove {{ dotnet_core_agent_dest_file }}
+      file:
+        path: "{{ dotnet_core_agent_dest_folder_linux }}/{{ dotnet_core_agent_dest_file }}"
+        state: absent
+      changed_when: false # this ensures this task is idempotent

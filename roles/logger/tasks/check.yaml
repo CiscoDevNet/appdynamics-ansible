@@ -1,0 +1,63 @@
+---
+  # Check to see if the agent directory is present. If not, check is the
+  # ignore flag is set. If the ignore flag is set, we skiip this agent_type
+  # otherwise, an error is raised
+
+  - debug:
+      msg: "Must check is agent dir exists : {{ logger_must_check_if_agent_dir_exists }}"
+
+  # If the logger role is not run as part of installing agents, we need to
+  # check if the agent directory exists.
+  - block:
+      - name: Initialize the 'agent_folder_exists' parameter to false
+        set_fact:
+          agent_folder_exists: false
+
+      - block:
+          - name: Check if the Agent is present on the host (Linux).
+            stat:
+              path: "{{ logger_agent_dest_folder }}"
+            register: agent_folder
+
+          - name: Update the folder exist state.
+            set_fact:
+              agent_folder_exists: true
+            when: agent_folder.stat.exists
+        when: ansible_os_family != 'Windows'
+
+      - block:
+          - name: Check if the Agent is present on the host (Windows).
+            win_stat:
+              path: "{{ logger_agent_dest_folder }}"
+            register: agent_folder
+
+          - name: Update the folder exist state.
+            set_fact:
+              agent_folder_exists: true
+            when: agent_folder.stat.exists
+        when: ansible_os_family == 'Windows'
+    when: logger_must_check_if_agent_dir_exists
+
+  - debug:
+      msg: "Agent folder exists = {{ agent_folder_exists }}"
+
+  # Let the user know if we are skipping this host
+  - debug:
+      msg: "Agent folder {{ logger_agent_dest_folder }} was not found! Skipping this change"
+    when: >
+      (not agent_folder_exists) and
+      (logger_ignore_missing is defined) and
+      (logger_ignore_missing)
+
+  # Set the flag to indicate how the role processing should proceed
+  - name: Initialize the {{ apply_logger_settings }} flag to false
+    set_fact:
+      apply_logger_settings: false
+
+  - name: Update the {{ apply_logger_settings }} flag to true if the agent directory exists or we want an error if it does not
+    set_fact:
+      apply_logger_settings: true
+    when: >
+        (agent_folder_exists) or
+        (logger_ignore_missing is not defined) or
+        (logger_ignore_missing is defined and not logger_ignore_missing)

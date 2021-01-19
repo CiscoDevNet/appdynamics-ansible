@@ -1,0 +1,38 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+  - name: Update apt cache (on Debian).
+    apt:
+      update_cache: true
+      cache_valid_time: 3600
+    when: ansible_os_family == 'Debian'
+  roles:
+    - role: appdynamics.agents.dotnetcore
+  vars:
+    # Define Agent Type and Version
+    agent_version: 20.9.0
+    agent_type: dotnetcore #machine-win for Windows host
+
+    # The applicationName
+    application_name: "IoT_API" # ONLY required if agent type is not machine or db
+    tier_name: "dotnet_core_tier" # ONLY required if agent type is not machine or db
+
+    # Proxy settings
+    enable_proxy: "true"
+    proxy_host: localhost
+    proxy_port: 9090
+    enable_proxy_authentication: "true"
+    proxy_user: "joe"
+    proxy_password: "12345"
+
+    # Your controller details
+    controller_account_access_key: "2498dd59-d059-48c1-8ec2-8dc2f3efa112" # Please add this to your Vault
+    controller_global_analytics_account_name: 'customer1_e52eb4e7-25d2-41c4-a5bc-9685502317f2' # Please add this to your Vault
+    controller_host_name: "lncontroller20103-2010-o8evv8rp.appd-cx.com" # Your AppDynamics controller
+    controller_account_name: "customer1" # Please add this to your Vault
+    enable_ssl: false
+    controller_port: "8090"
+    analytics_event_endpoint: "http://lncontroller20103-2010-o8evv8rp.appd-cx.com:9080"
+    enable_analytics_agent: true
+    machine_hierarchy: "AppName|Owners|Environment|" # Make sure it ends with a |

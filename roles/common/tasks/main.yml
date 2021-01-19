@@ -1,43 +1,48 @@
 - include_tasks: validate_parameters.yml
+- include_tasks: verify_lxml.yml  
 
-- debug: 
-     msg:  "Role Agent variables: type=> {{ agent_type }} version=> {{ agent_version }}"
+- block:
+  - debug:
+       msg:  "Role Agent variables: type=> {{ agent_type }} version=> {{ agent_version }}"
 
-- include_tasks: get_agent.yml
+  - include_tasks: verify_jq.yml
+  - include_tasks: get_agent.yml
 
-- name: Set AppDynamics access key facts
-  set_fact:
-    account_access_key: "{{ controller_account_access_key }}"
-  no_log: yes
+  - name: Set AppDynamics access key facts
+    set_fact:
+      account_access_key: "{{ controller_account_access_key }}"
+    no_log: yes
 
-- name: Set Controller Proxy configuration
-  set_fact:
-    enable_proxy: "{{ enable_proxy | bool | lower }}"
+  - name: Set Controller Proxy configuration
+    set_fact:
+      enable_proxy: "{{ enable_proxy | bool | lower }}"
 
-- name: Set AppDynamics controller facts
-  set_fact:
-    account_name: "{{ controller_account_name }}"
-    global_analytics_account_name: "{{ controller_global_analytics_account_name }}"
-    controller_host_name: "{{ controller_host_name }}"
-    analytics_event_endpoint: "{{ analytics_event_endpoint }}"
-    sim_enabled: "{{ sim_enabled | bool | lower }}"
-    enable_ssl: "{{ enable_ssl | bool | lower }}"
-    controller_port: "{{ controller_port }}"
-    enable_analytics_agent: "{{ enable_analytics_agent | bool | lower }}"
-    machine_hierarchy: "{{ machine_hierarchy }}"
+  - name: Set AppDynamics controller facts
+    set_fact:
+      account_name: "{{ controller_account_name }}"
+      global_analytics_account_name: "{{ controller_global_analytics_account_name }}"
+      controller_host_name: "{{ controller_host_name }}"
+      analytics_event_endpoint: "{{ analytics_event_endpoint }}"
+      enable_ssl: "{{ enable_ssl | bool | lower }}"
+      controller_port: "{{ controller_port }}"
+      enable_analytics_agent: "{{ enable_analytics_agent | bool | lower }}"
+      machine_hierarchy: "{{ machine_hierarchy }}"
 
-- name: Set HTTPS Protocol facts
-  set_fact:
-    controller_protocol: "{% if enable_ssl|bool %}https{% else %}http{% endif %}"
+  - name: Set HTTPS Protocol facts
+    set_fact:
+      controller_protocol: "{% if enable_ssl|bool %}https{% else %}http{% endif %}"
 
-- name: Print params
-  vars:
-     params: "
-      SSL enabled = {{ enable_ssl }} |
-      Controller= {{ controller_protocol }}://{{ controller_host_name }}:{{ controller_port }} |
-      controller_account_name = {{ controller_account_name }} |
-      analytics_event_endpoint = {{ analytics_event_endpoint }} |
-      enable_analytics_agent = {{ enable_analytics_agent }}  |  
-      enable_proxy = {{ enable_proxy }}"
-  debug: 
-    msg: "{{ params.split('|') }}"
+  - name: Print params
+    vars:
+       params: "
+        SSL enabled = {{ enable_ssl }} |
+        Controller= {{ controller_protocol }}://{{ controller_host_name }}:{{ controller_port }} |
+        controller_account_name = {{ controller_account_name }} |
+        analytics_event_endpoint = {{ analytics_event_endpoint }} |
+        enable_analytics_agent = {{ enable_analytics_agent }}  |
+        enable_proxy = {{ enable_proxy }} |
+        agent_log_level = {{ agent_log_level }}|
+        agent_logger = {{ agent_loggers }}"
+    debug:
+      msg: "{{ params.split('|') }}"
+  when: init_and_validate_agent_variables

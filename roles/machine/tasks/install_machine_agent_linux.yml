@@ -19,7 +19,8 @@
       group: "{{ appdynamics_user }}"
 
   - name: Check if Machine Agent is already installed
-    stat: path="{{ machine_agent_dest_folder_linux }}/machineagent.jar"
+    stat:
+      path: "{{ machine_agent_dest_folder_linux }}/machineagent.jar"
     register: previous_agent
 
   - name: Backup existing Machine Agent
@@ -83,6 +84,15 @@
       group: "{{ appdynamics_user }}"
       mode: 0755
     changed_when: false
+
+  # Update the Log4j setting to apply the desired log level to all the loggers
+  # listed in the {{agent_loggers}} list.
+  - name: Set the log level on the agent (if != info, which it is by default)
+    include_role:
+      name: logger
+    vars:
+      logger_must_check_if_agent_dir_exists: false # no need to check if the dir exists
+    when: agent_log_level|lower != 'info'
 
   - name: Ensure machine agent file is executable
     file:
