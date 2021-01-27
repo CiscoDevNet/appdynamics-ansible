@@ -4,3 +4,8 @@ java_agent_dest_file: java-agent.zip
 
 # Java Agent Windows
 #java_agent_dest_folder_win: C:/appdynamics/java-agent
+
+create_appdynamics_user: yes
+agent_dir_permission:
+  user:  "{{ appdynamics_user }}"
+  group: "{{ appdynamics_user }}"

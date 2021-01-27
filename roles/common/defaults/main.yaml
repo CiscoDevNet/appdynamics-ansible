@@ -15,8 +15,10 @@ machine_agent_dest_folder_linux: "{{ appd_linux_root }}/machine-agent"
 machine_agent_dest_folder_win: "{{ appd_windows_root }}/machine-agent"
 
 
-#wheel user for Machine agent
+#wheel user for Machine agent, user for DB agent
 appdynamics_user: appdynamics
+# create appdynamics_user if missing
+create_appdynamics_user: no
 ############ DO NOT CHANGE ANY OF THESE DEFAULTS - Except you know what you're doing#######################
 java_system_properties: ""
 host_name: '{{ ansible_hostname }}' # computername/hostname of the target machine
