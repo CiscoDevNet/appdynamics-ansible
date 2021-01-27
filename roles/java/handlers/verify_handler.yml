@@ -1,0 +1,3 @@
+- name: Verify java agent restart
+  include_tasks: handlers/verify.yml
+  listen: "Verify java agent restart"
