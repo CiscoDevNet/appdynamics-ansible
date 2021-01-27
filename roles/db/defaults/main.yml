@@ -5,5 +5,3 @@ db_agent_name: "AppDynamics"
 
 # DB Agent Windows
 # db_agent_dest_folder_windows: C:/appdynamics/db-agent
-
-create_appdynamics_user: yes
