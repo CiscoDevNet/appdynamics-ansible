@@ -9,3 +9,8 @@ create_appdynamics_user: yes
 agent_dir_permission:
   user:  "{{ appdynamics_user }}"
   group: "{{ appdynamics_user }}"
+
+node_name: "{{ host_name }}-{{ tier_name }}"
+
+#add application details (app/tier/node) into controller-info.xml.
+application_details_in_config: yes
