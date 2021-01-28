@@ -1,0 +1,44 @@
+---
+- debug:
+    msg: "Apply logger setting to .NET agent on Windows"
+
+- name: find the location where the agent was installed
+  ansible.windows.win_reg_stat:
+    path: 'HKLM:\SOFTWARE\AppDynamics\dotNet Agent'
+    name: InstallationDir
+  register: dotnet_agent_program_folder_win_info
+
+- name: .NET agent install directory
+  debug:
+    msg: "{{ dotnet_agent_program_folder_win_info }}"
+
+- name: record the install directory if found
+  set_fact:
+    dotnet_agent_program_folder_win: "{{ dotnet_agent_program_folder_win_info.value }}"
+  when: dotnet_agent_program_folder_win_info.exists
+
+# Check if we need to apply the logger settings. The check role
+# updates the {{ apply_logger_settings }} variable
+- include_tasks: check.yaml
+  vars:
+    logger_agent_dest_folder: "{{ dotnet_agent_program_folder_win }}"
+
+# Apply log settings to Windows hosts
+- name: Set the log level for the .NET agent on Windows
+  block:
+
+  - name: Set log level for all the matching loggers
+    community.windows.win_xml:
+      path: "{{ dotnet_agent_program_folder_win }}\\AppDynamicsAgentLog.config"
+      xpath: //*[local-name()='logger'][@name='{{ item }}' and @writeTo='logfile']
+      attribute: minlevel
+      fragment: "{{ agent_log_level }}"
+      type: attribute
+      count: yes
+    loop: "{{ agent_loggers }}"
+    register: result
+    changed_when: # only report changes if they are not part of installing the agent
+      - logger_must_check_if_agent_dir_exists
+      - result.changed
+
+  when: apply_logger_settings
