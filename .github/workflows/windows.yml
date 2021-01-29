@@ -22,14 +22,17 @@ jobs:
       fail-fast: true
       matrix:
         distro:
-          # - centos8
-          - debian10
+          # - windows2016
+          - windows2019
         collection_role:
           - dotnet
     defaults:
       run:
           shell: wsl-bash {0}
     steps:
+      - name: Update Admin Pass
+        shell: cmd
+        run: net user Administrator molecule123!
       - name: Check out code
         uses: actions/checkout@v2
 
@@ -44,7 +47,7 @@ jobs:
           sudo apt-get install python3-pip git libffi-dev libssl-dev -y
           pip3 install --user ansible pywinrm
           echo 'PATH=$HOME/.local/bin:$PATH' >> ~/.bashrc
-      # source .bashrc
+          source ~/.bashrc
       
       # - name: Setup tmate session
       #   uses: mxschmitt/action-tmate@v3
@@ -57,7 +60,7 @@ jobs:
       - name: Install test dependencies.
         run: | 
           pip3 install molecule[lint] yamllint ansible-lint flake8 lxml
-          sudo apt-get install jq -y
+          sudo apt-get install jq curl -y
       
       - name: Build the collection
         run: |
