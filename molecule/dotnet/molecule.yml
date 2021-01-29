@@ -8,7 +8,7 @@ driver:
     ansible_connection_options:
       ansible_connection: winrm
       ansible_winrm_transport: ntlm
-      ansible_user: Administrator
+      ansible_user: appdynamics
       ansible_password: molecule123!
       ansible_port: 5985
       ansible_host: localhost

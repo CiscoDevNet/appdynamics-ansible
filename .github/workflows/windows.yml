@@ -33,8 +33,8 @@ jobs:
       - name: Update Admin Pass
         shell: cmd
         run: | 
-          net user
-          net user Administrator molecule123!
+          net user appdynamics molecule123! /add /passwordchg:no /passwordreq:yes /active:yes /Y
+          net localgroup Administrators appdynamics /add
       - name: Check out code
         uses: actions/checkout@v2
 
