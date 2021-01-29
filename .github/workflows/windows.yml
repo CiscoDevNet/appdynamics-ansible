@@ -41,7 +41,9 @@ jobs:
         # https://github.com/marketplace/actions/setup-wsl#action
       - name: Setup WSL
         uses: Vampire/setup-wsl@v1
-      
+        with:
+          wsl-shell-command: bash --noprofile -euo pipefail
+
       - name: Install Ansible in WSL
         # shell: wsl-bash {0}
         run: |
