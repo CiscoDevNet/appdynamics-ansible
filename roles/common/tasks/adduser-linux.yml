@@ -1,4 +1,5 @@
 - name: "Add user {{ appdynamics_user }}"
+  become: yes
   user:
     name: "{{ appdynamics_user }}"
     system: yes

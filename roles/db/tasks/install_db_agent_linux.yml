@@ -2,7 +2,6 @@
 - name: DB Agent Linux Block
   become: true
   block:
-    - include_tasks: appd_sudoer.yml
 
     - include_tasks: install_java_linux.yml
       when: install_jre is undefined or install_jre
