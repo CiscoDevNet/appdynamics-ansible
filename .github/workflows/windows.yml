@@ -14,7 +14,7 @@ on:
     #   - 'roles/common/**'
 jobs:
   molecule:
-    runs-on: windows-latest
+    runs-on: windows-2019
     env:
       PY_COLORS: 1
       ANSIBLE_FORCE_COLOR: 1
@@ -32,7 +32,9 @@ jobs:
     steps:
       - name: Update Admin Pass
         shell: cmd
-        run: net user Administrator molecule123!
+        run: | 
+          net user
+          net user Administrator molecule123!
       - name: Check out code
         uses: actions/checkout@v2
 
