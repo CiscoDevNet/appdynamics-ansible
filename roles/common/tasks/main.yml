@@ -47,5 +47,8 @@
       msg: "{{ params.split('|') }}"
   when: init_and_validate_agent_variables
 
-- include_tasks: add_user.yml
-  when: create_appdynamics_user | bool
+- include_tasks: adduser-linux.yml
+  when: >
+    ( ansible_os_family == 'RedHat' or ansible_os_family == 'Debian' ) 
+    and create_appdynamics_user | bool
+
