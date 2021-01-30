@@ -35,6 +35,12 @@ jobs:
         run: | 
           net user appdynamics molecule123! /add /passwordchg:no /passwordreq:yes /active:yes /Y
           net localgroup Administrators appdynamics /add
+      
+      - name: Set git to use LF
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+      
       - name: Check out code
         uses: actions/checkout@v2
 
@@ -47,6 +53,7 @@ jobs:
       - name: Add path
         run: |
           env
+          ls -lah
           echo 'PATH=$HOME/.local/bin:$PATH' >> ~/.bashrc
           echo $PATH
           source ~/.bashrc
@@ -88,12 +95,14 @@ jobs:
         run: |
           source ~/.bashrc
           collection_file=$( basename $(ansible-galaxy collection build -f | awk -F" " '{print $NF}'))
-          echo "COLLECTION_FILE=$collection_file" >> $GITHUB_ENV
+          echo 'COLLECTION_FILE=$collection_file' >> ~/.bashrc
+        # echo "COLLECTION_FILE=$collection_file" >> $GITHUB_ENV
+          
         
       - name: Install the collection
         run: |
           source ~/.bashrc
-          ansible-galaxy collection install ${{ env.COLLECTION_FILE }}
+          ansible-galaxy collection install $COLLECTION_FILE
       
       - name: Run role tests
         run: >-
