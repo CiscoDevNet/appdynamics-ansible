@@ -8,6 +8,7 @@
     agent_version: 20.11.0
     agent_type: dotnet
     # The applicationName
+    application_name: DotnetApp
     restart_app: false
 
     # Agent configuration settings
