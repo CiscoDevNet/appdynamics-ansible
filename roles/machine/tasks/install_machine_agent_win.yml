@@ -28,11 +28,13 @@
     state: absent
   register: remove_read_std_in_result
   when: previous_agent.stat.exists
+  changed_when: false
 
 - name: Remove the machine agent service
   win_command: cscript.exe "{{ machine_agent_dest_folder_win }}/UninstallService.vbs"
   register: install_win_service_result
   when: previous_agent.stat.exists
+  changed_when: false
 
 - name: Clean up old agent after backup
   win_shell: "Remove-Item {{ machine_agent_dest_folder_win }}/* -Recurse"
@@ -99,6 +101,7 @@
 - name: 'Install machine agent service'
   win_command: "cscript.exe {{ machine_agent_dest_folder_win }}/InstallService.vbs {{ java_system_properties }}"
   register: install_win_service_result
+  changed_when: false
 
 - name: Install service result
   debug:
