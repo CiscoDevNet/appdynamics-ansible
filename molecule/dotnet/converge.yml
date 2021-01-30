@@ -46,4 +46,3 @@
     controller_port: "8090"
     analytics_event_endpoint: "http://lncontroller20103-2010-o8evv8rp.appd-cx.com:9080"
     enable_analytics_agent: true
-
