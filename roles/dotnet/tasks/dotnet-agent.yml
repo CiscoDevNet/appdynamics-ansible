@@ -8,22 +8,19 @@
      url: '{{ agent_download_url.stdout }}'
      dest: '{{ dotnet_agent_dest_folder_win }}\\{{ dotnet_agent_dest_file }}'
      force: 'true'
-  tags:
-    - molecule-idempotence-notest
+  changed_when: false
 
 - name: Configure Winston conf file
   template:
     src: templates/application-agent-controller-info.xml.j2
     dest: "{{ dotnet_agent_dest_folder_win }}\\controller-info.xml"
     force: yes
-  tags:
-    - molecule-idempotence-notest
+  changed_when: false
 
 - name: "Check if .NET agent is installed"
   win_shell: "get-wmiobject Win32_Product | Select-Object IdentifyingNumber, Name | Where{$_.Name -Match 'AppDynamics*'} | Select-Object -ExpandProperty IdentifyingNumber"
   register: is_agent_installed
-  tags:
-    - molecule-idempotence-notest
+  changed_when: false
 
 - name: Print .NET agent installation id
   debug:
@@ -35,8 +32,7 @@
     log_path: "{{ dotnet_agent_dest_folder_win }}/UninstallLogs.txt"
     state: absent
   when: is_agent_installed.stdout | length != 0
-  tags:
-    - molecule-idempotence-notest
+  changed_when: false
 
 - name: Remove the conf file # Since it does not update during installation
   win_file:
@@ -44,8 +40,7 @@
     state: absent
     force: true
   when: is_agent_installed.stdout | length != 0
-  tags:
-    - molecule-idempotence-notest
+  changed_when: false
 
 - block:
   - name: Install .NET agent service
@@ -58,8 +53,7 @@
     notify:
       - Verify .NET agent restart
       - Restart app listener
-    tags:
-      - molecule-idempotence-notest
+    changed_when: false
   rescue:
     - name: Get log Winston.txt
       win_shell: 'Get-Content {{ DOTNETAGENTFOLDER }}\Logs\Winston.txt -Tail 30'
@@ -87,5 +81,4 @@
   win_file:
     path: "{{ dotnet_agent_dest_folder_win }}\\{{ dotnet_agent_dest_file }}"
     state: absent
-  tags:
-    - molecule-idempotence-notest
+  changed_when: false
