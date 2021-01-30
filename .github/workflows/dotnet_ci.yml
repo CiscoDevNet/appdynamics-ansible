@@ -13,7 +13,7 @@ on:
       - '.github/workflows/dotnet_ci.yml'
       - 'roles/common/**'
 jobs:
-  molecule:
+  molecule-windows:
     runs-on: windows-2019
     env:
       PY_COLORS: 1
@@ -40,11 +40,19 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
 
+      # - name: Allow basic auth
+      #   shell: powershell
+      #   run: |
+      #     Set-Item -Path WSMan:\localhost\Service\Auth\Basic -Value $true
+
       - name: Prepare WinRM
         shell: cmd
         run: | 
           winrm quickconfig -q -force
           winrm enumerate winrm/config/Listener
+      - name: Create user
+        shell: cmd
+        run: | 
           net user appdynamics molecule123! /add /passwordchg:no /passwordreq:yes /active:yes /Y
           net localgroup Administrators appdynamics /add
       
