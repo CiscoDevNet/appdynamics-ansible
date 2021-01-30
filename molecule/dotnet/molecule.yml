@@ -12,6 +12,7 @@ driver:
       ansible_password: molecule123!
       ansible_port: 5985
       ansible_host: localhost
+      # ansible_winrm_server_cert_validation: ignore
 # lint: |
 #   set -e
 #   yamllint .
