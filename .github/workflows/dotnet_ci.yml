@@ -72,24 +72,16 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ./pip-cache
-          key: ${{ runner.os }}-pip-ansible
-          #${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+          key: ${{ runner.os }}-pip-ansible-${{ hashFiles('molecule/requirements-windows.txt') }}
 
-      - name: Install Ansible in WSL
+      - name: Install Ansible and test dependencies in WSL
         run: |
           echo $PATH
           source ~/.vars
           mkdir -p ./pip-cache
           sudo apt-get update
-          sudo apt-get install python3-pip git libffi-dev libssl-dev -y
-          pip3 install --cache-dir=./pip-cache --user ansible pywinrm
-    
-      - name: Install test dependencies
-        run: | 
-          pip3 install --cache-dir=./pip-cache --user ansible molecule[lint] yamllint ansible-lint flake8 lxml
-          sudo apt-get install jq curl -y
+          sudo apt-get install jq curl python3-pip git libffi-dev libssl-dev -y
+          pip3 install --cache-dir=./pip-cache --user -r molecule/requirements-windows.txt
       
       - name: Build the collection
         run: |
