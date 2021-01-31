@@ -73,6 +73,8 @@ jobs:
         with:
           path: ./pip-cache
           key: ${{ runner.os }}-pip-ansible-${{ hashFiles('molecule/requirements-windows.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-ansible
 
       - name: Install Ansible and test dependencies in WSL
         run: |
