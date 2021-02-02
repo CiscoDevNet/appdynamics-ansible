@@ -5,7 +5,6 @@ agent_log_level: "info"
 
 #Internal variables.
 agent_folder_exists: true # default to true for when the dir is not explicitly checked
-logger_must_check_if_agent_dir_exists: true # set to false when you know the directory exists (like when installing an agent)
 
 # The location on the windows server where the .NET agent program files are installed
 # This could be different is the install directory was changed during setup

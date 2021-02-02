@@ -20,5 +20,5 @@
   when: apply_logger_settings
   register: result
   changed_when: # only report changes if they are not part of installing the agent
-    - logger_must_check_if_agent_dir_exists
+    - logger_role_standalone
     - result.changed

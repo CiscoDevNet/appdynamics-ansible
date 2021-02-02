@@ -14,6 +14,7 @@ java_agent_dest_folder_win: "{{ appd_windows_root }}/java-agent"
 machine_agent_dest_folder_linux: "{{ appd_linux_root }}/machine-agent"
 machine_agent_dest_folder_win: "{{ appd_windows_root }}/machine-agent"
 
+logger_role_standalone: true # used to indicate that the role is being used on its own
 
 #wheel user for Machine agent, user for DB agent
 appdynamics_user: appdynamics

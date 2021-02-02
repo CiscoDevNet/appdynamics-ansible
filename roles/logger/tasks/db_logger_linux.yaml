@@ -72,7 +72,7 @@
       delegate_to: localhost
       when: item.count >= 1
       changed_when:
-        - logger_must_check_if_agent_dir_exists
+        - logger_role_standalone
         - result.changed
 
     - name: Copy the local file back to the host
