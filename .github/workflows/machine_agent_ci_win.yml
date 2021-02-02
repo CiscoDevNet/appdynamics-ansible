@@ -13,7 +13,7 @@ on:
       - '.github/workflows/machine_agent_ci.yml'
       - 'roles/common/**'
 jobs:
-  molecule-windows:
+  molecule:
     runs-on: windows-2019
     strategy:
       fail-fast: true
