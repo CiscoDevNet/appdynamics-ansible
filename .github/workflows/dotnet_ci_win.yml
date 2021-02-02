@@ -15,9 +15,6 @@ on:
 jobs:
   molecule-windows:
     runs-on: windows-2019
-    env:
-      PY_COLORS: 1
-      ANSIBLE_FORCE_COLOR: 1
     strategy:
       fail-fast: true
       matrix:
