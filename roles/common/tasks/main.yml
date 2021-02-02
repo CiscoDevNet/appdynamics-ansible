@@ -1,6 +1,7 @@
 - include_tasks: validate_parameters.yml
-- include_tasks: verify_lxml.yml  
-
+- include_tasks: verify_lxml.yml
+  when: logger_role_standalone is defined and logger_role_standalone
+ 
 - block:
   - debug:
        msg:  "Role Agent variables: type=> {{ agent_type }} version=> {{ agent_version }}"

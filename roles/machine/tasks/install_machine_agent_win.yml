@@ -81,7 +81,7 @@
   include_role:
     name: logger
   vars:
-    logger_must_check_if_agent_dir_exists: false # no need to check if the dir exists
+    logger_role_standalone: false # no need to check if the dir exists
   when: agent_log_level|lower != 'info'
 
 # - name: Set the log level for the machine agent

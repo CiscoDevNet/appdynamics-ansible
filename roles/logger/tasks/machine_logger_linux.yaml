@@ -52,7 +52,7 @@
     when: item.count >= 1
     register: result
     changed_when: # only report changes if they are not part of installing the agent
-      - logger_must_check_if_agent_dir_exists
+      - logger_role_standalone
       - result.changed
 
   - name: Copy the local file back to the host
