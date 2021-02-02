@@ -6,6 +6,7 @@
   - debug:
       msg: "Must check is agent dir exists : {{ logger_role_standalone }}"
 
+
   # If the logger role is not run as part of installing agents, we need to
   # check if the agent directory exists.
   - block:
@@ -54,7 +55,7 @@
     set_fact:
       apply_logger_settings: false
 
-  - name: Update the {{ apply_logger_settings }} flag to true if the agent directory exists or we want an error if it does not
+  - name: Update the 'apply_logger_settings' flag to true if the agent directory exists or we want an error if it does not
     set_fact:
       apply_logger_settings: true
     when: >

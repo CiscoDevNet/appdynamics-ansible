@@ -18,4 +18,3 @@
     groups: wheel
     append: yes
     state: present
-    createhome: yes

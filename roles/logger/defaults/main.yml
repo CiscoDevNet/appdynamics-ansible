@@ -1,7 +1,12 @@
 ---
 agents_to_set_loggers_for: [] # Initialize to an empty list
-agent_loggers: ['com', 'com.singularity']
+agent_loggers: ['*', 'com', 'com.singularity']
 agent_log_level: "info"
 
 #Internal variables.
 agent_folder_exists: true # default to true for when the dir is not explicitly checked
+
+# The location on the windows server where the .NET agent program files are installed
+# This could be different is the install directory was changed during setup
+dotnet_agent_program_folder_win: "C:\\Program Files\\AppDynamics\\AppDynamics .NET Agent"
+

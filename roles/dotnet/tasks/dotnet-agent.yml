@@ -62,6 +62,15 @@
   debug:
     var: install_app_agent_result
 
+# Update the Log4j setting to apply the desired log level to all the loggers
+# listed in the {{agent_loggers}} list.
+- name: Set the log level on the agent (if != info, which it is by default)
+  include_role:
+    name: logger
+  vars:
+    logger_must_check_if_agent_dir_exists: false
+  # when: agent_log_level|lower != 'info' 
+
 - name: Clean up - remove {{ dotnet_agent_dest_file }}
   win_file:
     path: "{{ dotnet_agent_dest_folder_win }}\\{{ dotnet_agent_dest_file }}"

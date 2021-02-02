@@ -18,6 +18,13 @@
 #    look at the defined {{ agent_type }} to work out how to set the debug level
 # ------------------------------------------------------------------------------
 
+# -------------[ dotnet ]---------------
+- include_tasks: dotnet_logger_win.yaml
+  when: >
+    (ansible_os_family == 'Windows') and
+    (agents_to_set_loggers_for | select('match', 'dotnet' ) or
+    ( agent_type is defined and agent_type == "dotnet" ))
+
 # --------------[ DB ]------------------
 - include_tasks: db_logger_linux.yaml
   when: >

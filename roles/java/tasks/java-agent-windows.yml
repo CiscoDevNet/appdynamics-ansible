@@ -38,8 +38,9 @@
   register: result
   failed_when: result.status_code != 200
 
-- debug:
-         msg: "{{ result }}"
+- name: Print download results
+  debug:
+    msg: "{{ result }}"
 
 - name: Unzip the Java agent
   win_unzip:

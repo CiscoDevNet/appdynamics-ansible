@@ -14,7 +14,7 @@
       account_access_key: "{{ controller_account_access_key }}"
     no_log: yes
 
-  - name: Set Controller Proxy configuration
+  - name: Set Controller proxy configuration
     set_fact:
       enable_proxy: "{{ enable_proxy | bool | lower }}"
 
@@ -47,3 +47,8 @@
     debug:
       msg: "{{ params.split('|') }}"
   when: init_and_validate_agent_variables
+
+- include_tasks: adduser-linux.yml
+  when: >
+    ( ansible_os_family == 'RedHat' or ansible_os_family == 'Debian' ) 
+    and create_appdynamics_user | bool

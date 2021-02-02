@@ -53,7 +53,7 @@
     You can override this configuration with an environment variable 'APPDYNAMICS_AGENT_APPLICATION_NAME' or
     the system property '-Dappdynamics.agent.applicationName'  -->
 
-    <application-name>{{ application_name }}</application-name>
+    <application-name>{{ application_name if application_details_in_config else '' }}</application-name>
 
     <!--  The logical business tier this node belongs to.
     For example, a tier can be 'ACME Frontend' or 'ACME Backend Service' etc.
@@ -63,7 +63,7 @@
     You can override this configuration with an environment variable 'APPDYNAMICS_AGENT_TIER_NAME' or
     the system property '-Dappdynamics.agent.tierName'  -->
 
-    <tier-name>{{ tier_name }}</tier-name>
+    <tier-name>{{ tier_name if application_details_in_config else '' }}</tier-name>
 
     <!--  Unique name for this jvm node. The name must be unique within the business application. e.g. weblogicinstance23 or
     hweb24. If your JVM / appserver startup script contains a system property that you want to use for the node name,
@@ -73,7 +73,7 @@
     You can override this configuration with an environment variable 'APPDYNAMICS_AGENT_NODE_NAME' or
     the system property '-Dappdynamics.agent.nodeName'  -->
 
-    <node-name>{{ host_name }}-{{ tier_name }}</node-name>
+    <node-name>{{ node_name if application_details_in_config else '' }}</node-name>
 
     <!--  The runtime directory for all runtime files (logs, transaction configuration) for agent nodes using this agent
     installation. This optional property defaults to the agent-installation-directory . If you specify a different directory,
