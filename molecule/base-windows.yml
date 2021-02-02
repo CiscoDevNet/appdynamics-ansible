@@ -9,7 +9,7 @@ driver:
       ansible_connection: winrm
       ansible_winrm_transport: ntlm
       ansible_user: appdynamics
-      ansible_password: molecule123!
+      ansible_password: ${WINRM_PASSWORD}
       ansible_port: 5985
       ansible_host: localhost
       # ansible_winrm_server_cert_validation: ignore
