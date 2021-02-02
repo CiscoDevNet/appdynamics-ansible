@@ -15,9 +15,6 @@ on:
 jobs:
   molecule-windows:
     runs-on: windows-2019
-    env:
-      PY_COLORS: 1
-      ANSIBLE_FORCE_COLOR: 1
     strategy:
       fail-fast: true
       matrix:
@@ -52,8 +49,10 @@ jobs:
           winrm enumerate winrm/config/Listener
       - name: Create user
         shell: cmd
+        env:
+          WINRM_PASSWORD: ${{ secrets.WINRM_PASSWORD }}
         run: | 
-          net user appdynamics molecule123! /add /passwordchg:no /passwordreq:yes /active:yes /Y
+          net user appdynamics "%WINRM_PASSWORD%" /add /passwordchg:no /passwordreq:yes /active:yes /Y
           net localgroup Administrators appdynamics /add
       
       # https://github.com/marketplace/actions/setup-wsl#action
@@ -74,7 +73,7 @@ jobs:
           path: ./pip-cache
           key: ${{ runner.os }}-pip-ansible-${{ hashFiles('molecule/requirements-windows.txt') }}
           restore-keys: |
-            ${{ runner.os }}-pip-ansible          
+            ${{ runner.os }}-pip-ansible
 
       - name: Install Ansible and test dependencies in WSL
         run: |
@@ -105,5 +104,7 @@ jobs:
           molecule --base-config molecule/base-windows.yml --debug test -s ${{ matrix.collection_role }}
         env: 
           PY_COLORS: '1'
+          WINRM_PASSWORD: ${{ secrets.WINRM_PASSWORD }}
           ANSIBLE_FORCE_COLOR: '1'
           MOLECULE_DISTRO: ${{ matrix.distro }}
+          WSLENV: PY_COLORS:WINRM_PASSWORD:ANSIBLE_FORCE_COLOR:MOLECULE_DISTRO
