@@ -1,0 +1,24 @@
+---
+- hosts: jboss
+  tasks:
+    - name: Include variables for the controller settings
+      include_vars: vars/controller.yaml
+
+    - include_role:
+        name: appdynamics.agents.instrument_jboss
+      vars:
+        # Define Agent Type and Version
+        agent_version: 20.10.0
+        agent_type: sun-java
+        # The applicationName
+        application_name: "JbossAPP" # ONLY required if agent type is not machine or db
+        tier_name: "java_tier" # ONLY required if agent type is not machine or db
+        node_name: jboss1-node3
+        proxy_enabled: false
+        restart_app: yes
+
+        # controller_account_access_key: "b0248ceb-c954-4a37-97b5-207e90418cb4" # Please add this to your Vault
+        # controller_host_name: "ansible-20100nosshcont-bum4wzwa.appd-cx.com" # Your AppDynamics controller
+        # controller_account_name: "customer1" # Please add this to your Vault
+        # enable_ssl: "false"
+        # controller_port: "8090"
