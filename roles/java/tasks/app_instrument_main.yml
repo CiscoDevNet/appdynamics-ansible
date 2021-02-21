@@ -1,0 +1,35 @@
+- name: Include app defaults
+  include_vars: 
+    file: app_defaults.yml
+    name: app_defaults
+- name: Include app type defaults
+  include_vars: 
+    file: app_{{ app_inputs.type }}.yml
+    name: app_type_defaults
+- name: Prepare app vars
+  set_fact:
+    app: "{{ app_defaults | combine( app_type_defaults ) | combine( app_inputs ) }}"
+
+- name: Set application_name from host defaults
+  set_fact:
+    app: "{{ app | combine( {'application_name': application_name } ) }}"
+  when: app.application_name is not defined and application_name is defined
+
+- name: Set tier_name from host defaults
+  set_fact:
+    app: "{{ app | combine( {'tier_name': tier_name } ) }}"
+  when: app.tier_name is not defined and tier_name is defined
+
+- name: Set node_name from host defaults
+  set_fact:
+    app: "{{ app | combine( { 'node_name': node_name } ) }}"
+  when: app.node_name is not defined and node_name is defined
+
+- name: Print app vars
+  debug:
+    var: app
+
+- include_tasks: app_instrument_{{ app.type }}.yml
+
+- include_tasks: app_restart_verify.yml
+  when: instrumentation.changed and app.restart_app | bool and app.service is defined
