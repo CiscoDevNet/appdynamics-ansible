@@ -3,3 +3,14 @@
 
 - include_tasks: java-agent-windows.yml
   when: ansible_os_family == 'Windows'
+
+- name: Instrument applications
+  include_tasks: app_instrument_{{ app.type }}.yml
+  # vars:
+    # jboss_script: "{{ app.type }}"
+    # separator: '\'
+    # app: "{{ app }}"
+  loop: "{{ apps }}"
+  loop_control: 
+    loop_var: app
+  when: apps is defined and apps | length > 0
