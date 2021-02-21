@@ -23,3 +23,18 @@ Use `sun-java8` instead of `sun-java` as `agent_type` if the instrumented applic
         controller_port: "8090"
 
 ```
+
+
+## Instrumentation
+
+# Common vars
+service - systemd service
+restart_app - 
+user - pid user that should be added to appdynamics group
+application_name:
+tier_name: 
+node_name: 
+backup: whether to make backup modified files or not
+
+# Jboss specific:
+jboss_config
