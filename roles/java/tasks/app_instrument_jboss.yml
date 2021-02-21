@@ -1,10 +1,3 @@
-- name: Print
-  debug:
-    msg: |
-      Instrumenting application {{ app.type }}
-      application_name={{ app.application_name }}
-      tier_name={{ app.tier_name }}
-      node_name={{ app.node_name }}
 
 - block:
     - name: Check jboss path is present
@@ -34,7 +27,4 @@
       export JAVA_OPTS="$JAVA_OPTS -javaagent:{{ java_agent_dest_folder_linux }}/javaagent.jar{{ ' -Dappdynamics.http.proxyHost='+proxy_host if enable_proxy else '' }}{{' -Dappdynamics.http.proxyPort='+proxy_port if enable_proxy else ''}}"
       while true;do
       \1
-    backup: yes
-
-- include_tasks: app_restart_verify.yml
-  when: instrumentation.changed and app.restart_app | bool and app.service is defined
+    backup: "{{ app.backup | bool }}"
