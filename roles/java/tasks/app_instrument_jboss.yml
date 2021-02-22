@@ -1,4 +1,3 @@
-
 - block:
     - name: Check jboss path is present
       stat: 

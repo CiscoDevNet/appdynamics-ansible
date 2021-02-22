@@ -29,7 +29,13 @@
   debug:
     var: app
 
+- include_tasks: app_add_user_to_group.yml
+  when: app.user is defined
+
 - include_tasks: app_instrument_{{ app.type }}.yml
+
+- include_tasks: app_service_override.yml
+  when: app.service is defined and app.add_service_override
 
 - include_tasks: app_restart_verify.yml
   when: instrumentation.changed and app.restart_app | bool and app.service is defined
