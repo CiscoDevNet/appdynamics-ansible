@@ -17,7 +17,7 @@ platforms:
 provisioner:
   name: ansible
   playbooks:
-    #prepare: ${MOLECULE_PLAYBOOK:-prepare.yaml}
+    prepare: ${MOLECULE_PLAYBOOK:-prepare.yaml}
     converge: ${MOLECULE_PLAYBOOK:-converge.yml}
 verifier:
   name: ansible
