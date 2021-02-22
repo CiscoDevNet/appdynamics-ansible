@@ -4,12 +4,14 @@ on:
     paths:
       - 'roles/java/**'
       - 'molecule/java/**'
+      - 'molecule/base-docker.yml'
       - '.github/workflows/java_agent_ci.yml'
       - 'roles/common/**'
   pull_request:
     paths:
       - 'roles/java/**'
       - 'molecule/java/**'
+      - 'molecule/base-docker.yml'
       - '.github/workflows/java_agent_ci.yml'
       - 'roles/common/**'
 jobs:
