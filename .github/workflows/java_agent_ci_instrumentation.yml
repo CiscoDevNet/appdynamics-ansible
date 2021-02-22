@@ -28,6 +28,7 @@ jobs:
         #   - debian10
         instrumentation_type:
           - tomcat
+          - jboss
     steps:
       - name: Check out code
         uses: actions/checkout@v2
@@ -39,8 +40,8 @@ jobs:
     
       - name: Install test dependencies.
         run: | 
-          apt update && apt install python3-apt -y
-          pip3 install ansible molecule-docker docker yamllint ansible-lint flake8 lxml apt_pkg apt
+          sudo apt update && sudo apt install python3-apt -y
+          pip3 install ansible molecule-docker docker yamllint ansible-lint flake8 lxml
       
       - name: Build the collection
         run: |
