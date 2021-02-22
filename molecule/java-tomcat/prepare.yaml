@@ -1,0 +1,11 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Install tomcat
+      become: true
+      package:
+        name: 
+          - tomcat9
+          - tomcat9-admin
+        state: present
+      when: ansible_os_family in ['Debian']
