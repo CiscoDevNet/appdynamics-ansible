@@ -4,13 +4,13 @@ on:
     paths:
       - 'roles/java/**'
       - 'molecule/java/**'
-      - '.github/workflows/java_agent_ci.yml'
+      - '.github/workflows/java_agent_ci_win.yml'
       - 'roles/common/**'
   pull_request:
     paths:
       - 'roles/java/**'
       - 'molecule/java/**'
-      - '.github/workflows/java_agent_ci.yml'
+      - '.github/workflows/java_agent_ci_win.yml'
       - 'roles/common/**'
 jobs:
   molecule:
