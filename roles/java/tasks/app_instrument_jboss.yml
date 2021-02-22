@@ -7,10 +7,8 @@
   rescue:
     - fail:
         msg: "Please make sure {{ app.jboss_config | dirname }} is present. Is Jboss installed?"
-
-# - name: Add jboss user to {{ appdynamics_user }} group
-#   become: yes
-#   include: add_user.yml
+      tags:
+        - skip_ansible_lint
 
 - name:  Add appd instrumentation to jboss
   become: yes
