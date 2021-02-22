@@ -30,7 +30,10 @@
     var: app
 
 - include_tasks: app_add_user_to_group.yml
-  when: app.user is defined
+  when: > 
+    create_appdynamics_user and 
+    app.user is defined
+    
 
 - include_tasks: app_instrument_{{ app.type }}.yml
 

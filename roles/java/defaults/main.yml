@@ -14,32 +14,4 @@ agent_dir_permission:
   user:  "{{ appdynamics_user }}"
   group: "{{ appdynamics_user }}"
 
-
-apps:
-  - type: jboss
-    application_name: a
-    tier_name: bcascsdds
-    node_name: node
-    jboss_config: /opt/wildfly/bin/standalone.sh
-    jboss_user: wildfly
-    service: wildfly
-    restart_app: yes
-  # - type: tomcat
-  #   application_name:
-  #   tier_name:
-  #   node_name:
-  #   restart_app: yes
-  #   tomcat_user: tomcat
-  #   tomcat_group: tomcat
-  #   tomcat_config: /etc/tomcat/conf.d/appdynamics.conf
-  # - type: custom
-  #   application_name:
-  #   tier_name: 
-  #   node_name:
-  #   restart_app: no
-  # - type: weblogic
-  #   application_name:
-  #   tier_name: 
-  #   node_name:
-  #   restart_app: no
-  #   weblogic_script: 
+create_appdynamics_user: yes
