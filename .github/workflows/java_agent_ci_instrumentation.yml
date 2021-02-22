@@ -38,7 +38,9 @@ jobs:
           python-version: '3.x'
     
       - name: Install test dependencies.
-        run: pip3 install ansible molecule-docker docker yamllint ansible-lint flake8 lxml apt_pkg apt
+        run: | 
+          apt update && apt install python3-apt -y
+          pip3 install ansible molecule-docker docker yamllint ansible-lint flake8 lxml apt_pkg apt
       
       - name: Build the collection
         run: |
