@@ -14,3 +14,5 @@
   systemd:
     daemon_reload: yes
   when: add_override.changed
+  tags:
+    - skip_ansible_lint

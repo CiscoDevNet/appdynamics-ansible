@@ -1,6 +1,0 @@
-- name: Add {{ jboss_user }} to {{ appdynamics_user }} group
-  user:
-    name: "{{ jboss_user }}"
-    groups:
-      - "{{ appdynamics_user }}"
-    append: yes
