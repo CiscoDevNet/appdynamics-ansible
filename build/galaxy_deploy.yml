@@ -39,8 +39,12 @@
         ansible-galaxy collection build -f
         chdir=../
       when: galaxy_yml.changed
+      tags:
+        - skip_ansible_lint
     - name: Publish the collection. 
       command: >
         ansible-galaxy collection publish ./appdynamics-agents-{{ tag }}.tar.gz
         chdir=../
       when: galaxy_yml.changed
+      tags:
+        - skip_ansible_lint
