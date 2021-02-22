@@ -4,12 +4,14 @@ on:
     paths:
       - 'roles/dotnetcore/**'
       - 'molecule/dotnetcore/**'
+      - 'molecule/base-docker.yml'
       - '.github/workflows/dotnet_core_agent_ci.yml'
       - 'roles/common/**'
   pull_request:
     paths:
       - 'roles/dotnetcore/**'
       - 'molecule/dotnetcore/**'
+      - 'molecule/base-docker.yml'
       - '.github/workflows/dotnet_core_agent_ci.yml'
       - 'roles/common/**'
 jobs:

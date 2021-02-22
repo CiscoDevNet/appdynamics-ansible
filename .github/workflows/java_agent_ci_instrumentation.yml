@@ -3,13 +3,15 @@ on:
   push:
     paths:
       - 'roles/java/**'
-      - 'molecule/java/**'
+      - 'molecule/java-tomcat/**'
+      - 'molecule/base-local.yml'
       - '.github/workflows/java_agent_ci_instrumentation.yml'
       - 'roles/common/**'
   pull_request:
     paths:
       - 'roles/java/**'
-      - 'molecule/java/**'
+      - 'molecule/java-tomcat/**'
+      - 'molecule/base-local.yml'
       - '.github/workflows/java_agent_ci_instrumentation.yml'
       - 'roles/common/**'
 jobs:

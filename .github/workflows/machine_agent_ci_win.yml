@@ -4,13 +4,15 @@ on:
     paths:
       - 'roles/machine/**'
       - 'molecule/machine/**'
-      - '.github/workflows/machine_agent_ci.yml'
+      - 'molecule/base-windows.yml'
+      - '.github/workflows/machine_agent_ci_win.yml'
       - 'roles/common/**'
   pull_request:
     paths:
       - 'roles/machine/**'
       - 'molecule/machine/**'
-      - '.github/workflows/machine_agent_ci.yml'
+      - 'molecule/base-windows.yml'
+      - '.github/workflows/machine_agent_ci_win.yml'
       - 'roles/common/**'
 jobs:
   molecule:
