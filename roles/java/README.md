@@ -38,3 +38,18 @@ backup: whether to make backup modified files or not
 
 # Jboss specific:
 jboss_config
+
+# Tomcat specific
+tomcat_config
+
+
+## QA
+
+I don't want to create any user, And I want to instrument single instance of app, what should I do?
+
+You can set:
+create_appdynamics_user: no
+agent_dir_permission:
+  user:  "{{ appdynamics_user }}"
+  group: "{{ appdynamics_user }}"
+
