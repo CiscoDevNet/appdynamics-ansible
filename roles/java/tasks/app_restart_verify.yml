@@ -11,6 +11,7 @@
   pause: 
     seconds: 10
 - name: Verify java agent has started
+  become: yes
   shell: cat $(ls -t {{ java_agent_ver_folder }}/logs/{{ app.node_name }}/agent* | head -1) | (grep -B 5 -E 'Started AppDynamics Java Agent Successfully|Could Not Start Java Agent')
   #shell: cat $(find {{ java_agent_ver_folder}}//logs/{{ node_name }} -mmin -1 -name 'agent*' | head -1) | grep 'Started AppDynamics Java Agent Successfully'
   retries: 3
