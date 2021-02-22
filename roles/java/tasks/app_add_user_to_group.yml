@@ -1,0 +1,7 @@
+- name: Add {{ app.user }} to {{ appdynamics_user }} group
+  become: yes
+  user:
+    name: "{{ app.user }}"
+    groups:
+      - "{{ appdynamics_user }}"
+    append: yes
