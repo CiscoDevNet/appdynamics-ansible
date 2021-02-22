@@ -4,12 +4,14 @@ on:
     paths:
       - 'roles/machine/**'
       - 'molecule/machine/**'
+      - 'molecule/base-docker.yml'
       - '.github/workflows/machine_agent_ci.yml'
       - 'roles/common/**'
   pull_request:
     paths:
       - 'roles/machine/**'
       - 'molecule/machine/**'
+      - 'molecule/base-docker.yml'
       - '.github/workflows/machine_agent_ci.yml'
       - 'roles/common/**'
 jobs:
