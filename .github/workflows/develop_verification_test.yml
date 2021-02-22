@@ -27,7 +27,7 @@ jobs:
           python-version: '3.x'
 
       - name: Install dependencies.
-        run: pip3 install molecule-docker docker yamllint ansible-lint flake8 ansible lxml
+        run: pip3 install ansible molecule-docker docker yamllint ansible-lint flake8 ansible lxml
       
       - name: Building the collection
         run: |
