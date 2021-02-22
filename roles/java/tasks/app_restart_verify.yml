@@ -13,7 +13,7 @@
 
 - name: Verify java agent has started
   become: yes
-  shell: set -o pipefail; cat $(ls -t {{ java_agent_ver_folder }}/logs/{{ app.node_name }}/agent* | head -1) | (grep -B 5 -E 'Started AppDynamics Java Agent Successfully|Could Not Start Java Agent')
+  shell: set -o pipefail && cat $(ls -t {{ java_agent_ver_folder }}/logs/{{ app.node_name }}/agent* | head -1) | (grep -B 5 -E 'Started AppDynamics Java Agent Successfully|Could Not Start Java Agent')
   retries: 3
   delay: 10
   until: agent_log.rc == 0
