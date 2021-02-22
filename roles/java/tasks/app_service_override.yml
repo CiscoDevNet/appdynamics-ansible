@@ -1,0 +1,16 @@
+- name: Add override directory for {{ app.service }}
+  become: yes
+  file:
+    path: /etc/systemd/system/{{ app.service }}.service.d
+    state: directory
+- name: Add ReadWritePaths to service
+  become: yes
+  template:
+    dest: /etc/systemd/system/{{ app.service }}.service.d/appdynamics.conf
+    src: app_systemd_service_override.j2
+  register: add_override
+- name: Execute daemon-reload
+  become: yes
+  systemd:
+    daemon_reload: yes
+  when: add_override.changed
