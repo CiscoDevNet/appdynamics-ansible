@@ -51,6 +51,9 @@ jobs:
       - name: Install the collection
         run: ansible-galaxy collection install ${{ env.COLLECTION_FILE }}
       
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+      
       - name: Run role tests
         run: >-
           molecule --version &&
