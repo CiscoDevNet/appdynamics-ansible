@@ -21,14 +21,12 @@ jobs:
       PY_COLORS: 1
       ANSIBLE_FORCE_COLOR: 1
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
-        # distro:
-        #   - centos8
-        #   - debian10
-        instrumentation_type:
-          - tomcat
-          - jboss
+        scenario:
+          - java-tomcat
+          - java-jboss
+          - java-tomcat-single-app-mode
     steps:
       - name: Check out code
         uses: actions/checkout@v2
@@ -55,7 +53,7 @@ jobs:
         run: >-
           molecule --version &&
           ansible --version &&
-          molecule --base-config molecule/base-local.yml --debug test -s java-${{ matrix.instrumentation_type }} 
+          molecule --base-config molecule/base-local.yml --debug test -s ${{ matrix.scenario }} 
         env: 
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
