@@ -7,6 +7,11 @@
       # Define Agent Type and Version
       agent_version: 21.1.0
       agent_type: sun-java
+      # single app mode: Can skip appdynamics user creation and own java-agent directory by app user (tomcat in this case)
+      create_appdynamics_user: no
+      agent_dir_permission:
+        user:  tomcat
+        group: tomcat
       application_name: "IoT_API22"
       tier_name: "Tomcat"
       agent_log_level: "debug"
