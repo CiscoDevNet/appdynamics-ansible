@@ -110,6 +110,8 @@ Example 2: Install java-agent and instrument one or more applications.
             restart_app: yes
 ```
 
+[![asciicast](https://asciinema.org/a/394098.svg)](https://asciinema.org/a/394098)
+
 Example 3: To make sure all instrumented applications can have access to java-agent logs directory, this role creates `appdynamics` functional user/group to own java-agent dir and then assigns applications PID users to `appdynamics` group.
 In some cases, when application PID user is not local on linux host (i.e. from external source) it cannot be added to the `appdynamics` group. In such case you can let application user to own java-agent directory instead.
 
