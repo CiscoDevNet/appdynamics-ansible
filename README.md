@@ -52,7 +52,16 @@ You should either reference the example playbooks in the collection installation
 
 The `var/playbooks/controller.yaml` file is meant to contain constant variables such as `enable_ssl`, `controller_port`, etc. You may either include `var/playbooks/controller.yaml` in the playbook as shown in the java example below, or overwrite the variables in the playbooks - whatever works best for you.
 
-## Java agent
+### Java agent
+
+This role features:
+
+- java-agent installation for Windows/Linux
+- instrumentation of applications such as tomcat and jboss(wildfly). Multiple application instances such as Jboss domains can be instrumented with the agent.
+- automatic applications restart (if systemd service is present)
+- java agent start verification
+
+Example 1: Install java-agent without any apps instrumentation.
 
 ```yml
 ---
@@ -63,17 +72,96 @@ The `var/playbooks/controller.yaml` file is meant to contain constant variables 
     - include_role:
         name: appdynamics.agents.java
       vars:
-        agent_version: 20.10.0
+        agent_version: 21.1.0
         agent_type: java8
-        application_name: "IoT_API" # ONLY required if agent type is not machine or db
-        tier_name: "java_tier" # ONLY required if agent type is not machine or db
-        # Directory permissions for agent. These can be set at host level in the invertory as well
-        agent_dir_permission:  #defaults to root:root if not specified
-          user:  "appdynamics" # This user must pre-exist. It is recommended to use the PID owner of your Java app
-          group: "appdynamics" # This group must pre-exist
+        application_name: "IoT_API" # agent default application
+        tier_name: "java_tier" # agent default tier
 ```
 
-### DotNet agent
+Example 2: Install java-agent and instrument one or more applications.
+
+```yml
+---
+- hosts: all
+  tasks:
+    - name: Include variables for the controller settings
+      include_vars: vars/controller.yaml
+    - include_role:
+        name: appdynamics.agents.java
+      vars:
+        agent_version: 21.1.0
+        agent_type: java8
+        
+        # List applications to instrument with java agent. 'jboss' and 'tomcat' are currently supported (Linux only). Remove 'apps' if you want to install java agent only.
+        application_details_in_config: no
+        apps:
+          - type: jboss
+            application_name: MyApp
+            tier_name: Jboss
+            jboss_config: /opt/wildfly/bin/standalone.sh
+            user: wildfly
+            service: wildfly
+            restart_app: yes
+          - type: tomcat
+            application_name: MyApp2
+            tier_name: Tomcat
+            tomcat_config: /usr/share/tomcat9/bin/setenv.sh
+            user: tomcat
+            service: tomcat9
+            restart_app: yes
+```
+
+Example 3: To make sure all instrumented applications can have access to java-agent logs directory, this role creates `appdynamics` functional user/group to own java-agent dir and then assigns applications PID users to `appdynamics` group.
+In some cases, when application PID user is not local on linux host (i.e. from external source) it cannot be added to the `appdynamics` group. In such case you can let application user to own java-agent directory instead.
+
+```yml
+---
+- hosts: all
+  tasks:
+    - name: Include variables for the controller settings
+      include_vars: vars/controller.yaml
+    - include_role:
+        name: appdynamics.agents.java
+      vars:
+        agent_version: 21.1.0
+        agent_type: java8
+        # single app mode: Can skip appdynamics user creation and own java-agent directory by app user (tomcat in this case)
+        create_appdynamics_user: no
+        agent_dir_permission:
+          user:  tomcat
+          group: tomcat
+        # List applications to instrument with java agent. 'jboss' and 'tomcat' are currently supported (Linux only). Remove 'apps' if you want to install java agent only.
+        application_details_in_config: no
+        apps:
+          - type: tomcat
+            application_name: MyApp2
+            tier_name: Tomcat
+            tomcat_config: /usr/share/tomcat9/bin/setenv.sh
+            user: tomcat
+            service: tomcat9
+            restart_app: yes
+```
+
+
+Java agent specific variables:
+
+|Variable<img width="200"/>     | Description | Required | Default |
+|--|--|--|--|
+| `application_details_in_config` | If default application_name, tier_name, node_name should be placed in controller-info.xml file. Set to 'no' if multiple apps are instrumented. | N | yes
+|`apps` | List of applications to be instrumented with the java agent. Supported types are `jboss`, `tomcat` | N
+|`apps[*].type` | Type of application to instrument. Supported types are `jboss`, `tomcat` | Y | |
+|`apps[*].application_name` | Application name. Overrides default application_name for this host | N
+|`apps[*].tier_name` | Tier name. Overrides default tier_name for this host | N
+|`apps[*].node_name` | Node name. Overrides default node_name for this host | N
+|`apps[*].user` | User that runs this application. It must be provided, so write permissions are given to the java-agent logs directory | Y | `tomcat`: tomcat, `jboss`: wildfly
+|`apps[*].service` | Systemd service that should be restated if `restart_app` is set to 'yes' | N | `jboss`: wildfly
+|`apps[*].add_service_override` | If enabled, adds systemd override file to explicitly allow write permissions to appdynamics java-agent dir. Required for tomcat9 installed on ubuntu20.04 | N | `all`: no, `tomcat`: yes
+|`apps[*].restart_app` | Set to 'yes' to automatically restart instrumented service | N | no 
+|`apps[*].backup` | Whether original config file should be backed up before any changes | N | no
+|`apps[*].tomcat_config` | Tomcat config to instrument. Choose which tomcat config file to modify. You should set full path to setenv.sh file, like <CATALINA_HOME>/bin/setenv.sh. Note that if Tomcat is installed with yum on RHEL distributions this file is not invoked by startup script. In that case, it can be set to `/etc/tomcat/conf.d/appdynamics.conf` instead. | Y |
+|`apps[*].jboss_config` | Jboss/Wildfly config to instrument. Provide a path to jboss standalone.sh | Y | /opt/wildfly/bin/standalone.sh
+
+### .NET agent
 
 In the playbook below, the parameters are initialised directly in the yaml file rather than including them from `var/playbooks/controller.yaml`
 
@@ -110,6 +198,43 @@ In the playbook below, the parameters are initialised directly in the yaml file 
             executable: mso.exe
 ```
 
+.NET agent specific variables:
+
+|Variable<img width="200"/>     | Description
+|--|--|
+|`monitor_all_IIS_apps`| Enable automatic instrumentation of all IIS applications
+|`runtime_reinstrumentation` | Runtime re-instrumentation works for .NET Framework 4.5.2 and greater. Note: Make sure you test this first in a non-production environment
+|`dotnet_machine_agent` | YAML map that describes dotnet machine agent settings. See [roles/dotnet/defaults/main.yml](roles/dotnet/defaults/main.yml) for the example
+|`standalone_applications` | List of standalone services to be instrumented with the .NET agent. See [roles/dotnet/defaults/main.yml](roles/dotnet/defaults/main.yml) for the example
+|`logFileFolderAccessPermissions` | The list of users who require write access to log directory of the agent (i.e. user who runs IIS). See [roles/dotnet/defaults/main.yml](roles/dotnet/defaults/main.yml) for the example
+
+
+### DB agent
+
+```yml
+---
+- hosts: linux
+  tasks:
+    - include_role:
+        name: appdynamics.agents.db
+      vars:
+        agent_version: 20.9.0
+        agent_type: db
+        controller_account_access_key: "b0248ceb-c954-4a37-97b5-207e90418cb4" # Please add this to your Vault
+        controller_host_name: "ansible-20100nosshcont-bum4wzwa.appd-cx.com" # Your AppDynamics controller
+        controller_account_name: "customer1" # Please add this to your Vault
+        enable_ssl: "false"
+        controller_port: "8090"
+        db_agent_name: "ProdDBAgent"
+```
+
+DB agent specific variables:
+
+|Variable<img width="200"/>     | Description |
+|--|--|
+|`db_agent_name` | Name assigned to the agent, typically used to allow one Database Agent  to act as a backup to another one
+|`install_jre`| Set this parameter to false if the JRE should not be installed together with the DB agent. <br><br>**Note:** to install java on windows, you need to run the <i>install-roles.yml</i> playbook first, which adds a galaxy role (lean_delivery.java) to you local playbook folder
+
 ### Machine agent
 
 ```yml
@@ -139,6 +264,16 @@ In the playbook below, the parameters are initialised directly in the yaml file 
         java_system_properties: "-Dappdynamics.http.proxyHost=10.0.4.2 -Dappdynamics.http.proxyPort=9090" # mind the space between each property
 ```
 
+Machine agent specific variables:
+
+|Variable<img width="200"/>     | Description 
+|--|--|
+|`java_system_properties`| can be used to configure proxy setting for agents 
+|`analytics_event_endpoint`   | Your Events Service URL  
+|`enable_analytics_agent`   | Indicate if analytics agent should be enabled in the Machine agent 
+|`sim_enabled` | Enable server infrastructure monitoring
+|`controller_global_analytics`<br/>`_account_name`| This is the global account name of the controller
+
 ### Logger
 
 The logger role allows you to change the agent log level for already deployed agents (either one agent type at a time or multiple types, depending on the value of the `agents_to_set_loggers_for` list.
@@ -158,7 +293,9 @@ The `init_and_validate_agent_variables` should be  **false** when using the logg
 
 ```
 
-## Role Variables
+## Common role variables
+
+Check `Agent Type/Roles` for specific variable support.
 
 |Variable<img width="200"/>     | Description | Agent Type/Roles |
 |--|--|--|
@@ -166,6 +303,7 @@ The `init_and_validate_agent_variables` should be  **false** when using the logg
 |`agent_version`  | AppDynamics agent version. AppDynamics uses calendar versioning. For example, if a Java agent is released in November of 2020, its version will begin with 20.11.0. When the Java agent team releases again in the month of November, the new agent will be 20.11.1  | All |
 |`application_name`   | The AppDynamics business application name, this variable is compulsory for all the  `dotnet`, `java` and `dotnetcore` roles  | All |
 |`tier_name`   | The AppDynamics tier name, this variable is compulsory for all the `dotnet`, `java` and `dotnetcore` roles  | All |
+|`node_name`   | The AppDynamics node name for `dotnet`, `java` and `dotnetcore` roles  | All |
 |`controller_host_name`   | The  controller host name, do not include `http(s)` | All |
 |`controller_account_name`   | Controller account name   | All |
 |`controller_account_access_key` | Account or license rule access key. This should ideally be placed into your vault | All |
@@ -176,23 +314,13 @@ The `init_and_validate_agent_variables` should be  **false** when using the logg
 |`agent_loggers` | List of loggers to set the log level on. The logger names vary from agent to agent. The default is set to ['*', 'com.singularity','com']. Update this variable with loggers specific to the target agent as required (refer to the log4j files in the <agent-home>/conf/logging directory for more info). | Machine, DB, Java, .NET, Logger
 |`init_and_validate`<br/>`_agent_variables`| This variable controls whether the Common role initialisation (which sets download urls and controller parameters) needs to be run. When using the logger role in isolations (that is not as part of agent installation) the value should be **false**|Machine, DB, Java, .NET, Logger
 |`agents_to_set_loggers_for`| List of agents to apply the log-level changes to. for example to set the log level of all deployed agents to say "info". initialise the variable to **['db', 'java', 'machine', 'dotnet']**. In contrast, to affect only the java agent, remove the unwanted entries from the list. **Note**: This variable should not be set when using the logger role as part of agent deployments. The `agent_type` variable will be used to determine how the log-level needs to be adjusted during the installation |Machine, DB, Java, .NET, Logger
-|`db_agent_name` | Name assigned to the agent, typically used to allow one Database Agent  to act as a backup to another one | DB
-|`install_jre`| Set this parameter to false if the JRE should not be installed together with the DB agent. <br><br>**Note:** to install java on windows, you need to run the <i>install-roles.yml</i> playbook first, which adds a galaxy role (lean_delivery.java) to you local playbook folder | DB
-|`monitor_all_IIS_apps`| Enable automatic instrumentation of all IIS applications | .NET
-|`runtime_reinstrumentation` | Runtime re-instrumentation works for .NET Framework 4.5.2 and greater. Note: Make sure you test this first in a non-production environment | .NET |
-|`dotnet_machine_agent` | YAML map that describes dotnet machine agent settings. See [roles/dotnet/defaults/main.yml](roles/dotnet/defaults/main.yml) for the example | .NET |
-|`standalone_applications` | List of standalone services to be instrumented with the .NET agent. See [roles/dotnet/defaults/main.yml](roles/dotnet/defaults/main.yml) for the example | .NET |
-|`logFileFolderAccessPermissions` | The list of users who require write access to log directory of the agent (i.e. user who runs IIS). See [roles/dotnet/defaults/main.yml](roles/dotnet/defaults/main.yml) for the example | .NET |
-|`agent_dir_permission.user` `agent_dir_permission.group` | user and group file permissions to assign to the java-agent on linux. The user and group selected must already exist on the host. If the parameters are omitted the permissions will default to root | Java
-|`java_system_properties`| can be used to configure proxy setting for agents | DB, Machine
-|`analytics_event_endpoint`   | Your Events Service URL   | Machine |
-|`enable_analytics_agent`   | Indicate if analytics agent should be enabled in the Machine agent | Machine |
-|`sim_enabled` | Enable server infrastructure monitoring | Machine
-|`controller_global_analytics`<br/>`_account_name`| This is the global account name of the controller | Machine
 | `analytics_agent_host` `analytics_agent_port` | Defines where the application agents sends its analytics events. The default is **localhost:9090** | .NET-Core
-| `enable_proxy` | Set to "true" to apply agent proxy settings to the agent config. When set, the `proxy_host` and `proxy_port` variables also need to be assigned | .NET and .NET-Core
-|`proxy_host`<br/> `proxy_port`| Host name/IP address and port number of the proxy to route agent data through. |.NET and .NET-Core
-| `enable_proxy_authentication` | Set to "true" to apply proxy authentication details using `proxy_user` and `proxy_password` parameters. | .NET&#8209;Core
+| `enable_proxy` | Set to "true" to apply agent proxy settings to the agent config. When set, the `proxy_host` and `proxy_port` variables also need to be assigned | .NET and .NET-Core, Java
+|`proxy_host`<br/> `proxy_port`| Host name/IP address and port number of the proxy to route agent data through. |.NET and .NET-Core, Java
+| `enable_proxy_authentication` | Set to "true" to apply proxy authentication details using `proxy_user` and `proxy_password` parameters. | .NET&#8209;Core 
+| `create_appdynamics_user` | Whether to create AppDynamics functional user on linux if missing | Java, DB, Machine |
+| `appdynamics_user` | Appdynamics functional user name, default is 'appdynamics' | Java, DB, Machine |
+|`agent_dir_permission.user` `agent_dir_permission.group` | user and group file permissions to assign to the java-agent/.net-core agent on linux. The user and group selected must already exist on the host if `create_appdynamics_user` is set to 'no'. For .NET-core, If the parameters are omitted the permissions will default to root |  .NET-Core, Java
 
 ## Contributing
 
