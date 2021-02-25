@@ -12,7 +12,7 @@ We built this AppDynamics Ansible collection to support (immutable) infrastructu
 
 <i> Pro Tip: Right-Click the GIF and "Open in new Tab" or view on <a href="https://terminalizer.com/view/405023a64449">terminalizer</a> </i>
 
-![DEMO](https://github.com/Appdynamics/appdynamics-ansible/blob/develop/docs/ansible.gif)
+![DEMO](https://github.com/Appdynamics/appdynamics-ansible/blob/develop/docs/ansible.gif?raw=true)
 
 ## Requirements
 
