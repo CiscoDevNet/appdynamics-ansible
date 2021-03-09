@@ -3,12 +3,14 @@ on:
   push:
     paths:
       - 'roles/java/**'
+      - 'roles/instrument_*/**'
       - 'molecule/java-tomcat/**'
       - 'molecule/base-local.yml'
       - '.github/workflows/java_agent_ci_instrumentation.yml'
       - 'roles/common/**'
   pull_request:
     paths:
+      - 'roles/instrument_*/**'
       - 'roles/java/**'
       - 'molecule/java-tomcat/**'
       - 'molecule/base-local.yml'
@@ -25,7 +27,7 @@ jobs:
       matrix:
         scenario:
           - java-tomcat
-          - java-jboss
+          #- java-jboss
           - java-tomcat-single-app-mode
     steps:
       - name: Check out code

@@ -1,13 +1,9 @@
 - include_tasks: java-agent-linux.yml
-  when: ansible_os_family == 'RedHat' or ansible_os_family == 'Debian'
+  when: >
+    (ansible_os_family == 'RedHat' or ansible_os_family == 'Debian') and
+    not just_installed_java_agent
 
 - include_tasks: java-agent-windows.yml
-  when: ansible_os_family == 'Windows'
-
-
-- name: "Instrument application"
-  include_tasks: app_instrument_main.yml
-  loop: "{{ apps }}"
-  loop_control: 
-    loop_var: app_inputs
-  when: apps is defined and apps | length > 0
+  when: >
+    ansible_os_family == 'Windows'
+    and not just_installed_java_agent

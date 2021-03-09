@@ -1,8 +1,3 @@
-- name: Restart app
-  become: yes
-  systemd:
-    name: "{{ app.service }}"
-    state: restarted
 
 # Verify Java Agent Installation
 # After an installation, the agent log in <agent_home>/logs will contain the following message:
@@ -13,7 +8,7 @@
 
 - name: Verify java agent has started
   become: yes
-  shell: set -o pipefail && cat $(ls -t {{ java_agent_ver_folder }}/logs/{{ app.node_name }}/agent* | head -1) | (grep -B 5 -E 'Started AppDynamics Java Agent Successfully|Could Not Start Java Agent')
+  shell: set -o pipefail && cat $(ls -t {{ java_agent_ver_folder }}/logs/{{ node_name }}/agent* | head -1) | (grep -B 5 -E 'Started AppDynamics Java Agent Successfully|Could Not Start Java Agent')
   args:
     executable: /bin/bash
   retries: 3

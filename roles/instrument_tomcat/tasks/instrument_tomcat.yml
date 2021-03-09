@@ -1,0 +1,17 @@
+- name: Add appd instrumentation to tomcat
+  become: yes
+  blockinfile:
+    path: "{{ tomcat_config }}"
+    #regex: ".+javaagent:.+"
+    block: |
+      export APPDYNAMICS_AGENT_APPLICATION_NAME="{{ application_name }}"
+      export APPDYNAMICS_AGENT_TIER_NAME="{{ tier_name }}"
+      export APPDYNAMICS_AGENT_NODE_NAME="{{ node_name }}"
+      CATALINA_OPTS="$CATALINA_OPTS -javaagent:{{ java_agent_dest_folder_linux }}/javaagent.jar{{ ' -Dappdynamics.http.proxyHost='+proxy_host if enable_proxy else '' }}{{' -Dappdynamics.http.proxyPort='+proxy_port if enable_proxy else ''}}"
+    create: yes
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: 'u+x'
+    state: present
+    backup: "{{ backup }}"
+  notify: Restart app listener
