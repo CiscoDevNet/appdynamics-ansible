@@ -27,7 +27,7 @@ jobs:
       matrix:
         scenario:
           - java-tomcat
-          #- java-jboss
+          - java-jboss
           - java-tomcat-single-app-mode
     steps:
       - name: Check out code
