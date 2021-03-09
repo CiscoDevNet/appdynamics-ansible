@@ -1,5 +1,3 @@
-
-
 app_user: tomcat
 # choose which tomcat config file to modify. You should set full path to setenv.sh file, like "{{ CATALINA_HOME}}/bin/setenv.sh".
 # Note that on RHEL distributions this file is not invoked by startup script if tomcat is installed with yum.
