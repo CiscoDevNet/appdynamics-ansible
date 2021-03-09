@@ -1,0 +1,39 @@
+---
+- hosts: all
+  tasks:
+    - name: Include variables for the controller settings
+      include_vars: vars/controller.yaml
+
+    - include_role:
+        name: appdynamics.agents.instrument_tomcat
+      vars:
+        # Define Agent Type and Version
+        agent_version: 20.10.0
+        agent_type: sun-java
+
+
+
+        # List applications to instrument with java agent. 'jboss' and 'tomcat' are currently supported (Linux only). Remove 'apps' if you want to install java agent only.
+        application_details_in_config: no
+        application_name: MyApp
+        tier_name: Tomcat
+        node_name: Tommy2
+        tomcat_config: /etc/tomcat/conf.d/appdynamics.conf
+        app_user: tomcat
+        tomcat_service: tomcat
+        restart_app: yes
+    # - include_role:
+    #     name: appdynamics.agents.instrument_tomcat
+    #   vars:
+    #     # Define Agent Type and Version
+    #     agent_version: 20.10.0
+    #     agent_type: sun-java
+
+    #     # List applications to instrument with java agent. 'jboss' and 'tomcat' are currently supported (Linux only). Remove 'apps' if you want to install java agent only.
+    #     application_details_in_config: no
+
+    #     application_name: MyAppd
+    #     tier_name: Tomcat2
+    #     tomcat_config: /etc/tomcat/conf.d/appdynamics.conf
+    #     app_user: tomcat
+    #     tomcat_service: tomcat

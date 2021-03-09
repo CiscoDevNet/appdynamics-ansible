@@ -1,12 +1,12 @@
-- name: Add override directory for {{ app.service }}
+- name: Add override directory for {{ tomcat_service }}
   become: yes
   file:
-    path: /etc/systemd/system/{{ app.service }}.service.d
+    path: /etc/systemd/system/{{ tomcat_service }}.service.d
     state: directory
 - name: Add ReadWritePaths to service
   become: yes
   template:
-    dest: /etc/systemd/system/{{ app.service }}.service.d/appdynamics.conf
+    dest: /etc/systemd/system/{{ tomcat_service }}.service.d/appdynamics.conf
     src: app_systemd_service_override.j2
   register: add_override
 - name: Execute daemon-reload

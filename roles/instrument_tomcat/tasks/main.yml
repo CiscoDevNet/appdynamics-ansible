@@ -1,0 +1,21 @@
+
+- include_tasks: check_tomcat.yml
+
+- include_role:
+    name: appdynamics.agents.java
+    # use role variables in following tasks when public: yes
+    public: yes
+    #tasks_from: app_instrument_main
+    # here what goes into appdynamics.agents.java:
+    # - notify: Restart app listener
+    # - app_user - can be added to appdynamics group
+  #vars:
+    # apps:
+    #   - "{{ app }}"
+    #remove:
+    #just_installed_java_agent: yes
+
+- include_tasks: instrument_tomcat.yml
+
+- include_tasks: app_service_override.yml
+  when: tomcat_service is defined and add_service_override
