@@ -9,4 +9,4 @@ app_user: wildfly
 jboss_service: wildfly
 
 #whether to backup configuration file or not
-backup: yes
+backup: no
