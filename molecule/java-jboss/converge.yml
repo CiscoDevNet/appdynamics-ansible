@@ -22,4 +22,3 @@
       app_user: wildfly
       restart_app: yes
       jboss_config: /opt/wildfly/bin/standalone.sh
-
