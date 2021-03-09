@@ -1,4 +1,3 @@
-
 # Verify Java Agent Installation
 # After an installation, the agent log in <agent_home>/logs will contain the following message:
 # Started AppDynamics Java Agent Successfully
