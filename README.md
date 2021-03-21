@@ -83,11 +83,11 @@ Java agent specific variables:
 
 ### AppDynamics role to instrument Jboss/Wildfly
 
-This role is built on top of java role. It features:
+This role features:
 
 - java-agent installation for Linux
 - instrumentation of Jboss/Wildfly
-- automatic application restart (if systemd service is present)
+- automatic applications restart (if systemd service is present)
 - java agent start verification
 
 Example 1: Install java-agent and instrument one or more applications.
@@ -99,11 +99,16 @@ Example 1: Install java-agent and instrument one or more applications.
     - name: Include variables for the controller settings
       include_vars: vars/controller.yaml
     - include_role:
-        name: appdynamics.agents.instrument_jboss
+        name: appdynamics.agents.java
       vars:
         agent_version: 21.1.0
         agent_type: java8
-        
+        # use java role variables in the following instrumentation tasks when public: yes
+        public: yes
+
+    - include_role:
+        name: appdynamics.agents.instrument_jboss
+      vars:
         # instrument jboss:
         application_name: "IoT_API2"
         tier_name: "Jboss"
@@ -123,18 +128,18 @@ In some cases, when application PID user is not local on linux host (i.e. from e
     - name: Include variables for the controller settings
       include_vars: vars/controller.yaml
     - include_role:
-        name: appdynamics.agents.instrument_jboss
+        name: appdynamics.agents.java
       vars:
         agent_version: 21.1.0
         agent_type: java8
-        
         # single app mode: Can skip appdynamics user creation and own java-agent directory by app user (wildfly in this case)
         create_appdynamics_user: no
         agent_dir_permission:
           user:  wildfly
           group: wildfly
-
-
+    - include_role:
+        name: appdynamics.agents.instrument_jboss
+      vars:
         # instrument jboss:
         application_name: "IoT_API2"
         tier_name: "Jboss"
@@ -173,12 +178,14 @@ Example 1: Install java-agent and instrument one or more applications.
     - name: Include variables for the controller settings
       include_vars: vars/controller.yaml
     - include_role:
-        name: appdynamics.agents.instrument_tomcat
+        name: appdynamics.agents.java
       vars:
         agent_version: 21.1.0
         agent_type: java8
-        
-        # instrument tomcat:
+    - include_role:
+        name: appdynamics.agents.instrument_tomcat
+      vars:
+      # instrument tomcat:
         tomcat_service: tomcat9
         application_name: "IoT_API22"
         tier_name: "Tomcat"
@@ -197,17 +204,19 @@ In some cases, when application PID user is not local on linux host (i.e. from e
     - name: Include variables for the controller settings
       include_vars: vars/controller.yaml
     - include_role:
-        name: appdynamics.agents.instrument_tomcat
+        name: appdynamics.agents.java
       vars:
         agent_version: 21.1.0
         agent_type: java8
-        
         # single app mode: Can skip appdynamics user creation and own java-agent directory by app user (tomcat in this case)
         create_appdynamics_user: no
         agent_dir_permission:
           user:  tomcat
           group: tomcat
 
+    - include_role:
+        name: appdynamics.agents.instrument_tomcat
+      vars:
         # instrument tomcat:
         tomcat_service: tomcat9
         application_name: "IoT_API22"

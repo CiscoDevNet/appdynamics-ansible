@@ -17,12 +17,14 @@ Example 1: Install java-agent and instrument one or more applications.
     - name: Include variables for the controller settings
       include_vars: vars/controller.yaml
     - include_role:
-        name: appdynamics.agents.instrument_tomcat
+        name: appdynamics.agents.java
       vars:
         agent_version: 21.1.0
         agent_type: java8
-        
-        # instrument tomcat:
+    - include_role:
+        name: appdynamics.agents.instrument_tomcat
+      vars:
+      # instrument tomcat:
         tomcat_service: tomcat9
         application_name: "IoT_API22"
         tier_name: "Tomcat"
@@ -41,17 +43,19 @@ In some cases, when application PID user is not local on linux host (i.e. from e
     - name: Include variables for the controller settings
       include_vars: vars/controller.yaml
     - include_role:
-        name: appdynamics.agents.instrument_tomcat
+        name: appdynamics.agents.java
       vars:
         agent_version: 21.1.0
         agent_type: java8
-        
         # single app mode: Can skip appdynamics user creation and own java-agent directory by app user (tomcat in this case)
         create_appdynamics_user: no
         agent_dir_permission:
           user:  tomcat
           group: tomcat
 
+    - include_role:
+        name: appdynamics.agents.instrument_tomcat
+      vars:
         # instrument tomcat:
         tomcat_service: tomcat9
         application_name: "IoT_API22"
