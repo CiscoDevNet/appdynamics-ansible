@@ -2,7 +2,7 @@
 - name: Converge
   hosts: all
   roles:
-    - role: appdynamics.agents.instrument_tomcat
+    - role: appdynamics.agents.java
   vars:
       # Define Agent Type and Version
       agent_version: 21.1.0
