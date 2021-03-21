@@ -121,8 +121,3 @@
         path: "{{ java_agent_dest_folder_linux }}/{{ java_agent_dest_file }}"
         state: absent
       changed_when: false # this ensures this task is idempotent
-
-- include_tasks: app_add_user_to_group.yml
-  when: > 
-    create_appdynamics_user and 
-    app_user is defined

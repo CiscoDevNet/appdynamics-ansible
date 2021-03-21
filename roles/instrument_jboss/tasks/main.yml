@@ -5,4 +5,9 @@
     name: verify_java_restart
   when: restart_app | bool
 
+- include_tasks: app_add_user_to_group.yml
+  when: > 
+    create_appdynamics_user and 
+    app_user is defined
+
 - include_tasks: instrument_jboss.yml
