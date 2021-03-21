@@ -15,17 +15,19 @@
       controller_account_name: "customer1" # Please add this to your Vault
       enable_ssl: false
       controller_port: "8090"
-
-      # instrument tomcat:
-      tomcat_service: tomcat9
-      application_name: "IoT_API22"
-      tier_name: "Tomcat"
-      app_user: tomcat
-      restart_app: yes
-      tomcat_config: /usr/share/tomcat9/bin/setenv.sh
-
       # single app mode: Can skip appdynamics user creation and own java-agent directory by app user (tomcat in this case)
       create_appdynamics_user: no
       agent_dir_permission:
         user:  tomcat
         group: tomcat
+  tasks:
+    - include_role:
+        name: appdynamics.agents.instrument_tomcat
+      vars:
+      # instrument tomcat:
+        tomcat_service: tomcat9
+        application_name: "IoT_API22"
+        tier_name: "Tomcat"
+        app_user: tomcat
+        restart_app: yes
+        tomcat_config: /usr/share/tomcat9/bin/setenv.sh

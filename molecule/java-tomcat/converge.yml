@@ -2,7 +2,7 @@
 - name: Converge
   hosts: all
   roles:
-    - role: appdynamics.agents.instrument_tomcat
+    - role: appdynamics.agents.java
   vars:
       # Define Agent Type and Version
       agent_version: 21.1.0
@@ -15,11 +15,15 @@
       controller_account_name: "customer1" # Please add this to your Vault
       enable_ssl: false
       controller_port: "8090"
-      
-      # instrument tomcat:
-      tomcat_service: tomcat9
-      application_name: "IoT_API22"
-      tier_name: "Tomcat"
-      app_user: tomcat
-      restart_app: yes
-      tomcat_config: /usr/share/tomcat9/bin/setenv.sh
+  tasks:
+    - include_role:
+        name: appdynamics.agents.instrument_tomcat
+      vars:
+        # instrument tomcat:
+        tomcat_service: tomcat9
+        application_name: "IoT_API22"
+        tier_name: "Tomcat"
+        app_user: tomcat
+        restart_app: yes
+        tomcat_config: /usr/share/tomcat9/bin/setenv.sh
+

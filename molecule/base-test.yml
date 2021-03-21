@@ -1,0 +1,26 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: delegated
+  options:
+    managed: false
+    ansible_connection_options:
+      ansible_connection: ssh
+      ansible_user: vagrant
+      ansible_host: localhost
+      ansible_port: 2222
+lint: |
+  # set -e
+  yamllint .
+  flake8
+  ansible-lint
+platforms:
+  - name: instance
+provisioner:
+  name: ansible
+  playbooks:
+    prepare: ${MOLECULE_PLAYBOOK:-prepare.yaml}
+    converge: ${MOLECULE_PLAYBOOK:-converge.yml}
+verifier:
+  name: ansible
