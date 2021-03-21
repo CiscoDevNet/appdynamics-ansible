@@ -26,4 +26,3 @@
         app_user: tomcat
         restart_app: yes
         tomcat_config: /usr/share/tomcat9/bin/setenv.sh
-
