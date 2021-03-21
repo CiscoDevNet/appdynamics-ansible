@@ -1,4 +1,2 @@
 # vars are propagated to dependencies (but defaults not)
 create_appdynamics_user: yes
-
-just_installed_java_agent: no

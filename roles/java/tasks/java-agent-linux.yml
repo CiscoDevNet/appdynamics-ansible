@@ -121,10 +121,6 @@
         path: "{{ java_agent_dest_folder_linux }}/{{ java_agent_dest_file }}"
         state: absent
       changed_when: false # this ensures this task is idempotent
-    # this is to avoid multiple install/uninstall in the single run
-    - name: Set just_installed_java_agent flag
-      set_fact:
-        just_installed_java_agent: yes
 
 - include_tasks: app_add_user_to_group.yml
   when: > 
