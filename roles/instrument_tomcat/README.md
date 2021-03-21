@@ -22,7 +22,6 @@ Example 1: Install java-agent and instrument one or more applications.
         agent_version: 21.1.0
         agent_type: java8
         
-        application_details_in_config: no
         # instrument tomcat:
         tomcat_service: tomcat9
         application_name: "IoT_API22"
@@ -53,7 +52,6 @@ In some cases, when application PID user is not local on linux host (i.e. from e
           user:  tomcat
           group: tomcat
 
-        application_details_in_config: no
         # instrument tomcat:
         tomcat_service: tomcat9
         application_name: "IoT_API22"

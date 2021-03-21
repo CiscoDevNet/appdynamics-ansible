@@ -7,8 +7,6 @@ java_agent_dest_file: java-agent.zip
 
 node_name: "{{ host_name }}-{{ tier_name }}"
 
-#add application details (app/tier/node) into controller-info.xml.
-application_details_in_config: yes
 
 agent_dir_permission:
   user:  "{{ appdynamics_user }}"

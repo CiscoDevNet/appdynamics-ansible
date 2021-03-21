@@ -25,7 +25,7 @@
 
 
         # List applications to instrument with java agent. 'jboss' and 'tomcat' are currently supported (Linux only). Remove 'apps' if you want to install java agent only.
-        application_details_in_config: no
+        
         apps:
           - type: jboss
             application_name: MyApp

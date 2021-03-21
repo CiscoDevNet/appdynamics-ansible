@@ -79,7 +79,7 @@ Java agent specific variables:
 
 |Variable<img width="200"/>     | Description | Required | Default |
 |--|--|--|--|
-| `application_details_in_config` | If default application_name, tier_name, node_name should be placed in controller-info.xml file. Set to 'no' if multiple apps are instrumented. | N | True
+
 
 ### AppDynamics role to instrument Jboss/Wildfly
 
@@ -104,7 +104,6 @@ Example 1: Install java-agent and instrument one or more applications.
         agent_version: 21.1.0
         agent_type: java8
         
-        application_details_in_config: no
         # instrument jboss:
         application_name: "IoT_API2"
         tier_name: "Jboss"
@@ -135,7 +134,6 @@ In some cases, when application PID user is not local on linux host (i.e. from e
           user:  wildfly
           group: wildfly
 
-        application_details_in_config: no
 
         # instrument jboss:
         application_name: "IoT_API2"
@@ -180,7 +178,6 @@ Example 1: Install java-agent and instrument one or more applications.
         agent_version: 21.1.0
         agent_type: java8
         
-        application_details_in_config: no
         # instrument tomcat:
         tomcat_service: tomcat9
         application_name: "IoT_API22"
@@ -211,7 +208,6 @@ In some cases, when application PID user is not local on linux host (i.e. from e
           user:  tomcat
           group: tomcat
 
-        application_details_in_config: no
         # instrument tomcat:
         tomcat_service: tomcat9
         application_name: "IoT_API22"

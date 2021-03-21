@@ -52,7 +52,6 @@ In some cases, when application PID user is not local on linux host (i.e. from e
           user:  wildfly
           group: wildfly
 
-        application_details_in_config: no
 
         # instrument jboss:
         application_name: "IoT_API2"

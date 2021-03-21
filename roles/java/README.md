@@ -25,4 +25,4 @@ Java agent specific variables:
 
 |Variable<img width="200"/>     | Description | Required | Default |
 |--|--|--|--|
-| `application_details_in_config` | If default application_name, tier_name, node_name should be placed in controller-info.xml file. Set to 'no' if multiple apps are instrumented. | N | True
+
