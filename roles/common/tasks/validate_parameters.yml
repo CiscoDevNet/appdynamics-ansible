@@ -17,13 +17,13 @@
     assert:
       that: application_name is defined
       msg: 'An application_name must be provided'
-    when: agent_type is not search("machine|db") # Do not enforce application_name if agent_type is machine or db
+    when: agent_type is not search("machine|db|java") # Do not enforce application_name if agent_type is machine, java or db
 
   - name: Validate tier_name
     assert:
       that: tier_name is defined
       msg: 'A tier name must be provided'
-    when: agent_type is not search("machine|db|dotnet") # Do not enforce tier_name if agent_type is machine, dotnet or db
+    when: agent_type is not search("machine|db|java|dotnet") # Do not enforce tier_name if agent_type is machine, java, dotnet or db
 
   - name: Validate controller_account_access_key
     assert:
