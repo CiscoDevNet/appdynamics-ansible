@@ -1,9 +1,9 @@
 - include_tasks: check_tomcat.yml
 
+# include this role to verify java agent after app restart
 - include_role:
-    name: appdynamics.agents.java
-    # use role variables in following tasks when public: yes
-    public: yes
+    name: verify_java_restart
+  when: restart_app | bool
 
 - include_tasks: instrument_tomcat.yml
 
