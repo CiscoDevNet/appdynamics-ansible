@@ -12,5 +12,6 @@ skip_list:
   - '208'
   - '303'
   - '305'
+  - unnamed-task
 use_default_rules: true
 verbosity: 1
