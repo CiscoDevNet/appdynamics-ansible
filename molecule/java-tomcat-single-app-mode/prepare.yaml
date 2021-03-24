@@ -1,0 +1,14 @@
+---
+- hosts: all
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  tasks:
+    - name: Install tomcat
+      become: true
+      package:
+        name:
+          - default-jdk
+          - tomcat9
+          - tomcat9-admin
+        state: present
+      when: ansible_os_family in ['Debian']

@@ -1,0 +1,33 @@
+---
+- name: Converge
+  hosts: all
+  roles:
+    - role: appdynamics.agents.java
+  vars:
+      # Define Agent Type and Version
+      agent_version: 21.1.0
+      agent_type: sun-java
+
+      agent_log_level: "debug"
+      # Your controller details
+      controller_account_access_key: "2498dd59-d059-48c1-8ec2-8dc2f3efa112" # Please add this to your Vault
+      controller_host_name: "lncontroller20103-2010-o8evv8rp.appd-cx.com" # Your AppDynamics controller
+      controller_account_name: "customer1" # Please add this to your Vault
+      enable_ssl: false
+      controller_port: "8090"
+      # single app mode: Can skip appdynamics user creation and own java-agent directory by app user (tomcat in this case)
+      create_appdynamics_user: no
+      agent_dir_permission:
+        user:  tomcat
+        group: tomcat
+  tasks:
+    - include_role:
+        name: appdynamics.agents.instrument_tomcat
+      vars:
+      # instrument tomcat:
+        tomcat_service: tomcat9
+        application_name: "IoT_API22"
+        tier_name: "Tomcat"
+        app_user: tomcat
+        restart_app: yes
+        tomcat_config: /usr/share/tomcat9/bin/setenv.sh

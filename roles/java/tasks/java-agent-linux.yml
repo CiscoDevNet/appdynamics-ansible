@@ -80,7 +80,7 @@
         java_agent_ver_folder: "{{ result.files[0].path }}" # "{{ ver.stdout | regex_replace ('\\r\\n', '') }}"
 
     - name: Copy controller-info.xml to the versioned agent folder
-      shell: cp  {{ java_agent_dest_folder_linux }}/conf/controller-info.xml  {{ java_agent_ver_folder }}/conf/
+      shell: cp {{ java_agent_dest_folder_linux }}/conf/controller-info.xml  {{ java_agent_ver_folder }}/conf/
       changed_when: false
 
     # Update the Log4j setting to apply the desired log level to all the loggers

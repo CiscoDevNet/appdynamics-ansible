@@ -1,0 +1,12 @@
+app_user: tomcat
+# choose which tomcat config file to modify. You should set full path to setenv.sh file, like "{{ CATALINA_HOME}}/bin/setenv.sh".
+# Note that on RHEL distributions this file is not invoked by startup script if tomcat is installed with yum.
+# In that case, look for path /etc/tomcat/conf.d instead
+# tomcat_config: {{ CATALINA_BASE}}/bin/setenv.sh
+# https://serverfault.com/questions/139435/where-to-set-java-heap-options-e-g-xmx-for-tomcat-6-under-ubuntu-9-04
+# tomcat_config: /usr/share/tomcat9/bin/setenv.sh
+
+# if service is defined, add systemd override file (required for Tomcat9 installed from apt on Ubuntu 20.)
+add_service_override: yes
+restart_app: no
+backup: no

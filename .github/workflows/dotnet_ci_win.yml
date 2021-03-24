@@ -4,13 +4,15 @@ on:
     paths:
       - 'roles/dotnet/**'
       - 'molecule/dotnet/**'
-      - '.github/workflows/dotnet_ci.yml'
+      - 'molecule/base-windows.yml'
+      - '.github/workflows/dotnet_ci_win.yml'
       - 'roles/common/**'
   pull_request:
     paths:
       - 'roles/dotnet/**'
       - 'molecule/dotnet/**'
-      - '.github/workflows/dotnet_ci.yml'
+      - 'molecule/base-windows.yml'
+      - '.github/workflows/dotnet_ci_win.yml'
       - 'roles/common/**'
 jobs:
   molecule:

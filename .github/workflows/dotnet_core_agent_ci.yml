@@ -4,12 +4,14 @@ on:
     paths:
       - 'roles/dotnetcore/**'
       - 'molecule/dotnetcore/**'
+      - 'molecule/base-docker.yml'
       - '.github/workflows/dotnet_core_agent_ci.yml'
       - 'roles/common/**'
   pull_request:
     paths:
       - 'roles/dotnetcore/**'
       - 'molecule/dotnetcore/**'
+      - 'molecule/base-docker.yml'
       - '.github/workflows/dotnet_core_agent_ci.yml'
       - 'roles/common/**'
 jobs:
@@ -36,7 +38,7 @@ jobs:
           python-version: '3.x'
     
       - name: Install test dependencies.
-        run: pip3 install molecule-docker docker yamllint ansible-lint flake8 lxml
+        run: pip3 install ansible molecule-docker docker yamllint ansible-lint flake8 lxml
       
       - name: Build the collection
         run: |

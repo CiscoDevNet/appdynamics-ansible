@@ -1,0 +1,8 @@
+- name: Restart app
+  become: yes
+  systemd:
+    name: "{{ jboss_service }}"
+    state: restarted
+  notify: "Verify java agent restart"
+  listen: Restart app listener
+  when: restart_app | bool

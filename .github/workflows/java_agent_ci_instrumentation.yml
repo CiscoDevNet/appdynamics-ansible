@@ -1,0 +1,61 @@
+name: "appdynamics.agents.java(instrumentation)"
+on:
+  push:
+    paths:
+      - 'roles/java/**'
+      - 'roles/instrument_*/**'
+      - 'molecule/java-tomcat/**'
+      - 'molecule/base-local.yml'
+      - '.github/workflows/java_agent_ci_instrumentation.yml'
+      - 'roles/common/**'
+  pull_request:
+    paths:
+      - 'roles/instrument_*/**'
+      - 'roles/java/**'
+      - 'molecule/java-tomcat/**'
+      - 'molecule/base-local.yml'
+      - '.github/workflows/java_agent_ci_instrumentation.yml'
+      - 'roles/common/**'
+jobs:
+  molecule:
+    runs-on: ubuntu-20.04
+    env:
+      PY_COLORS: 1
+      ANSIBLE_FORCE_COLOR: 1
+    strategy:
+      fail-fast: false
+      matrix:
+        scenario:
+          - java-tomcat
+          - java-jboss
+          - java-tomcat-single-app-mode
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Set up Python 3
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+    
+      - name: Install test dependencies.
+        run: | 
+          sudo apt update && sudo apt install python3-apt -y
+          pip3 install ansible molecule-docker docker yamllint ansible-lint flake8 lxml
+      
+      - name: Build the collection
+        run: |
+          collection_file=$( basename $(ansible-galaxy collection build -f | awk -F" " '{print $NF}'))
+          echo "COLLECTION_FILE=$collection_file" >> $GITHUB_ENV
+        
+      - name: Install the collection
+        run: ansible-galaxy collection install ${{ env.COLLECTION_FILE }}
+      
+      - name: Run role tests
+        run: >-
+          molecule --version &&
+          ansible --version &&
+          molecule --base-config molecule/base-local.yml --debug test -s ${{ matrix.scenario }} 
+        env: 
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'

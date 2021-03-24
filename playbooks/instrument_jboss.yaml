@@ -1,0 +1,25 @@
+---
+- hosts: all
+  tasks:
+    - name: Include variables for the controller settings
+      include_vars: vars/controller.yaml
+    - include_role:
+        name: appdynamics.agents.java
+        # use java role variables in the following instrumentation tasks when public: yes
+        public: yes
+      vars:
+        agent_version: 21.1.0
+        agent_type: java8
+        #todo remove application, tier_name necessary
+        application_name: "IoT_API2"
+        tier_name: "Jboss"
+    - include_role:
+        name: appdynamics.agents.instrument_jboss
+        # instrument jboss:
+      vars:
+        application_name: "IoT_API2"
+        tier_name: "Jboss"
+        jboss_service: wildfly
+        app_user: wildfly
+        restart_app: yes
+        jboss_config: /opt/wildfly/bin/standalone.sh

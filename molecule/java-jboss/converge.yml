@@ -1,0 +1,26 @@
+---
+- name: Converge
+  hosts: all
+  roles:
+    - role: appdynamics.agents.java
+  vars:
+      # Define Agent Type and Version
+      agent_version: 21.1.0
+      agent_type: sun-java
+      agent_log_level: "debug"
+      # Your controller details
+      controller_account_access_key: "2498dd59-d059-48c1-8ec2-8dc2f3efa112" # Please add this to your Vault
+      controller_host_name: "lncontroller20103-2010-o8evv8rp.appd-cx.com" # Your AppDynamics controller
+      controller_account_name: "customer1" # Please add this to your Vault
+      enable_ssl: false
+      controller_port: "8090"
+  tasks:
+    - include_role:
+        name: appdynamics.agents.instrument_jboss
+      vars:
+        application_name: "IoT_API2"
+        tier_name: "Jboss"
+        jboss_service: wildfly
+        app_user: wildfly
+        restart_app: yes
+        jboss_config: /opt/wildfly/bin/standalone.sh

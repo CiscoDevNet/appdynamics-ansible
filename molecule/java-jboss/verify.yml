@@ -1,0 +1,12 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  tasks:
+  - name: Check wildfly is responding
+    uri:
+      url: http://localhost:8080
+      return_content: yes
+    register: this
+    failed_when: "'WildFly' not in this.content"

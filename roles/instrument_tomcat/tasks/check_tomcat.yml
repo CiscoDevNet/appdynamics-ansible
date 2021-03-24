@@ -1,0 +1,11 @@
+- block:
+    - name: Check tomcat configuration path is present
+      stat: 
+        path: "{{ tomcat_config | dirname }}"
+      register: p
+      failed_when: p.stat.isdir is not defined
+  rescue: 
+    - fail:
+        msg: "Please make sure {{ tomcat_config | dirname }} is present. Is tomcat installed?"
+      tags:
+        - skip_ansible_lint
