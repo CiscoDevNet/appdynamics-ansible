@@ -2,7 +2,9 @@
 
 # AppDynamics Ansible Collection
 
-The AppDynamics Ansible Collection installs and configures AppDynamics agents and configurations. All supported agents are downloaded from the download portal unto the Ansible control node automatically –– this makes it easy to acquire and upgrade agents declaratively.
+The AppDynamics Ansible Collection installs and configures AppDynamics agents. All supported agents are downloaded from the download portal unto the Ansible control node automatically –– this makes it easy to acquire and upgrade agents declaratively.
+
+Additionally, this AppDynamics Ansible Collection supports auto-instrumenation of JBoss(Wildfly) and Tomcat, on Linux only. 
 
 Refer to the [role variables](#Role-Variables) below for a description of available deployment options.
 
