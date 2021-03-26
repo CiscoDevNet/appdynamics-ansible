@@ -15,7 +15,6 @@ We built this AppDynamics Ansible collection to support (immutable) infrastructu
 
 ![DEMO](https://github.com/Appdynamics/appdynamics-ansible/blob/master/docs/ansible.gif?raw=true)
 
-
 ## Requirements
 
 - Requires Ansible >=2.8.0
@@ -39,7 +38,6 @@ The agent binaries and the installation process for the Machine and DB agent dep
 |`db` | Agent to monitor Databases. Windows and Linux|
 |`dotnetcore` | Agent to Monitor .NetCore applications on Linux|
 
-
 ## Installation
 
 Install the <a href="https://galaxy.ansible.com/appdynamics"> AppDynamics Collection </a> from Ansible Galaxy on your Ansible control node:
@@ -62,7 +60,6 @@ This role features:
 - java-agent installation for Windows/Linux
 
 Example 1: Install java-agent without any apps instrumentation.
-
 
 ```yml
 ---
@@ -147,7 +144,7 @@ In some cases, when application PID user is not local on linux host (i.e. from e
         jboss_config: /opt/wildfly/bin/standalone.sh
 ```
 
-instrument_jboss specific variables:
+### JBoss Instrumentation Variables
 
 |Variable<img width="200"/>     | Description | Required | Default |
 |--|--|--|--|
@@ -165,7 +162,6 @@ This role features:
 - instrumentation of Apache Tomcat
 - automatic applications restart (if systemd service is present)
 - java agent start verification
-
 
 **Example 1:** Install java-agent and instrument one or more applications.
 
@@ -224,8 +220,7 @@ In some cases, when application PID user is not local on linux host (i.e. from e
         tomcat_config: /usr/share/tomcat9/bin/setenv.sh
 ```
 
-
-### Tomcat Instrumention Variables 
+### Tomcat Instrumentation Variables
 
 |Variable<img width="200"/>     | Description | Required | Default |
 |--|--|--|--|
@@ -273,7 +268,7 @@ In the playbook below, the parameters are initialised directly in the yaml file 
             executable: mso.exe
 ```
 
-**.NET agent specific variables**
+### .NET agent specific variables
 
 |Variable<img width="200"/>     | Description
 |--|--|
@@ -303,7 +298,7 @@ In the playbook below, the parameters are initialised directly in the yaml file 
         db_agent_name: "ProdDBAgent"
 ```
 
-DB agent specific variables:
+### DB agent specific variables
 
 |Variable<img width="200"/>     | Description |
 |--|--|
@@ -345,7 +340,7 @@ The logger role allows you to change the agent log level for already deployed ag
 
 The `init_and_validate_agent_variables` should be  **false** when using the logger role after the agents are already deployed, to skip unnecessary common role processing.
 
-Machine agent specific variables:
+### Machine agent specific variables
 
 |Variable<img width="200"/>     | Description 
 |--|--|
