@@ -2,6 +2,8 @@ name: "Master verification Tests"
 on:
   push:
    branches: [ master ]
+   paths-ignore:
+     - '**/README.md'
 jobs:
   master_CI:
     runs-on: ubuntu-latest
