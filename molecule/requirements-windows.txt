@@ -1,0 +1,8 @@
+# windows(WSL) requirements to run molecule tests
+ansible
+pywinrm
+molecule[lint]
+yamllint
+ansible-lint
+flake8
+lxml

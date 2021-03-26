@@ -1,0 +1,12 @@
+#jboss defaults
+# Provide a path to jboss standalone.sh
+jboss_config: /opt/wildfly/bin/standalone.sh
+
+# Provide user that runs jboss. It will be added to appdynamics group
+app_user: wildfly
+
+# provide systemctl jboss service or command to restart Jboss. Only required if you set restart_app: yes
+jboss_service: wildfly
+
+#whether to backup configuration file or not
+backup: no

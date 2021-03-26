@@ -46,8 +46,9 @@
       register: result
       failed_when: result.status_code != 200
 
-    - debug:
-         msg: "{{ result }}"
+    - name: Print download results
+      debug:
+        msg: "{{ result }}"
 
     # Keeping downloading and unziping seperate tasks
     # as not all customers are allowed to download on the remote servers.
@@ -79,7 +80,7 @@
         java_agent_ver_folder: "{{ result.files[0].path }}" # "{{ ver.stdout | regex_replace ('\\r\\n', '') }}"
 
     - name: Copy controller-info.xml to the versioned agent folder
-      shell: cp  {{ java_agent_dest_folder_linux }}/conf/controller-info.xml  {{ java_agent_ver_folder }}/conf/
+      shell: cp {{ java_agent_dest_folder_linux }}/conf/controller-info.xml  {{ java_agent_ver_folder }}/conf/
       changed_when: false
 
     # Update the Log4j setting to apply the desired log level to all the loggers
@@ -88,20 +89,30 @@
       include_role:
         name: logger
       vars:
-        logger_must_check_if_agent_dir_exists: false # no need to check if the dir exists
+        logger_role_standalone: false # the role is not being used on its own (so we need not check if the agent dir exists for example )
       when: agent_log_level|lower != 'info'
 
     - name: Recursively change ownership of the Java agent directory
       file:
         path: "{{ java_agent_dest_folder_linux }}"
         recurse: yes
-        owner: "{{ agent_dir_permission.user | default('root') }}"
-        group: "{{ agent_dir_permission.group | default('root') }}"
-      when:
-        - agent_dir_permission.user is defined
-        - agent_dir_permission.group is defined
-        - agent_dir_permission.user | length != 0
-        - agent_dir_permission.group | length != 0
+        owner: "{{ agent_dir_permission.user }}"
+        group: "{{ agent_dir_permission.group }}"
+      ignore_errors: yes
+      changed_when: false
+
+    - name: "Make java agent log and conf dirs writable to {{ agent_dir_permission.user }} user and {{ agent_dir_permission.group }} group"
+      file:
+        path: "{{ item }}"
+        recurse: yes
+        state: directory
+        owner: "{{ agent_dir_permission.user }}"
+        group: "{{ agent_dir_permission.group }}"
+        mode: '0775'
+      loop:
+        - "{{ java_agent_ver_folder }}/logs"
+        - "{{ java_agent_ver_folder }}/conf"
+        - "{{ java_agent_dest_folder_linux }}/conf"
       ignore_errors: yes
       changed_when: false
 

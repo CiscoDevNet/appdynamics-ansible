@@ -1,0 +1,29 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: delegated
+  options:
+    managed: false
+    ansible_connection_options:
+      ansible_connection: winrm
+      ansible_winrm_transport: ntlm
+      ansible_user: appdynamics
+      ansible_password: ${WINRM_PASSWORD}
+      ansible_port: 5985
+      ansible_host: localhost
+      # ansible_winrm_server_cert_validation: ignore
+# lint: |
+#   set -e
+#   yamllint .
+#   flake8
+#   ansible-lint
+platforms:
+  - name: instance
+provisioner:
+  name: ansible
+  playbooks:
+    #prepare: ${MOLECULE_PLAYBOOK:-prepare.yaml}
+    converge: ${MOLECULE_PLAYBOOK:-converge.yml}
+verifier:
+  name: ansible

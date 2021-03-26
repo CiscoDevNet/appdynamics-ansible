@@ -5,7 +5,8 @@
           name: appdynamics.agents.logger
         vars:
           # init_and_validate_agent_variables: false # skip agent type variable init and validation
-          agents_to_set_loggers_for: ['db', 'java', 'machine']
+
+          agents_to_set_loggers_for: ['db', 'java', 'machine', 'dotnet' ]
           agent_log_level: "info"
           logger_ignore_missing: false
-          agent_loggers: ['com.appdynamics', 'com', 'com.singularity', 'com.singularity.BusinessTransactions', 'com.singularity.ee.agent.dbagent.collector.server.connection.wmi.NativeClient']
+          # agent_loggers: ['com.appdynamics', 'com', 'com.singularity', 'com.singularity.BusinessTransactions', 'com.singularity.ee.agent.dbagent.collector.server.connection.wmi.NativeClient']

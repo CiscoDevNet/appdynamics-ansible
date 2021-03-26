@@ -1,0 +1,16 @@
+- include_tasks: check_tomcat.yml
+
+# include this role to verify java agent after app restart
+- include_role:
+    name: verify_java_restart
+  when: restart_app | bool
+
+- include_tasks: app_add_user_to_group.yml
+  when: > 
+    create_appdynamics_user and 
+    app_user is defined
+
+- include_tasks: instrument_tomcat.yml
+
+- include_tasks: app_service_override.yml
+  when: tomcat_service is defined and add_service_override

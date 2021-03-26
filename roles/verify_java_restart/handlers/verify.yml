@@ -1,0 +1,23 @@
+# Verify Java Agent Installation
+# After an installation, the agent log in <agent_home>/logs will contain the following message:
+# Started AppDynamics Java Agent Successfully
+- name: Wait for agent to restart
+  pause: 
+    seconds: 10
+
+- name: Verify java agent has started
+  become: yes
+  shell: set -o pipefail && cat $(ls -t {{ java_agent_ver_folder }}/logs/{{ node_name }}/agent* | head -1) | (grep -B 5 -E 'Started AppDynamics Java Agent Successfully|Could Not Start Java Agent')
+  args:
+    executable: /bin/bash
+  retries: 3
+  delay: 10
+  until: agent_log.rc == 0
+  register: agent_log
+  failed_when: ('Could Not Start Java Agent' in agent_log.stdout) or agent_log.rc != 0
+  tags:
+    - skip_ansible_lint
+
+- name: Print agent log
+  debug:
+    msg: "{{ agent_log.stdout }}"

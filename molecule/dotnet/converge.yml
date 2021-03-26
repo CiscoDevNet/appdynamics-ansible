@@ -1,0 +1,48 @@
+---
+- name: Converge
+  hosts: all
+  roles:
+    - role: appdynamics.agents.dotnet
+  vars:
+    # Define Agent Type and Version
+    agent_version: 20.11.0
+    agent_type: dotnet
+    # The applicationName
+    application_name: DotnetApp
+    restart_app: false
+
+    # Agent configuration settings
+    monitor_all_IIS_apps: "true"  # Enable automatic instrumentation of all IIS applications
+    runtime_reinstrumentation: "true" # Runtime reinstrumentation works for .NET Framework 4.5.2 and greater. 
+    # The list of users who require write access to log directory of the agent (i.e. user who runs IIS)
+    logFileFolderAccessPermissions:
+      - { name: 'NT AUTHORITY\LOCAL SERVICE', displayName: 'LOCAL SERVICE' }
+      - { name: 'NT AUTHORITY\SYSTEM', displayName: 'SYSTEM' }
+      - { name: 'NT AUTHORITY\NETWORK SERVICE', displayName: 'NETWORK SERVICE' }
+      - { name: 'BUILTIN\IIS_IUSRS', displayName: 'ApplicationPool Identity' }
+      # - { name: 'APNET\SYS_DSINEAL1', displayName: 'APNET\SYS_DSINEAL1' }
+
+    # Machine agent settings. Elements supported metrics(perf-metrics,perf-counters)
+    # TODO: add instrumentation(instrumentor)
+    # Configuration mirrors properties described in the documentation:
+    # See https://docs.appdynamics.com/display/latest/.NET+Agent+Configuration+Properties
+    dotnet_machine_agent:
+      machine-snapshot:
+        enabled: "true"
+        window-size: 600
+        samples-per-window: 60
+        violations-per-window: 6
+        max-percent-cpu: 80
+        max-queue-item-age: 100
+        periodic-collection: 60
+
+
+    # Your controller details
+    controller_account_access_key: "2498dd59-d059-48c1-8ec2-8dc2f3efa112" # Please add this to your Vault
+    controller_global_analytics_account_name: 'customer1_e52eb4e7-25d2-41c4-a5bc-9685502317f2' # Please add this to your Vault
+    controller_host_name: "lncontroller20103-2010-o8evv8rp.appd-cx.com" # Your AppDynamics controller
+    controller_account_name: "customer1" # Please add this to your Vault
+    enable_ssl: false
+    controller_port: "8090"
+    analytics_event_endpoint: "http://lncontroller20103-2010-o8evv8rp.appd-cx.com:9080"
+    enable_analytics_agent: true

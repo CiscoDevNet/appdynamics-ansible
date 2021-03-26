@@ -1,0 +1,24 @@
+---
+- hosts: all
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  tasks:
+    - name: Install jboss(wildfly)
+      become: true
+      shell: |
+        apt update && apt install default-jdk -y
+        groupadd -r wildfly
+        useradd -r -g wildfly -d /opt/wildfly -s /sbin/nologin wildfly
+        cd /tmp
+        wget https://download.jboss.org/wildfly/16.0.0.Final/wildfly-16.0.0.Final.tar.gz
+        tar xvf wildfly-16.0.0.Final.tar.gz
+        mv wildfly-16.0.0.Final/ /opt/wildfly
+        chown -RH wildfly: /opt/wildfly
+        mkdir -p /etc/wildfly
+        cp /opt/wildfly/docs/contrib/scripts/systemd/wildfly.conf /etc/wildfly/
+        cp /opt/wildfly/docs/contrib/scripts/systemd/launch.sh /opt/wildfly/bin/
+        sh -c 'chmod +x /opt/wildfly/bin/*.sh'
+        cp /opt/wildfly/docs/contrib/scripts/systemd/wildfly.service /etc/systemd/system/
+        systemctl enable wildfly.service
+        systemctl start wildfly.service
+      when: ansible_os_family in ['Debian']

@@ -75,7 +75,7 @@
   include_role:
     name: logger
   vars:
-    logger_must_check_if_agent_dir_exists: false # no need to check if the dir exists
+    logger_role_standalone: false # the role is not being used on its own (so we need not check if the agent dir exists for example )
   when: agent_log_level|lower != 'info'
 
 - name: Clean up - remove {{ db_agent_dest_file }}
