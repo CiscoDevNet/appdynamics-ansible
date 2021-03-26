@@ -36,7 +36,6 @@ The agent binaries and the installation process for the Machine and DB agent dep
 |`machine` | 64 Bit Machine agent ZIP bundle with JRE. Windows and Linux |
 |`db` | Agent to monitor Databases. Windows and Linux|
 |`dotnetcore` | Agent to Monitor .NetCore applications on Linux|
-
 ## Installation
 
 Install the <a href="https://galaxy.ansible.com/appdynamics"> AppDynamics Collection </a> from Ansible Galaxy on your Ansible control node:
@@ -340,6 +339,10 @@ DB agent specific variables:
         # Can be used to configure the proxy for the agent
         java_system_properties: "-Dappdynamics.http.proxyHost=10.0.4.2 -Dappdynamics.http.proxyPort=9090" # mind the space between each property
 ```
+### Logger
+The logger role allows you to change the agent log level for already deployed agents (either one agent type at a time or multiple types, depending on the value of the `agents_to_set_loggers_for` list.
+
+The `init_and_validate_agent_variables` should be  **false** when using the logger role after the agents are already deployed, to skip unnecessary common role processing.
 
 Machine agent specific variables:
 
