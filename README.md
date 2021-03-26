@@ -1,5 +1,4 @@
 
-
 # AppDynamics Ansible Collection
 
 The AppDynamics Ansible Collection installs and configures AppDynamics agents. All supported agents are downloaded from the download portal unto the Ansible control node automatically –– this makes it easy to acquire and upgrade agents declaratively.
@@ -15,6 +14,7 @@ We built this AppDynamics Ansible collection to support (immutable) infrastructu
 <i> Pro Tip: Right-Click the GIF and "Open in new Tab" or view on <a href="https://terminalizer.com/view/405023a64449">terminalizer</a> </i>
 
 ![DEMO](https://github.com/Appdynamics/appdynamics-ansible/blob/master/docs/ansible.gif?raw=true)
+
 
 ## Requirements
 
@@ -38,6 +38,8 @@ The agent binaries and the installation process for the Machine and DB agent dep
 |`machine` | 64 Bit Machine agent ZIP bundle with JRE. Windows and Linux |
 |`db` | Agent to monitor Databases. Windows and Linux|
 |`dotnetcore` | Agent to Monitor .NetCore applications on Linux|
+
+
 ## Installation
 
 Install the <a href="https://galaxy.ansible.com/appdynamics"> AppDynamics Collection </a> from Ansible Galaxy on your Ansible control node:
@@ -46,20 +48,21 @@ Install the <a href="https://galaxy.ansible.com/appdynamics"> AppDynamics Collec
 ansible-galaxy collection install appdynamics.agents
 ```
 
-## Playbooks
+# Playbooks
 
 Example playbooks for each agent type is provided in the collections's `playbooks` folder.  
 You should either reference the example playbooks in the collection installation folder, or access the examples in the GitHub <a href="https://github.com/Appdynamics/appdynamics-ansible/tree/master/playbooks"> repository </a>.
 
 The `var/playbooks/controller.yaml` file is meant to contain constant variables such as `enable_ssl`, `controller_port`, etc. You may either include `var/playbooks/controller.yaml` in the playbook as shown in the java example below, or overwrite the variables in the playbooks - whatever works best for you.
 
-### Java agent
+## Java agent
 
 This role features:
 
 - java-agent installation for Windows/Linux
 
 Example 1: Install java-agent without any apps instrumentation.
+
 
 ```yml
 ---
@@ -76,13 +79,7 @@ Example 1: Install java-agent without any apps instrumentation.
         tier_name: "java_tier" # agent default tier
 ```
 
-Java agent specific variables:
-
-|Variable<img width="200"/>     | Description | Required | Default |
-|--|--|--|--|
-
-
-### AppDynamics role to instrument Jboss/Wildfly
+### Instrument JBoss/Wildfly
 
 This role features:
 
@@ -91,7 +88,7 @@ This role features:
 - automatic applications restart (if systemd service is present)
 - java agent start verification
 
-Example 1: Install java-agent and instrument one or more applications.
+**Example 1:** Install java-agent and instrument one or more applications.
 
 ```yml
 ---
@@ -119,7 +116,7 @@ Example 1: Install java-agent and instrument one or more applications.
         jboss_config: /opt/wildfly/bin/standalone.sh
 ```
 
-Example 2: To make sure all instrumented applications can have access to java-agent logs directory, this role creates `appdynamics` functional user/group to own java-agent dir and then assigns applications PID users to `appdynamics` group.
+**Example 2:** To make sure all instrumented applications can have access to java-agent logs directory, this role creates `appdynamics` functional user/group to own java-agent directory and then assigns applications PID users to `appdynamics` group.
 In some cases, when application PID user is not local on linux host (i.e. from external source) it cannot be added to the `appdynamics` group. In such case you can let application user to own java-agent directory instead.
 
 ```yml
@@ -160,7 +157,7 @@ instrument_jboss specific variables:
 |`backup` | Whether original config file should be backed up before any changes | N | False
 |`jboss_config` | Jboss/Wildfly config to instrument. Provide a path to jboss standalone.sh | Y | /opt/wildfly/bin/standalone.sh
 
-### AppDynamics role to instrument Apache tomcat
+## Instrument Apache Tomcat
 
 This role features:
 
@@ -170,7 +167,7 @@ This role features:
 - java agent start verification
 
 
-Example 1: Install java-agent and instrument one or more applications.
+**Example 1:** Install java-agent and instrument one or more applications.
 
 ```yml
 ---
@@ -195,7 +192,7 @@ Example 1: Install java-agent and instrument one or more applications.
         tomcat_config: /usr/share/tomcat9/bin/setenv.sh
 ```
 
-Example 2: To make sure all instrumented applications can have access to java-agent logs directory, this role creates `appdynamics` functional user/group to own java-agent dir and then assigns applications PID users to `appdynamics` group.
+**Example 2:** To make sure all instrumented applications can have access to java-agent logs directory, this role creates `appdynamics` functional user/group to own java-agent dir and then assigns applications PID users to `appdynamics` group.
 In some cases, when application PID user is not local on linux host (i.e. from external source) it cannot be added to the `appdynamics` group. In such case you can let application user to own java-agent directory instead.
 
 ```yml
@@ -228,7 +225,7 @@ In some cases, when application PID user is not local on linux host (i.e. from e
 ```
 
 
-instrument_tomcat specific variables:
+### Tomcat Instrumention Variables 
 
 |Variable<img width="200"/>     | Description | Required | Default |
 |--|--|--|--|
@@ -239,7 +236,7 @@ instrument_tomcat specific variables:
 |`backup` | Whether original config file should be backed up before any changes | N | no
 |`tomcat_config` | Tomcat config to instrument. Choose which tomcat config file to modify. You should set full path to setenv.sh file, like <CATALINA_HOME>/bin/setenv.sh. Note that if Tomcat is installed with yum on RHEL distributions this file is not invoked by startup script. In that case, it can be set to `/etc/tomcat/conf.d/appdynamics.conf` instead. | Y |
 
-### .NET agent
+## .NET agent
 
 In the playbook below, the parameters are initialised directly in the yaml file rather than including them from `var/playbooks/controller.yaml`
 
@@ -276,7 +273,7 @@ In the playbook below, the parameters are initialised directly in the yaml file 
             executable: mso.exe
 ```
 
-.NET agent specific variables:
+**.NET agent specific variables**
 
 |Variable<img width="200"/>     | Description
 |--|--|
@@ -287,7 +284,7 @@ In the playbook below, the parameters are initialised directly in the yaml file 
 |`logFileFolderAccessPermissions` | The list of users who require write access to log directory of the agent (i.e. user who runs IIS). See [roles/dotnet/defaults/main.yml](roles/dotnet/defaults/main.yml) for the example
 
 
-### DB agent
+## DB agent
 
 ```yml
 ---
@@ -313,7 +310,7 @@ DB agent specific variables:
 |`db_agent_name` | Name assigned to the agent, typically used to allow one Database Agent  to act as a backup to another one
 |`install_jre`| Set this parameter to false if the JRE should not be installed together with the DB agent. <br><br>**Note:** to install java on windows, you need to run the <i>install-roles.yml</i> playbook first, which adds a galaxy role (lean_delivery.java) to you local playbook folder
 
-### Machine agent
+## Machine agent
 
 ```yml
 ---
@@ -341,7 +338,9 @@ DB agent specific variables:
         # Can be used to configure the proxy for the agent
         java_system_properties: "-Dappdynamics.http.proxyHost=10.0.4.2 -Dappdynamics.http.proxyPort=9090" # mind the space between each property
 ```
-### Logger
+
+### MA Enhanced logger 
+
 The logger role allows you to change the agent log level for already deployed agents (either one agent type at a time or multiple types, depending on the value of the `agents_to_set_loggers_for` list.
 
 The `init_and_validate_agent_variables` should be  **false** when using the logger role after the agents are already deployed, to skip unnecessary common role processing.
@@ -356,7 +355,7 @@ Machine agent specific variables:
 |`sim_enabled` | Enable server infrastructure monitoring
 |`controller_global_analytics`<br/>`_account_name`| This is the global account name of the controller
 
-### Logger
+# Logger
 
 The logger role allows you to change the agent log level for already deployed agents (either one agent type at a time or multiple types, depending on the value of the `agents_to_set_loggers_for` list.
 
@@ -375,7 +374,7 @@ The `init_and_validate_agent_variables` should be  **false** when using the logg
 
 ```
 
-## Common role variables
+# Common role variables
 
 Check `Agent Type/Roles` for specific variable support.
 
