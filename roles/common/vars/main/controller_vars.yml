@@ -1,7 +1,0 @@
----
-analytics_event_endpoint: "https://fra-ana-api.saas.appdynamics.com:443"
-enable_ssl: false
-controller_port: "443"
-controller_account_name: "customer1"
-controller_global_analytics_account_name: "customer1-guid"
-enable_analytics_agent: "true"
