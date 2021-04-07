@@ -17,7 +17,7 @@ We built this AppDynamics Ansible collection to support (immutable) infrastructu
 
 ## Requirements
 
-- Requires Ansible >=2.8.0
+- Requires Ansible >=2.9.0
 - Supports most Debian and RHEL-based Linux distributions, and Windows.
 - Windows OS requires >= Powershell 5.0
 - Network/firewall access to download AppDynamics agents from `https://download-files.appdynamics.com` and `https://download.appdynamics.com` on the Ansible control node  
