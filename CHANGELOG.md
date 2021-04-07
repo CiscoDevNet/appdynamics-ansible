@@ -1,4 +1,10 @@
 
+## 2021-04-07
+
+### Changed
+
+- Common role: Move controller_vars from vars to defaults
+
 ## 2021-02-24
 
 ### Added
