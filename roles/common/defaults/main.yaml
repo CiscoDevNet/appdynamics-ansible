@@ -50,6 +50,11 @@ machine_hierarchy: ""
 enable_ssl: false
 enable_proxy: false
 enable_proxy_authentication: false
+analytics_event_endpoint: "https://fra-ana-api.saas.appdynamics.com:443"
+controller_port: "443"
+controller_account_name: "customer1"
+controller_global_analytics_account_name: "customer1-guid"
+enable_analytics_agent: "true"
 
 #restart_app flag - Set this flag true to automatically restart service
 restart_app: false
