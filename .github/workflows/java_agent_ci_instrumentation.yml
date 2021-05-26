@@ -29,6 +29,10 @@ jobs:
           - java-tomcat
           - java-jboss
           - java-tomcat-single-app-mode
+        ansible_ver:
+          - "==2.9.*"
+          - "==2.10.*"
+          - ">=2.10" # latest
     steps:
       - name: Check out code
         uses: actions/checkout@v2
@@ -41,7 +45,7 @@ jobs:
       - name: Install test dependencies.
         run: | 
           sudo apt update && sudo apt install python3-apt -y
-          pip3 install ansible molecule-docker docker yamllint ansible-lint flake8 lxml
+          pip3 install "ansible${{ matrix.ansible_ver }}" molecule-docker docker yamllint ansible-lint flake8 lxml
       
       - name: Build the collection
         run: |
