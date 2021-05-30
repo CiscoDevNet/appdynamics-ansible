@@ -176,6 +176,8 @@ This role features:
       vars:
         agent_version: 21.1.0
         agent_type: java8
+        # use java role variables in the following instrumentation tasks when public: yes
+        public: yes
     - include_role:
         name: appdynamics.agents.instrument_tomcat
       vars:
