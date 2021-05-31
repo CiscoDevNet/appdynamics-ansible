@@ -28,6 +28,10 @@ jobs:
           - debian10
         collection_role:
           - java
+        ansible_ver:
+          - "==2.9.*"
+          - "==2.10.*"
+          - ">=2.10" # latest
     steps:
       - name: Check out code
         uses: actions/checkout@v2
@@ -38,7 +42,7 @@ jobs:
           python-version: '3.x'
     
       - name: Install test dependencies.
-        run: pip3 install ansible molecule-docker docker yamllint ansible-lint flake8 lxml
+        run: pip3 install "ansible${{ matrix.ansible_ver }}" molecule-docker docker yamllint ansible-lint flake8 lxml
       
       - name: Build the collection
         run: |
