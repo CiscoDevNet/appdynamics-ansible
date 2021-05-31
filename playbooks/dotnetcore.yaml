@@ -19,7 +19,6 @@
         agent_dir_permission:  #defaults to root:root if not specified
           user:  "appdynamics" # This user must pre-exist. It is recommended to use the PID owner of your Java app
           group: "appdynamics" # This group must pre-exist
-
         # # Proxy settings
         # enable_proxy: "true"
         # proxy_host: localhost
@@ -27,9 +26,4 @@
         # enable_proxy_authentication: "true"
         # proxy_user: "joe"
         # proxy_password: "12345"
-        # # Your controller details
-        # controller_account_access_key: "b0248ceb-c954-4a37-97b5-207e90418cb4" # Please add this to your Vault
-        # controller_host_name: "ansible-20100nosshcont-bum4wzwa.appd-cx.com" # Your AppDynamics controller
-        # controller_account_name: "customer1" # Please add this to your Vault
-        # enable_ssl: "false"
-        # controller_port: "8090"
+
