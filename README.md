@@ -95,11 +95,11 @@ This role features:
       include_vars: vars/controller.yaml
     - include_role:
         name: appdynamics.agents.java
+        # use java role variables in the following instrumentation tasks when public: yes
+        public: yes
       vars:
         agent_version: 21.1.0
         agent_type: java8
-        # use java role variables in the following instrumentation tasks when public: yes
-        public: yes
 
     - include_role:
         name: appdynamics.agents.instrument_jboss
@@ -124,6 +124,8 @@ In some cases, when application PID user is not local on linux host (i.e. from e
       include_vars: vars/controller.yaml
     - include_role:
         name: appdynamics.agents.java
+        # use java role variables in the following instrumentation tasks when public: yes
+        public: yes
       vars:
         agent_version: 21.1.0
         agent_type: java8
@@ -173,11 +175,12 @@ This role features:
       include_vars: vars/controller.yaml
     - include_role:
         name: appdynamics.agents.java
+        # use java role variables in the following instrumentation tasks when public: yes
+        public: yes
       vars:
         agent_version: 21.1.0
         agent_type: java8
-        # use java role variables in the following instrumentation tasks when public: yes
-        public: yes
+
     - include_role:
         name: appdynamics.agents.instrument_tomcat
       vars:
@@ -201,6 +204,8 @@ In some cases, when application PID user is not local on linux host (i.e. from e
       include_vars: vars/controller.yaml
     - include_role:
         name: appdynamics.agents.java
+        # use java role variables in the following instrumentation tasks when public: yes
+        public: yes
       vars:
         agent_version: 21.1.0
         agent_type: java8
