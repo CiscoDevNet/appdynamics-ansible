@@ -1,18 +1,25 @@
 
-## 2021-04-07
+
+## Unreleased
+
+### Bugfix
+
+- Logger role: Fix for working in ansible 2.9.*
+
+## 21.4
 
 ### Changed
 
 - Common role: Move controller_vars from vars to defaults
 
-## 2021-02-24
+## 21.2
 
 ### Added
 
 - Java agent: Tomcat instrumentation (Linux)
 - Java agent: Jboss(Wildfly) instrumentation (Linux)
 
-## 2021-01-28
+## 21.1
 
 ### Added
 
