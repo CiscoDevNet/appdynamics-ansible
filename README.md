@@ -17,7 +17,7 @@ We built this AppDynamics Ansible collection to support (immutable) infrastructu
 
 ## Requirements
 
-- Requires Ansible >=2.8.0
+- Requires Ansible >=2.9.0
 - Supports most Debian and RHEL-based Linux distributions, and Windows.
 - Windows OS requires >= Powershell 5.0
 - Network/firewall access to download AppDynamics agents from `https://download-files.appdynamics.com` and `https://download.appdynamics.com` on the Ansible control node  
@@ -95,11 +95,11 @@ This role features:
       include_vars: vars/controller.yaml
     - include_role:
         name: appdynamics.agents.java
+        # use java role variables in the following instrumentation tasks when public: yes
+        public: yes
       vars:
         agent_version: 21.1.0
         agent_type: java8
-        # use java role variables in the following instrumentation tasks when public: yes
-        public: yes
 
     - include_role:
         name: appdynamics.agents.instrument_jboss
@@ -124,6 +124,8 @@ In some cases, when application PID user is not local on linux host (i.e. from e
       include_vars: vars/controller.yaml
     - include_role:
         name: appdynamics.agents.java
+        # use java role variables in the following instrumentation tasks when public: yes
+        public: yes
       vars:
         agent_version: 21.1.0
         agent_type: java8
@@ -173,9 +175,12 @@ This role features:
       include_vars: vars/controller.yaml
     - include_role:
         name: appdynamics.agents.java
+        # use java role variables in the following instrumentation tasks when public: yes
+        public: yes
       vars:
         agent_version: 21.1.0
         agent_type: java8
+
     - include_role:
         name: appdynamics.agents.instrument_tomcat
       vars:
@@ -199,6 +204,8 @@ In some cases, when application PID user is not local on linux host (i.e. from e
       include_vars: vars/controller.yaml
     - include_role:
         name: appdynamics.agents.java
+        # use java role variables in the following instrumentation tasks when public: yes
+        public: yes
       vars:
         agent_version: 21.1.0
         agent_type: java8

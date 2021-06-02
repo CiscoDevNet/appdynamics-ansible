@@ -10,34 +10,3 @@
         # Define Agent Type and Version
         agent_version: 20.10.0
         agent_type: sun-java
-
-        # Default application settings:
-        application_name: "Tomcatapp"
-        tier_name: "Tomcat"
-        node_name: tomcat-wn-node3
-
-        # # Your controller details
-        # controller_account_access_key: "b0248ceb-c954-4a37-97b5-207e90418cb4" # Please add this to your Vault
-        # controller_host_name: "ansible-20100nosshcont-bum4wzwa.appd-cx.com" # Your AppDynamics controller
-        # controller_account_name: "customer1" # Please add this to your Vault
-        # enable_ssl: "false"
-        # controller_port: "8090"
-
-
-        # List applications to instrument with java agent. 'jboss' and 'tomcat' are currently supported (Linux only). Remove 'apps' if you want to install java agent only.
-        
-        apps:
-          - type: jboss
-            application_name: MyApp
-            tier_name: Jboss
-            jboss_config: /opt/wildfly/bin/standalone.sh
-            user: wildfly
-            service: wildfly
-            restart_app: yes
-          - type: tomcat
-            application_name: MyApp2
-            tier_name: Tomcat
-            tomcat_config: /usr/share/tomcat9/bin/setenv.sh
-            user: tomcat
-            service: tomcat9
-            restart_app: yes

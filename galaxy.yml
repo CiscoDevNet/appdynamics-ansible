@@ -9,7 +9,7 @@ name: agents
 
 # The version of the collection. Must be compatible with semantic versioning
 # It must obey semantic versioning rules - MAJOR.MINOR.PATCH
-version: "21.1.0" 
+version: "21.6.0" 
 
 # The path to the Markdown (.md) readme file. This path is relative to the root of the collection
 readme: README.md
