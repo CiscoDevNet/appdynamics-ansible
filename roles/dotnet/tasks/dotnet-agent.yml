@@ -53,7 +53,6 @@
     notify:
       - Verify .NET agent restart
       - Restart app listener
-    changed_when: false
   rescue:
     - name: Get log Winston.txt
       win_shell: 'Get-Content {{ DOTNETAGENTFOLDER }}\Logs\Winston.txt -Tail 30'
