@@ -277,13 +277,14 @@ In the playbook below, the parameters are initialised directly in the yaml file 
 
 ### .NET agent specific variables
 
-|Variable<img width="200"/>     | Description
-|--|--|
-|`monitor_all_IIS_apps`| Enable automatic instrumentation of all IIS applications
-|`runtime_reinstrumentation` | Runtime re-instrumentation works for .NET Framework 4.5.2 and greater. Note: Make sure you test this first in a non-production environment
-|`dotnet_machine_agent` | YAML map that describes dotnet machine agent settings. See [roles/dotnet/defaults/main.yml](roles/dotnet/defaults/main.yml) for the example
-|`standalone_applications` | List of standalone services to be instrumented with the .NET agent. See [roles/dotnet/defaults/main.yml](roles/dotnet/defaults/main.yml) for the example
-|`logFileFolderAccessPermissions` | The list of users who require write access to log directory of the agent (i.e. user who runs IIS). See [roles/dotnet/defaults/main.yml](roles/dotnet/defaults/main.yml) for the example
+|Variable<img width="200"/>     | Description | Required | Default |
+|--|--|--|--|
+|`monitor_all_IIS_apps`| Enable automatic instrumentation of all IIS applications | N | no |
+|`runtime_reinstrumentation` | Runtime re-instrumentation works for .NET Framework 4.5.2 and greater. Note: Make sure you test this first in a non-production environment | N | no |
+|`dotnet_machine_agent` | YAML map that describes dotnet machine agent settings. See [roles/dotnet/defaults/main.yml](roles/dotnet/defaults/main.yml) for the example | N | |
+|`standalone_applications` | List of standalone services to be instrumented with the .NET agent. See [roles/dotnet/defaults/main.yml](roles/dotnet/defaults/main.yml) for the example | N |
+|`logFileFolderAccessPermissions` | The list of users who require write access to log directory of the agent (i.e. user who runs IIS). See [roles/dotnet/defaults/main.yml](roles/dotnet/defaults/main.yml) for the example | N | |
+|`restart_app` | Set to 'yes' to automatically restart IIS | N | no |
 
 
 ## DB agent
@@ -307,7 +308,7 @@ In the playbook below, the parameters are initialised directly in the yaml file 
 
 ### DB agent specific variables
 
-|Variable<img width="200"/>     | Description |
+|Variable<img width="200"/>     | Description | 
 |--|--|
 |`db_agent_name` | Name assigned to the agent, typically used to allow one Database Agent  to act as a backup to another one
 |`install_jre`| Set this parameter to false if the JRE should not be installed together with the DB agent. <br><br>**Note:** to install java on windows, you need to run the <i>install-roles.yml</i> playbook first, which adds a galaxy role (lean_delivery.java) to you local playbook folder
