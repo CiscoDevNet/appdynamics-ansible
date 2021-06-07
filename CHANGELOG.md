@@ -1,10 +1,12 @@
 
+# Changelog
 
-## Unreleased
+## 21.6
 
-### Bugfix
+### Fixed
 
-- Logger role: Fix for working in ansible 2.9.*
+- Logger role: Fixed role in ansible 2.9.*
+- Dotnet role: Fixed automatic restart of IIS
 
 ## 21.4
 
@@ -26,4 +28,5 @@
 - DotNet agent logger 
 
 ### Removed
-### Changed
+### Updated
+### Fixed
