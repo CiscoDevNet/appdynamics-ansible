@@ -6,16 +6,16 @@
       name: lxml
     check_mode: yes
     ignore_errors: yes
-    register: lxmlStatus
+    register: lxml_status
     delegate_to: localhost
     changed_when: false
 
-  - debug: var=lxmlStatus
+  - debug: var=lxml_status
 
   - name: check lxml
     set_fact:
       lxml_found: True
-    when: lxmlStatus.stdout | regex_search('lxml==.*')
+    when: lxml_status.stdout | regex_search('lxml==.*')
 
   - name: Assert that lxml is installed on control node
     assert:
