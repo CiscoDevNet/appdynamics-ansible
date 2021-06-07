@@ -78,7 +78,6 @@
         - agent_dir_permission.group is defined
         - agent_dir_permission.user | length != 0
         - agent_dir_permission.group | length != 0
-      ignore_errors: yes
       changed_when: false
 
     - name: Copy the environment variables shell script file to /etc/profile.d Directory

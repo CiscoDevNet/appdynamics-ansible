@@ -49,7 +49,7 @@
     - name: Kill running DB processes
       command: "kill {{ item }}"
       with_items: "{{ running_processes.stdout_lines }}"
-      ignore_errors: yes  # Skip 'kill: No such process' errors
+      ignore_errors: yes  # Skip 'kill: No such process' errors # noqa ignore-errors
       when: previous_db_agent.stat.exists
       changed_when: false
 
