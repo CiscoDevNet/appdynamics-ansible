@@ -35,7 +35,7 @@
       tempfile:
         state: directory
         suffix: build
-      register: tempDir
+      register: temp_dir
       changed_when: false
 
     # Rather than modifying the XML files in-situ on the remote server, re copy
@@ -45,7 +45,7 @@
     - name: Copy the log4j file down to update it localy
       fetch:
         src: '{{ db_agent_dest_folder_linux }}/conf/logging/log4j.xml'
-        dest: '{{ tempDir.path }}/'
+        dest: '{{ temp_dir.path }}/'
         mode: 0755
         flat: yes
       changed_when: false
@@ -53,7 +53,7 @@
     - name: Check which xpath entries are found
       xml:
         # path: '{{ db_agent_dest_folder_linux }}/conf/logging/log4j.xml'
-        path: '{{ tempDir.path }}/log4j.xml'
+        path: '{{ temp_dir.path }}/log4j.xml'
         xpath: //logger[@name='{{ item }}']/level
         count: yes
       register: hits
@@ -63,7 +63,7 @@
     - name: Set the log DB level for all relevant loggers
       xml:
         # path: '{{ db_agent_dest_folder_linux }}/conf/logging/log4j.xml'
-        path: '{{ tempDir.path }}/log4j.xml'
+        path: '{{ temp_dir.path }}/log4j.xml'
         xpath: "{{ item.actions.xpath }}" # //logger[@name='{{ item }}']/level
         attribute: value
         value: "{{ agent_log_level }}"
@@ -78,13 +78,13 @@
     - name: Copy the local file back to the host
       become: true
       copy:
-         src: '{{ tempDir.path }}/log4j.xml'
+         src: '{{ temp_dir.path }}/log4j.xml'
          dest: '{{ db_agent_dest_folder_linux }}/conf/logging/log4j.xml'
       changed_when: false
 
     - name: Delete the temp directory
       file:
-         path: "{{ tempDir.path }}"
+         path: "{{ temp_dir.path }}"
          state: absent
       delegate_to: localhost
       changed_when: false

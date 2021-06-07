@@ -98,7 +98,6 @@
         recurse: yes
         owner: "{{ agent_dir_permission.user }}"
         group: "{{ agent_dir_permission.group }}"
-      ignore_errors: yes
       changed_when: false
 
     - name: "Make java agent log and conf dirs writable to {{ agent_dir_permission.user }} user and {{ agent_dir_permission.group }} group"
@@ -113,7 +112,6 @@
         - "{{ java_agent_ver_folder }}/logs"
         - "{{ java_agent_ver_folder }}/conf"
         - "{{ java_agent_dest_folder_linux }}/conf"
-      ignore_errors: yes
       changed_when: false
 
     - name: Clean up - remove {{ java_agent_dest_file }}

@@ -9,5 +9,5 @@
     - { service: was, state: restarted }
     - { service: w3svc, state: started }
   listen: Restart app listener
-  ignore_errors: yes
+  ignore_errors: yes # noqa ignore-errors
   when: monitor_all_IIS_apps | bool and restart_app | bool and iis_service.exists

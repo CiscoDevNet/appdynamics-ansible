@@ -33,7 +33,7 @@
     tempfile:
       state: directory
       suffix: build
-    register: tempDir
+    register: temp_dir
     changed_when: false
 
   # Rather than modifying the XML files in-situ on the remote server, we copy
@@ -43,7 +43,7 @@
   - name: Copy the log4j file down to update it localy ( which we do as not to require the lxml python library on the target )
     fetch:
       src: '{{ java_agent_ver_folder }}/conf/logging/log4j2.xml'
-      dest: '{{ tempDir.path }}/'
+      dest: '{{ temp_dir.path }}/'
       mode: 0755
       flat: yes
     changed_when: false
@@ -51,7 +51,7 @@
   - name: Check which xpath entries are found in the log4j2 file
     xml:
       # path: '{{ java_agent_ver_folder }}/conf/logging/log4j2.xml'
-      path: '{{ tempDir.path }}/log4j2.xml'
+      path: '{{ temp_dir.path }}/log4j2.xml'
       xpath: //AsyncLogger[@name='{{ item }}']
       count: yes
     register: hits
@@ -61,7 +61,7 @@
   - name: Set the log level for the java agent
     xml:
       # path: '{{ java_agent_ver_folder }}/conf/logging/log4j2.xml'
-      path: '{{ tempDir.path }}/log4j2.xml'
+      path: '{{ temp_dir.path }}/log4j2.xml'
       xpath: "{{ item.actions.xpath }}" #  //AsyncLogger[@name='{{ item }}']
       attribute: level
       value: "{{ agent_log_level }}"
@@ -76,13 +76,13 @@
   - name: Copy the local file back to the host
     become: true
     copy:
-       src: '{{ tempDir.path }}/log4j2.xml'
+       src: '{{ temp_dir.path }}/log4j2.xml'
        dest: '{{ java_agent_ver_folder }}/conf/logging/'
     changed_when: false
 
   - name: Delete the temp directory
     file:
-       path: "{{ tempDir.path }}"
+       path: "{{ temp_dir.path }}"
        state: absent
     delegate_to: localhost
     changed_when: false

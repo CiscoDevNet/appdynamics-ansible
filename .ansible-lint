@@ -6,12 +6,12 @@ parseable: true
 quiet: true
 rulesdir:
   - ./rule/directory/
+#warn_list:
+# - X
 skip_list:
-  - '201'
-  - '204'
-  - '208'
-  - '303'
-  - '305'
   - unnamed-task
+  - var-naming
+  - risky-file-permissions
+  - command-instead-of-shell
 use_default_rules: true
 verbosity: 1
