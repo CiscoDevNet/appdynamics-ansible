@@ -5,7 +5,7 @@
 
 ### Fixed
 
-- Logger role: Fixed role in ansible 2.9.*
+- Logger role: Fixed role in ansible 2.9.* (https://github.com/Appdynamics/appdynamics-ansible/issues/71)
 - Dotnet role: Fixed automatic restart of IIS
 
 ## 21.4
