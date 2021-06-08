@@ -59,7 +59,7 @@ This role features:
 
 - java-agent installation for Windows/Linux
 
-Example 1: Install java-agent without any apps instrumentation.
+**Example 1:** Install java-agent without any apps instrumentation.
 
 ```yml
 ---
@@ -74,6 +74,47 @@ Example 1: Install java-agent without any apps instrumentation.
         agent_type: java8
         application_name: "IoT_API" # agent default application
         tier_name: "java_tier" # agent default tier
+```
+
+**Example 2:** Install java-agent with changing java startup script and performing restart
+
+```yml
+---
+- hosts: single-java-host
+  tasks:
+    - name: Include variables for the controller settings
+      include_vars: vars/controller.yaml
+    - import_role:
+        name: appdynamics.agents.java
+        public: yes
+      vars:
+        agent_version: 21.1.0
+        agent_type: java8
+        application_name: "BIGFLY" # agent default application
+        tier_name: "java_tier" # agent default tier
+    - name: Editing startup script putting java startup variables
+      lineinfile:
+        path: /opt/application/startAll.sh
+        # Line to Search/Match against
+        regexp: '^(.*)(-jar.*$)'
+        # Line to Replace with
+        line: '\1 -javaagent:{{ java_agent_dest_folder_linux }}/javaagent.jar -Dappdynamics.agent.nodeName=application-1 \2'
+        backup: yes
+        backrefs: yes
+        state: present
+      notify: RestartingApp
+    - name: allow appuser write to appd logs folder
+      user:
+        name: appuser
+        groups:
+        - appdynamics
+        append: yes
+      become: yes
+  handlers:
+    - name: RestartingApp
+      command: '/opt/application/stopAll.sh && /opt/application/startAll.sh'
+      args: 
+        chdir: '/opt/application/'
 ```
 
 ### Instrument JBoss/Wildfly
@@ -285,6 +326,57 @@ In the playbook below, the parameters are initialised directly in the yaml file 
 |`standalone_applications` | List of standalone services to be instrumented with the .NET agent. See [roles/dotnet/defaults/main.yml](roles/dotnet/defaults/main.yml) for the example | N |
 |`logFileFolderAccessPermissions` | The list of users who require write access to log directory of the agent (i.e. user who runs IIS). See [roles/dotnet/defaults/main.yml](roles/dotnet/defaults/main.yml) for the example | N | |
 |`restart_app` | Set to 'yes' to automatically restart IIS | N | no |
+
+## .NET core agent for linux
+
+In the playbook below, the parameters for communicating with controller included from `var/playbooks/controller.yaml`
+
+**Example 1:** Install .net core agent on linux host and change environment variables for application to start app with .net core agent
+
+```yml
+---
+- hosts: netcore_lin
+  tasks:
+    - name: Include variables for the controller settings
+      include_vars: vars/controller.yaml
+    - include_role:
+        name: appdynamics.agents.dotnetcore
+        public: yes
+      vars:
+        # Define Agent Type and Version
+        agent_version: 21.5.0
+        agent_type: dotnetcore
+        # The applicationName
+        application_name: "BIGCOMPANY"
+        tier_name: "dotnet" 
+        # Directory permissions for agent. These can be set at host level in the invertory as well
+        agent_dir_permission:  #defaults to root:root if not specified
+          user:  "centos" # This user must pre-exist. It is recommended to use the PID owner of your netcore app
+          group: "centos" # This group must pre-exist
+    - name: changing application startup script App 1
+      blockinfile: 
+        path: /opt/Gateway/StartGatewayApi.sh 
+        backup: yes
+        insertbefore: BOF
+        marker: "# {mark} appd instrumentation"
+        block: |
+            export APPDYNAMICS_AGENT_APPLICATION_NAME="BIGCOMPANY"
+            export APPDYNAMICS_AGENT_TIER_NAME="dotnet-gateweay"
+            export APPDYNAMICS_AGENT_REUSE_NODE_NAME=true
+            export APPDYNAMICS_AGENT_REUSE_NODE_NAME_PREFIX="dotnet-gw"
+            export CORECLR_PROFILER={57e1aa68-2229-41aa-9931-a6e93bbc64d8}
+            export CORECLR_ENABLE_PROFILING=1
+            export CORECLR_PROFILER_PATH={{ dotnet_core_agent_dest_folder_linux }}/libappdprofiler.so
+      notify: RestartingApptask
+  handlers:
+    - name: RestartingApptask
+      shell: '{{ item }}'
+      args: 
+        chdir: '/opt/Gateway/'
+      with_items:
+        - '/opt/Gateway/StopGatewayApi.sh '
+        - '/opt/Gateway/StartGatewayApi.sh '
+```
 
 
 ## DB agent
