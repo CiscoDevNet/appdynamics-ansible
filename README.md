@@ -92,7 +92,7 @@ This role features:
         agent_type: java8
         application_name: "BIGFLY" # agent default application
         tier_name: "java_tier" # agent default tier
-    - name: Editing startup script putting java startup variables
+    - name: Edit startup script with new java startup variables
       lineinfile:
         path: /opt/application/startAll.sh
         # Line to Search/Match against
@@ -103,7 +103,7 @@ This role features:
         backrefs: yes
         state: present
       notify: RestartingApp
-    - name: allow appuser write to appd logs folder
+    - name: Allow appuser write to appd logs folder
       user:
         name: appuser
         groups:
@@ -284,6 +284,8 @@ In some cases, when application PID user is not local on linux host (i.e. from e
 
 In the playbook below, the parameters are initialised directly in the yaml file rather than including them from `var/playbooks/controller.yaml`
 
+**Example 1:** Install .net agent and instrument standalone applications.
+
 ```yml
 ---
 - hosts: windows
@@ -354,7 +356,7 @@ In the playbook below, the parameters for communicating with controller included
         agent_dir_permission:  #defaults to root:root if not specified
           user:  "centos" # This user must pre-exist. It is recommended to use the PID owner of your netcore app
           group: "centos" # This group must pre-exist
-    - name: changing application startup script App 1
+    - name: Change application startup script
       blockinfile: 
         path: /opt/Gateway/StartGatewayApi.sh 
         backup: yes
@@ -368,9 +370,9 @@ In the playbook below, the parameters for communicating with controller included
             export CORECLR_PROFILER={57e1aa68-2229-41aa-9931-a6e93bbc64d8}
             export CORECLR_ENABLE_PROFILING=1
             export CORECLR_PROFILER_PATH={{ dotnet_core_agent_dest_folder_linux }}/libappdprofiler.so
-      notify: RestartingApptask
+      notify: RestartingApp
   handlers:
-    - name: RestartingApptask
+    - name: RestartingApp
       shell: '{{ item }}'
       args: 
         chdir: '/opt/Gateway/'
@@ -381,6 +383,8 @@ In the playbook below, the parameters for communicating with controller included
 
 
 ## DB agent
+
+**Example 1:** Install database agent on linux host
 
 ```yml
 ---
@@ -407,6 +411,8 @@ In the playbook below, the parameters for communicating with controller included
 |`install_jre`| Set this parameter to false if the JRE should not be installed together with the DB agent. <br><br>**Note:** to install java on windows, you need to run the <i>install-roles.yml</i> playbook first, which adds a galaxy role (lean_delivery.java) to you local playbook folder
 
 ## Machine agent
+
+**Example 1:** Install machine agent on hosts. Agents communicate with controller with proxy.
 
 ```yml
 ---
