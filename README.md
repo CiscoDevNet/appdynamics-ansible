@@ -332,7 +332,7 @@ In the playbook below, the parameters are initialised directly in the yaml file 
 
 ## .NET core agent for linux
 
-In the playbook below, the parameters for communicating with controller included from `var/playbooks/controller.yaml`
+In the playbook below, the parameters for communicating with controller included from `vars/controller.yaml`
 
 **Example 1:** Install .net core agent on linux host and change environment variables for application to start app with .net core agent
 
