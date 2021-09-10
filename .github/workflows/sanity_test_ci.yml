@@ -37,4 +37,4 @@ jobs:
       - name: Sanity test the collection
         run: |
            cd /home/runner/.ansible/collections/ansible_collections/appdynamics/agents
-           ansible-test sanity --docker default -v
+           ansible-test sanity --docker default -v --color=yes
