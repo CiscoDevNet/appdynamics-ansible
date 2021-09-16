@@ -1,4 +1,5 @@
 ---
+allow_duplicates: true
 galaxy_info:
   author: Israel Ogbole (https://galaxy.ansible.com/iogbole)
   role_name: common
