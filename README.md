@@ -507,6 +507,8 @@ Check `Agent Type/Roles` for specific variable support.
 
 ## Contributing
 
+Do not commit directly to master branch, please submit PRs to `develop` branch first.
+
 Here are a few ways you can pitch in:
 
 - Report bugs or issues.
