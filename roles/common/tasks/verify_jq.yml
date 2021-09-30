@@ -6,7 +6,8 @@
   delegate_to: localhost
   changed_when: false
 
-- debug: var=is_jq_exist
+- debug: 
+    var: is_jq_exist
 
 - name: Assert that jq is installed on control node
   assert:
