@@ -13,7 +13,7 @@ We built this AppDynamics Ansible collection to support (immutable) infrastructu
 
 <i> Pro Tip: Right-Click the GIF and "Open in new Tab" or view on <a href="https://terminalizer.com/view/405023a64449">terminalizer</a> </i>
 
-![DEMO](https://github.com/Appdynamics/appdynamics-ansible/blob/master/docs/ansible.gif?raw=true)
+![DEMO](https://github.com/CiscoDevNet/appdynamics-ansible/blob/master/docs/ansible.gif?raw=true)
 
 ## Requirements
 
@@ -49,7 +49,7 @@ ansible-galaxy collection install appdynamics.agents
 # Playbooks
 
 Example playbooks for each agent type is provided in the collections's `playbooks` folder.  
-You should either reference the example playbooks in the collection installation folder, or access the examples in the GitHub <a href="https://github.com/Appdynamics/appdynamics-ansible/tree/master/playbooks"> repository </a>.
+You should either reference the example playbooks in the collection installation folder, or access the examples in the GitHub <a href="https://github.com/CiscoDevNet/appdynamics-ansible/tree/master/playbooks"> repository </a>.
 
 The `var/playbooks/controller.yaml` file is meant to contain constant variables such as `enable_ssl`, `controller_port`, etc. You may either include `var/playbooks/controller.yaml` in the playbook as shown in the java example below, or overwrite the variables in the playbooks - whatever works best for you.
 

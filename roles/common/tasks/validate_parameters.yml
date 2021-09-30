@@ -6,7 +6,7 @@
   - name: Validate agent_type
     assert:
       that: agent_type is defined
-      msg: 'agent type must be provided. Refer to https://github.com/Appdynamics/download-appdynamcis-agents#supported-agent-types'
+      msg: 'agent type must be provided. Refer to https://github.com/CiscoDevNet/download-appdynamcis-agents#supported-agent-types'
 
   - name: "Validate agent_version"
     assert:
