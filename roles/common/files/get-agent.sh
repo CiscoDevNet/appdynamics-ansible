@@ -192,7 +192,12 @@ get_download_url() {
   _version="$2"
   #portal_page="https://download.appdynamics.com/download/downloadfile/?version=${_version}&apm=${_app_agent}&os=${_os_platform}&platform_admin_os=${_os_platform}&events=${_events}&eum=${_eum}&apm_os=windows%2Clinux%2Calpine-linux%2Cosx%2Csolaris%2Csolaris-sparc%2Caix"
 
-  portal_page="https://download.appdynamics.com/download/downloadfile/?version=${_version}&apm=${_app_agent}&os=${_os_platform}&platform_admin_os=${_os_platform}&events=${_events}&eum=${_eum}&apm_os=${_os_platform}"
+  if [ "$_version" == "latest" ]; then
+    # download latest version available
+    portal_page="https://download.appdynamics.com/download/downloadfile/?apm=${_app_agent}&os=${_os_platform}&platform_admin_os=${_os_platform}&events=${_events}&eum=${_eum}&apm_os=${_os_platform}"
+  else
+    portal_page="https://download.appdynamics.com/download/downloadfile/?version=${_version}&apm=${_app_agent}&os=${_os_platform}&platform_admin_os=${_os_platform}&events=${_events}&eum=${_eum}&apm_os=${_os_platform}"
+  fi
 
   http_response=$(curl -s -o "${DOWNLOAD_PAGE_OUTPUT}" -w "%{http_code}" -X GET "$portal_page")
 

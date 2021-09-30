@@ -11,7 +11,7 @@
     - role: appdynamics.agents.machine
   vars:
     # Define Agent Type and Version
-    agent_version: 20.9.0
+    agent_version: latest
     agent_type: machine #machine-win for Windows host
     agent_log_level: "debug"
     # Your controller details
