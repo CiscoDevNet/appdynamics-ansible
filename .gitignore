@@ -2,3 +2,5 @@
 .DS_Store
 playbooks/my*
 playbooks/vars/my*
+.cache
+appdynamics-agents-*.tar.gz
