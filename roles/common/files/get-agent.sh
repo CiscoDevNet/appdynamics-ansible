@@ -49,7 +49,7 @@ _usage() {
   echo
   echo "  download AGENT                       Agent to download (choices: sun-java | java | sun-java8 | java8 | ibm-java | machine | machine-win | dotnet | dotnet-core | dotnetcore | db | db-win)"
   echo "    -v, --version  version             Version number for the supplied agent"
-  echo "    -d, --dryrun                       Rturns only the download URL if specificed, it is recommended to use this arg for provisioning tools such as ansible, chef, etc "
+  echo "    -d, --dryrun                       Returns only the download URL if specificed, it is recommended to use this arg for provisioning tools such as ansible, chef, etc "
   echo
 }
 
@@ -306,7 +306,7 @@ download() {
   done
 
   if [ -z "${agent:-}" ] || [ -z "${version:-}" ]; then
-    exit_bad_args "missing one or more of agent type and  version"
+    exit_bad_args "missing one or more of agent type and version"
   fi
 
   if [ -z "${dryrun:-}" ]; then
