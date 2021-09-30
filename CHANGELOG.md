@@ -1,6 +1,12 @@
 
 # Changelog
 
+## Next
+
+### Added
+
+- Allow allow_duplicates: true (https://github.com/CiscoDevNet/appdynamics-ansible/pull/82)
+
 ## 21.6
 
 ### Fixed
