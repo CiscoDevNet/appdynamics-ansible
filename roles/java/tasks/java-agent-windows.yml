@@ -64,7 +64,7 @@
 - name: Find the version specific directory name
   win_find:
     paths: "{{ java_agent_dest_folder_win }}"
-    patterns: "ver{{ agent_version }}*"
+    patterns: "ver*"
     file_type: directory
   register: result
 

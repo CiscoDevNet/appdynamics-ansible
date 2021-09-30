@@ -71,7 +71,7 @@
     - name: Find the version specific directory name
       find:
         paths: "{{ java_agent_dest_folder_linux }}"
-        patterns: "ver{{ agent_version }}*"
+        patterns: "ver*"
         file_type: directory
       register: result
 
