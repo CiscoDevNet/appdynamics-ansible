@@ -8,7 +8,7 @@
         name: appdynamics.agents.dotnet
       vars:
         # Define Agent Type and Version
-        agent_version: 20.11.0
+        agent_version: 21.5.0
         agent_type: dotnet
         application_name: 'IoT_API'
         ## Proxy settings
