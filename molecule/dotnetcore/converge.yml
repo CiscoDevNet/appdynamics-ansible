@@ -12,11 +12,11 @@
   vars:
     # Define Agent Type and Version
     agent_version: 20.9.0
-    agent_type: dotnetcore #machine-win for Windows host
+    agent_type: dotnetcore
 
     # The applicationName
-    application_name: "IoT_API" # ONLY required if agent type is not machine or db
-    tier_name: "dotnet_core_tier" # ONLY required if agent type is not machine or db
+    application_name: "IoT_API"
+    tier_name: "dotnet_core_tier"
 
     # Proxy settings
     enable_proxy: "true"
