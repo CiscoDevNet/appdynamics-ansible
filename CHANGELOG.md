@@ -6,6 +6,7 @@
 ### Added
 
 - Allow allow_duplicates: true (https://github.com/CiscoDevNet/appdynamics-ansible/pull/82)
+- Add support to download latest agent (https://github.com/CiscoDevNet/appdynamics-ansible/pull/83)
 
 ## 21.6
 

@@ -483,7 +483,7 @@ Check `Agent Type/Roles` for specific variable support.
 |Variable<img width="200"/>     | Description | Agent Type/Roles |
 |--|--|--|
 |`agent_type`   | AppDynamics agent type.  java, machine, etc  | All |
-|`agent_version`  | AppDynamics agent version. AppDynamics uses calendar versioning. For example, if a Java agent is released in November of 2020, its version will begin with 20.11.0. When the Java agent team releases again in the month of November, the new agent will be 20.11.1  | All |
+|`agent_version`  | AppDynamics agent version. Use 'latest' to install latest agent available. AppDynamics uses calendar versioning. For example, if a Java agent is released in November of 2020, its version will begin with 20.11.0. When the Java agent team releases again in the month of November, the new agent will be 20.11.1  | All |
 |`application_name`   | The AppDynamics business application name, this variable is compulsory for all the  `dotnet`, `java` and `dotnetcore` roles  | All |
 |`tier_name`   | The AppDynamics tier name, this variable is compulsory for all the `dotnet`, `java` and `dotnetcore` roles  | All |
 |`node_name`   | The AppDynamics node name for `dotnet`, `java` and `dotnetcore` roles  | All |
