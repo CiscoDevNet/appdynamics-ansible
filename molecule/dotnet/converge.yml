@@ -5,7 +5,7 @@
     - role: appdynamics.agents.dotnet
   vars:
     # Define Agent Type and Version
-    agent_version: 20.11.0
+    agent_version: latest
     agent_type: dotnet
     # The applicationName
     application_name: DotnetApp
