@@ -21,7 +21,7 @@ Example 1: Install java-agent and instrument one or more applications.
         # use java role variables in the following instrumentation tasks when public: yes
         public: yes
       vars:
-        agent_version: 21.1.0
+        agent_version: 21.11.4
         agent_type: java8
 
     - include_role:
@@ -50,7 +50,7 @@ In some cases, when application PID user is not local on linux host (i.e. from e
         # use java role variables in the following instrumentation tasks when public: yes
         public: yes
       vars:
-        agent_version: 21.1.0
+        agent_version: 21.11.4
         agent_type: java8
         # single app mode: Can skip appdynamics user creation and own java-agent directory by app user (tomcat in this case)
         create_appdynamics_user: no

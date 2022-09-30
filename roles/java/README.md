@@ -15,7 +15,7 @@ Example 1: Install java-agent without any apps instrumentation.
     - include_role:
         name: appdynamics.agents.java
       vars:
-        agent_version: 21.1.0
+        agent_version: 21.11.4
         agent_type: java8
         application_name: "IoT_API" # agent default application
         tier_name: "java_tier" # agent default tier
