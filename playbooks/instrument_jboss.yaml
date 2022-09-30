@@ -8,7 +8,7 @@
         # use java role variables in the following instrumentation tasks when public: yes
         public: yes
       vars:
-        agent_version: 21.1.0
+        agent_version: 21.11.4
         agent_type: java8
         #todo remove application, tier_name necessary
         application_name: "IoT_API2"
